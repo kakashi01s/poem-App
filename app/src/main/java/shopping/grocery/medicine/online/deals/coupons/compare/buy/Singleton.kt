@@ -47,7 +47,18 @@ class Singleton : Application() {
             AdSettings.setIntegrationErrorMode(AdSettings.IntegrationErrorMode.INTEGRATION_ERROR_CRASH_DEBUG_MODE);
         }
 
-        MobileAds.initialize(this){}
+        MobileAds.initialize(this) { initializationStatus ->
+            val statusMap =
+                initializationStatus.adapterStatusMap
+            for (adapterClass in statusMap.keys) {
+                val status = statusMap[adapterClass]
+                Log.d("MyApp", String.format(
+                    "Adapter name: %s, Description: %s, Latency: %d",
+                    adapterClass, status!!.description, status.latency))
+            }
+
+            // Start loading ads here...
+        }
 
         if (BuildConfig.DEBUG){
             AdSettings.setTestMode(true);

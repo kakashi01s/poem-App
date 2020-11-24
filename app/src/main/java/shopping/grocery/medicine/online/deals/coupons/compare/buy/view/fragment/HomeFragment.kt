@@ -1,6 +1,7 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -26,8 +26,6 @@ import com.google.android.gms.ads.formats.MediaView
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageClickListener
@@ -35,7 +33,6 @@ import com.synnapps.carouselview.ImageListener
 import kotlinx.android.synthetic.main.fragment_home.*
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseFragment
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.home.TopTrending
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.MainActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.WebActivity
@@ -156,7 +153,11 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
         trendingAdapter = TrendingAdapter(context)
         trendingAdapter!!.setListener(this)
         rvTrending.apply {
-            rvTrending?.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
+            rvTrending?.layoutManager = LinearLayoutManager(
+                activity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
             rvTrending?.adapter = trendingAdapter
         }
 
@@ -191,7 +192,10 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
 
     var imageListener: ImageListener = ImageListener { position, imageView ->
-        Log.d("TAG", "onLoadCarouselImages: position " + position +" data "+ carouselImagesList!![position][3])
+        Log.d(
+            "TAG",
+            "onLoadCarouselImages: position " + position + " data " + carouselImagesList!![position][3]
+        )
         Glide.with(imageView.context)
             .load(carouselImagesList!![position][3])
             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -366,10 +370,19 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
     override fun onAllCardClick(item: List<String>) {
         Log.d("TAG", "onAllCardClick: " + item.get(1))
-        val intent: Intent? = Intent(activity, WebActivity::class.java)
-        intent?.putExtra("title", item.get(1))
-        intent?.putExtra("url", item.get(2))
-        intent?.putExtra("app_icon", item.get(3))
+
+        if(item[1] == "Amazon"){
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(item[2]))
+            startActivity(browserIntent)
+
+        }else{
+            val intent: Intent? = Intent(activity, WebActivity::class.java)
+            intent?.putExtra("title", item.get(1))
+            intent?.putExtra("url", item.get(2))
+            intent?.putExtra("app_icon", item.get(3))
+
+            startActivity(intent)
+        }
 
         val bundle = Bundle()
         bundle.putString("title", item.get(1))
@@ -377,8 +390,6 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
         (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "all_apps_visited", true)
 
-
-        startActivity(intent)
     }
 
     override fun onTrendingClickListener(item: List<String>) {
