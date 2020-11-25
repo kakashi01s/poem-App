@@ -41,6 +41,7 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.h
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.AllAppsItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.home.TrendingItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.HomeViewModel
+import kotlin.math.log
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,7 +82,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
         get() = 0
     override val layoutId: Int
         get() = 0
-
+    var bool : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -132,7 +133,11 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
             onLoadNativeAd1()
             onLoadNativeAd2()
         }
-
+        if(firebaseRemoteConfig!!.getBoolean(Constants().OPEN_BROWSER)) {
+            bool=true
+        } else {
+            bool=false
+        }
     }
 
     fun initViews(view: View) {
@@ -372,16 +377,18 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
         Log.d("TAG", "onAllCardClick: " + item.get(1))
 
         if(item[1] == "Amazon"){
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(item[2]))
-            startActivity(browserIntent)
 
-        }else{
-            val intent: Intent? = Intent(activity, WebActivity::class.java)
-            intent?.putExtra("title", item.get(1))
-            intent?.putExtra("url", item.get(2))
-            intent?.putExtra("app_icon", item.get(3))
+            if(bool==true) {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(item[2]))
+                startActivity(browserIntent)
+            } else {
+                val intent: Intent? = Intent(activity, WebActivity::class.java)
+                intent?.putExtra("title", item.get(1))
+                intent?.putExtra("url", item.get(2))
+                intent?.putExtra("app_icon", item.get(3))
 
-            startActivity(intent)
+                startActivity(intent)
+            }
         }
 
         val bundle = Bundle()

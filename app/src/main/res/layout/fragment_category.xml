@@ -31,8 +31,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_supermarket"
-                    app:tint="@color/colorPrimary" />
+                    android:src="@drawable/ic_supermarts"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -61,8 +60,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_grocery"
-                    app:tint="@color/colorPrimary" />
+                    android:src="@drawable/ic_groceries"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -94,8 +92,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_medicine"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_medicines"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -124,8 +121,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_protein_supplement"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_suppliments"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -157,8 +153,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_device"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_electronics"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -187,8 +182,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_product"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_beauty"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -233,8 +227,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_jewelry"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_jwellery"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -263,8 +256,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_kitchen_utensils"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_kitchen_appliences"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -296,8 +288,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_child"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_kids"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -326,8 +317,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_unicorn"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_baby_toys"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -359,8 +349,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_lingerie"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_lingerie"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -389,8 +378,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_boxers"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_men"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -422,8 +410,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_book"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_books"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -452,8 +439,7 @@
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_footwear"
-                    app:tint="@color/colorPrimary"/>
+                    android:src="@drawable/ic_footwear"/>
 
                 <TextView
                     android:layout_width="wrap_content"

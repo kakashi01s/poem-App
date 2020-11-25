@@ -7,6 +7,7 @@ import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.data.DataFactory
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.data.DataService
@@ -74,6 +75,7 @@ class Singleton : Application() {
         // set in-app defaults
         val remoteConfigDefaults = TreeMap<String?, Any?>()
         remoteConfigDefaults[Constants().SHOW_ADS] = false
+        remoteConfigDefaults[Constants().OPEN_BROWSER] = false
         remoteConfigDefaults[ForceUpdateChecker().KEY_UPDATE_REQUIRED] = false
         remoteConfigDefaults[ForceUpdateChecker().KEY_CURRENT_VERSION] = "1.0"
         remoteConfigDefaults[ForceUpdateChecker().KEY_UPDATE_URL] =

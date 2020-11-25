@@ -1,12 +1,13 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.utils
 
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.BuildConfig
+import com.firebase.ui.common.BuildConfig
+//import shopping.grocery.medicine.online.deals.coupons.compare.buy.BuildConfig
 
 
 class Constants {
 
     val SHOW_ADS = "show_ads"
-
+    val OPEN_BROWSER = "open_browser"
     val ADMOB_NATIVE_TEST = "ca-app-pub-3940256099942544/2247696110"
     val ADMOB_BANNER_TEST = "ca-app-pub-3940256099942544/6300978111"
     val ADMOB_INTERSTITIAL_TEST = "ca-app-pub-3940256099942544/1033173712"
