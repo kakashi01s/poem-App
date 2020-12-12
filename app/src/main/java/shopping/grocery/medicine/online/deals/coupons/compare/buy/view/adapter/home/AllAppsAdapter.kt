@@ -1,6 +1,7 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.home
 
 import android.content.Context
+import android.view.View.inflate
 import android.view.ViewGroup
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.adapter.GenericRecyclerAdapter
