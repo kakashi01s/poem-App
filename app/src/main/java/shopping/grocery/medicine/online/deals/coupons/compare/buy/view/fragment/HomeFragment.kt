@@ -41,7 +41,6 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.h
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.AllAppsItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.home.TrendingItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.HomeViewModel
-import kotlin.math.log
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

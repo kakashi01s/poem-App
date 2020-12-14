@@ -18,6 +18,7 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.ForceUpd
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.CategoryViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.HomeViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.DealsViewModel
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.GlobalViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewpager.AppPagerAdapter
 
 class MainActivity : BaseActivity(), ForceUpdateChecker.OnUpdateNeededListener {
@@ -26,6 +27,7 @@ class MainActivity : BaseActivity(), ForceUpdateChecker.OnUpdateNeededListener {
     var viewPagerTab: TabLayout? =null
     var fragmentPagerAdapter: FragmentPagerAdapter ?= null
     var homeViewModel: HomeViewModel? = null
+    var globalViewModel:GlobalViewModel? =null
     var dealsViewModel: DealsViewModel? = null
     var categoryViewModel: CategoryViewModel? = null
     var firebaseAnalytics: FirebaseAnalytics? = null
@@ -47,7 +49,7 @@ class MainActivity : BaseActivity(), ForceUpdateChecker.OnUpdateNeededListener {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         dealsViewModel = ViewModelProvider(this).get(DealsViewModel::class.java)
         categoryViewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
-
+        globalViewModel= ViewModelProvider(this).get(GlobalViewModel::class.java)
         viewPagerTab!!.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 Log.d("TAG", "onTabSelected: " + tab.position)
@@ -83,6 +85,7 @@ class MainActivity : BaseActivity(), ForceUpdateChecker.OnUpdateNeededListener {
 
     override fun onDestroy() {
         homeViewModel?.reset()
+       globalViewModel?.reset()
         dealsViewModel?.reset()
         categoryViewModel?.reset()
         super.onDestroy()
