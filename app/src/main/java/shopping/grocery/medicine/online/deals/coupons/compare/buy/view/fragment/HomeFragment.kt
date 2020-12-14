@@ -390,6 +390,14 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
                 startActivity(intent)
             }
         }
+        else{
+            val intent: Intent? = Intent(activity, WebActivity::class.java)
+            intent?.putExtra("title", item.get(1))
+            intent?.putExtra("url", item.get(2))
+            intent?.putExtra("app_icon", item.get(3))
+
+            startActivity(intent)
+        }
 
         val bundle = Bundle()
         bundle.putString("title", item.get(1))
