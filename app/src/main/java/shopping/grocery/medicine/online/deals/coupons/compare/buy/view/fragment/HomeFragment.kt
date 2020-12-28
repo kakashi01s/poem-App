@@ -375,21 +375,10 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
     override fun onAllCardClick(item: List<String>) {
         Log.d("TAG", "onAllCardClick: " + item.get(1))
-
-        if(item[1] == "Amazon"){
-
-            if(bool==true) {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(item[2]))
-                startActivity(browserIntent)
-            } else {
-                val intent: Intent? = Intent(activity, WebActivity::class.java)
-                intent?.putExtra("title", item.get(1))
-                intent?.putExtra("url", item.get(2))
-                intent?.putExtra("app_icon", item.get(3))
-
-                startActivity(intent)
-            }
-        }
+        val intent: Intent? = Intent(activity, WebActivity::class.java)
+        intent?.putExtra("title", item.get(1))
+        intent?.putExtra("url", item.get(2))
+        intent?.putExtra("app_icon", item.get(3))
 
         val bundle = Bundle()
         bundle.putString("title", item.get(1))
@@ -397,6 +386,8 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
         (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "all_apps_visited", true)
 
+
+        startActivity(intent)
     }
 
     override fun onTrendingClickListener(item: List<String>) {
