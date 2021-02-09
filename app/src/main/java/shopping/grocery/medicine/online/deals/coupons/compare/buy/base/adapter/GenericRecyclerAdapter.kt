@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.listener.BaseRecyclerListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.viewholder.BaseViewHolder
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.GlobalFragment
 import java.util.*
 
 abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : BaseViewHolder<T, L>?>(
@@ -162,8 +163,7 @@ abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : B
      */
     fun setListener(listener: L) {
         this.listener = listener
-    }
-    /**
+    }/**
      * Inflates a view.
      *
      * @param layout       layout to me inflater

@@ -41,7 +41,6 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.h
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.AllAppsItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.home.TrendingItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.HomeViewModel
-import kotlin.math.log
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -375,10 +374,29 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
     override fun onAllCardClick(item: List<String>) {
         Log.d("TAG", "onAllCardClick: " + item.get(1))
-        val intent: Intent? = Intent(activity, WebActivity::class.java)
-        intent?.putExtra("title", item.get(1))
-        intent?.putExtra("url", item.get(2))
-        intent?.putExtra("app_icon", item.get(3))
+
+        if(item[1] == "Amazon"){
+
+            if(bool==true) {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(item[2]))
+                startActivity(browserIntent)
+            } else {
+                val intent: Intent? = Intent(activity, WebActivity::class.java)
+                intent?.putExtra("title", item.get(1))
+                intent?.putExtra("url", item.get(2))
+                intent?.putExtra("app_icon", item.get(3))
+
+                startActivity(intent)
+            }
+        }
+        else{
+            val intent: Intent? = Intent(activity, WebActivity::class.java)
+            intent?.putExtra("title", item.get(1))
+            intent?.putExtra("url", item.get(2))
+            intent?.putExtra("app_icon", item.get(3))
+
+            startActivity(intent)
+        }
 
         val bundle = Bundle()
         bundle.putString("title", item.get(1))
@@ -386,8 +404,6 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
         (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "all_apps_visited", true)
 
-
-        startActivity(intent)
     }
 
     override fun onTrendingClickListener(item: List<String>) {

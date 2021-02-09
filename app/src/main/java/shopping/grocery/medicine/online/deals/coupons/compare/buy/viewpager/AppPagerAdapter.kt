@@ -3,12 +3,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.CategoryFragment
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.CategoryFragment.Companion.newInstance
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.FragmentHome
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.DealFragment
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.GlobalFragment
 
 class AppPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
 
-    val NUM_ITEMS = 3;
+    val NUM_ITEMS = 4;
 
     override fun getCount(): Int {
         return NUM_ITEMS
@@ -25,7 +27,9 @@ class AppPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(f
             2 -> {
                 return CategoryFragment.newInstance(position, "Category")
             }
-
+            3 -> {
+                return GlobalFragment.newInstance(position, "Global")
+            }
             else -> return FragmentHome.newInstance(position, "Home")
         }
     }
@@ -39,6 +43,9 @@ class AppPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(f
         }
         else if (position == 2) {
             title = "Category"
+        }
+        else if (position == 3) {
+            title = "Global"
         }
         return title
     }
