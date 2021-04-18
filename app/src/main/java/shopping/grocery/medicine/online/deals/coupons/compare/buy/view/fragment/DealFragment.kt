@@ -1,5 +1,6 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
@@ -7,14 +8,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import com.facebook.ads.*
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.MainActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.WebActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.DealsAdapter
@@ -43,6 +48,11 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
     var investDataList: ArrayList<List<String>>? = ArrayList()
     var firebaseAnalytics: FirebaseAnalytics? = null
 
+    var firebaseRemoteConfig: FirebaseRemoteConfig? = null
+    var btShowDeals: Button? = null
+    private var interstitialFbAd: com.facebook.ads.InterstitialAd? = null
+    private var adView: AdView? = null
+    var layoutShowVideo: View? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -67,20 +77,34 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
         setRecyclerView()
 
         dealsViewModel = ViewModelProvider(activity!!).get(DealsViewModel::class.java)
-
+        firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         dealsViewModel?.loadData()
-
+        if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
+            onLoadFbInterstitial()
+        }
         dealsViewModel!!.dealsLiveData.observe(this, Observer { t ->
             Log.d("TAG", "onViewCreated: Deals ${t?.size}")
             investDataList?.addAll(t!!)
             dealsAdapter?.notifyDataSetChanged()
         })
 
+        btShowDeals!!.setOnClickListener {
+            if(interstitialFbAd!!.isAdLoaded){
+                interstitialFbAd!!.show()
+            }
+            else{
+                onDisplayDeals()
+            }
+        }
+
+
     }
 
     fun initViews(view: View){
         firebaseAnalytics = FirebaseAnalytics.getInstance(activity!!)
         rvInvest = view.findViewById(R.id.rvInvest)
+        layoutShowVideo = view.findViewById(R.id.layoutShowVideo)
+        btShowDeals = layoutShowVideo!!.findViewById(R.id.btShowDeals)
     }
 
     fun setRecyclerView(){
@@ -108,6 +132,60 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
                 outRect.left = space
                 outRect.right = 0
             }
+        }
+    }
+    fun onLoadFbInterstitial() {
+        interstitialFbAd = InterstitialAd(context, Constants().getFbInterstitialWebExit())
+
+        val interstitialAdListener: InterstitialAdListener = object : InterstitialAdListener {
+            override fun onInterstitialDisplayed(ad: Ad) {
+                // Interstitial ad displayed callback
+                Log.e(TAG, "Interstitial ad displayed.")
+            }
+
+            override fun onInterstitialDismissed(ad: Ad) {
+                // Interstitial dismissed callback
+                Log.e(TAG, "Interstitial ad dismissed.")
+
+            }
+
+            override fun onError(ad: Ad?, adError: AdError) {
+                // Ad error callback
+                Log.e(TAG, "Interstitial ad failed to load: " + adError.getErrorMessage())
+            }
+
+            override fun onAdLoaded(ad: Ad) {
+                // Interstitial ad is loaded and ready to be displayed
+                Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!")
+                // Show the ad
+//                interstitialFbAd.show()
+            }
+
+            override fun onAdClicked(ad: Ad) {
+                // Ad clicked callback
+                Log.d(TAG, "Interstitial ad clicked!")
+            }
+
+            override fun onLoggingImpression(ad: Ad) {
+                // Ad impression logged callback
+                Log.d(TAG, "Interstitial ad impression logged!")
+            }
+        }
+
+        interstitialFbAd!!.loadAd(
+            interstitialFbAd!!.buildLoadAdConfig()
+                .withAdListener(interstitialAdListener)
+                .build()
+        );
+
+    }
+
+    fun onDisplayDeals(){
+        if(layoutShowVideo!!.visibility == View.VISIBLE){
+            layoutShowVideo!!.visibility = View.GONE
+        }
+        if(rvInvest!!.visibility == View.GONE){
+            rvInvest!!.visibility = View.VISIBLE
         }
     }
 

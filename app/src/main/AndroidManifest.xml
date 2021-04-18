@@ -4,6 +4,7 @@
     package="shopping.grocery.medicine.online.deals.coupons.compare.buy">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -40,6 +41,7 @@
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT"  android:value="DISABLE" />
 
 
     </application>

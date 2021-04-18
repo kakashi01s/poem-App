@@ -9,6 +9,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.onesignal.OneSignal
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.data.DataFactory
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.data.DataService
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
@@ -16,12 +17,13 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.ForceUpd
 import io.reactivex.Scheduler
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.AppNotificationOpenHandler
 import java.util.*
 
 class Singleton : Application() {
     private var dataService: DataService? = null
     private var scheduler: Scheduler? = null
-
+    private val ONESIGNAL_APP_ID ="df46e0a9-5880-4d88-ade5-f973c52a8a0e"
     companion object{
 
         var application: Singleton? = null
@@ -42,6 +44,13 @@ class Singleton : Application() {
                 "onCreate: " + throwable.message
             )
         }
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this)
+        OneSignal.setAppId(ONESIGNAL_APP_ID)
+        OneSignal.setNotificationOpenedHandler(AppNotificationOpenHandler(this))
+
 
         AudienceNetworkAds.initialize(this);
         if(BuildConfig.DEBUG){

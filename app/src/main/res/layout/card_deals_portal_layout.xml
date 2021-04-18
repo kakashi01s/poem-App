@@ -25,24 +25,27 @@
             android:layout_height="wrap_content"
             android:padding="10dp">
 
-            <ImageView
+            <TextView
                 android:id="@+id/ivDeals"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_hot_deal"/>
+                android:textStyle="bold"
+                android:text="Deals"/>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/black_25" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/tvCoupons"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="32dp"
-                android:src="@drawable/ic_coupons"/>
+                android:paddingLeft="3dp"
+                android:text="Coupon"
+                android:textStyle="bold"/>
 
 
         </LinearLayout>

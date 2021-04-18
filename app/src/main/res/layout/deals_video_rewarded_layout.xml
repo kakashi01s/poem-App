@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_hot_deal"
+        android:layout_marginBottom="40dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Press this button and watch a rewarded video to grab some amazing deals and coupons."
+        android:textSize="18sp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="@font/montserrat_semibold"/>
+
+    <Button
+        android:id="@+id/btShowDeals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Deals"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_button"
+        android:fontFamily="@font/montserrat_semibold"
+        />
+
+</LinearLayout>

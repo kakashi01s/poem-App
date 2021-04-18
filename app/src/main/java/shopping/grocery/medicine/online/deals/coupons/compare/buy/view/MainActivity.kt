@@ -23,7 +23,7 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.Glob
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewpager.AppPagerAdapter
 
 class MainActivity : BaseActivity(), ForceUpdateChecker.OnUpdateNeededListener {
-    private val ONESIGNAL_APP_ID ="df46e0a9-5880-4d88-ade5-f973c52a8a0e"
+
     var viewPager: CustomViewPager? = null
     var viewPagerTab: TabLayout? =null
     var fragmentPagerAdapter: FragmentPagerAdapter ?= null
@@ -45,11 +45,6 @@ class MainActivity : BaseActivity(), ForceUpdateChecker.OnUpdateNeededListener {
         setupViewPager()
 
         ForceUpdateChecker().with(this)!!.onUpdateNeeded(this).check()
-        // Enable verbose OneSignal logging to debug issues if needed.
-        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
-        // OneSignal Initialization
-        OneSignal.initWithContext(this);
-        OneSignal.setAppId(ONESIGNAL_APP_ID);
 
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         dealsViewModel = ViewModelProvider(this).get(DealsViewModel::class.java)

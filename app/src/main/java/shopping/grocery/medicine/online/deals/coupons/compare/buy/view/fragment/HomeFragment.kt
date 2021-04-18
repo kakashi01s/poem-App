@@ -1,5 +1,6 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -7,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.facebook.ads.*
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -71,6 +70,10 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
     var nativeAdHome1: UnifiedNativeAd? = null
     var nativeAdHome2: UnifiedNativeAd? = null
+    private var nativeAdFB1: NativeAd? = null
+    private var nativeAdFB2: NativeAd? = null
+    private var nativeAdLayout: NativeAdLayout? = null
+    private var adView: LinearLayout? = null
 
     var carouselImagesList: ArrayList<List<String>>? = ArrayList()
 //
@@ -127,15 +130,14 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
             trendingAdapter!!.setItems(t)
         })
 
-
-        if(firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)){
-            onLoadNativeAd1()
-            onLoadNativeAd2()
-        }
         if(firebaseRemoteConfig!!.getBoolean(Constants().OPEN_BROWSER)) {
             bool=true
         } else {
             bool=false
+        }
+        if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
+            onLoadFBNativeAd1(view, context!!)
+            onLoadFBNativeAd2(view, context!!)
         }
     }
 
@@ -205,142 +207,147 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(imageView)
     }
+    fun onLoadFBNativeAd1(view: View, context: Context) {
+        nativeAdFB1 = NativeAd(context, Constants().getFbNativeHome1())
+        val nativeAdListener: NativeAdListener = object : NativeAdListener {
+            override fun onError(p0: Ad?, p1: AdError?) {
+                Log.d("TAG", "onError: onLoadFBNativeAd1 " + p1!!.errorMessage)
+            }
 
+            override fun onAdLoaded(ad: Ad?) {
 
-    fun onLoadNativeAd1() {
+                // Race condition, load() called again before last ad was displayed
+                if (nativeAdFB1 == null || nativeAdFB1 !== ad) {
+                    return
+                }
+                // Inflate Native Ad into Container
 
-        val builder = AdLoader.Builder(context, Constants().getNativeHome1())
+                // Add the Ad view into the ad container.
+                nativeAdLayout = view.findViewById(R.id.native_ad_container_home_1)
+                val inflater = LayoutInflater.from(context)
+                // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
+                adView =
+                    inflater.inflate(
+                        R.layout.native_ad_layout,
+                        nativeAdLayout,
+                        false
+                    ) as LinearLayout
+                nativeAdLayout!!.addView(adView)
 
-        builder.forUnifiedNativeAd { unifiedNativeAd ->
-            // OnUnifiedNativeAdLoadedListener implementation.
-            val adView = layoutInflater
-                .inflate(R.layout.native_ads_layout, null) as UnifiedNativeAdView
-            nativeAdHome1?.destroy()
-            nativeAdHome1 = unifiedNativeAd
-            populateUnifiedNativeAdView(unifiedNativeAd, adView)
-            ad_frame.removeAllViews()
-            ad_frame.addView(adView)
+                inflateAd(nativeAdFB1!!, adView!!)
+
+                val adChoicesContainer: LinearLayout = view.findViewById(R.id.ad_choices_container)
+                val adOptionsView = AdOptionsView(context, nativeAdFB1, nativeAdLayout)
+                adChoicesContainer.removeAllViews()
+                adChoicesContainer.addView(adOptionsView, 0)
+            }
+
+            override fun onAdClicked(p0: Ad?) {
+                Log.d("TAG", "onAdClicked: onLoadFBNativeAd1")
+            }
+
+            override fun onLoggingImpression(p0: Ad?) {
+                Log.d("TAG", "onLoggingImpression: onLoadFBNativeAd1")
+            }
+
+            override fun onMediaDownloaded(p0: Ad?) {
+                Log.d("TAG", "onMediaDownloaded: onLoadFBNativeAd1")
+            }
         }
 
-        val adLoader = builder.withAdListener(object : AdListener() {
-            override fun onAdFailedToLoad(errorCode: Int) {
-                Log.d("TAG", "onAdFailedToLoad: Failed to load native ad: $errorCode")
-            }
-        }).build()
-
-        adLoader.loadAd(AdRequest.Builder().build())
-
+        nativeAdFB1!!.loadAd(
+            nativeAdFB1!!.buildLoadAdConfig()
+                .withAdListener(nativeAdListener)
+                .build()
+        );
     }
 
-    fun onLoadNativeAd2() {
-
-        val builder = AdLoader.Builder(context, Constants().getNativeHome2())
-
-        builder.forUnifiedNativeAd { unifiedNativeAd ->
-            // OnUnifiedNativeAdLoadedListener implementation.
-            val adView = layoutInflater
-                .inflate(R.layout.native_ads_layout, null) as UnifiedNativeAdView
-            nativeAdHome2?.destroy()
-            nativeAdHome2 = unifiedNativeAd
-            populateUnifiedNativeAdView(unifiedNativeAd, adView)
-            ad_frame_2.removeAllViews()
-            ad_frame_2.addView(adView)
-        }
-
-        val adLoader = builder.withAdListener(object : AdListener() {
-            override fun onAdFailedToLoad(errorCode: Int) {
-                Log.d("TAG", "onAdFailedToLoad: Failed to load native ad: $errorCode")
+    fun onLoadFBNativeAd2(view: View,context: Context) {
+        nativeAdFB2 = NativeAd(context, Constants().getFbNativeHome2())
+        val nativeAdListener: NativeAdListener = object : NativeAdListener {
+            override fun onError(p0: Ad?, p1: AdError?) {
+                Log.d("TAG", "onError: onLoadFBNativeAd1 " + p1!!.errorMessage)
             }
-        }).build()
 
-        adLoader.loadAd(AdRequest.Builder().build())
+            override fun onAdLoaded(ad: Ad?) {
 
+                // Race condition, load() called again before last ad was displayed
+                if (nativeAdFB2 == null || nativeAdFB2 !== ad) {
+                    return
+                }
+                // Inflate Native Ad into Container
+
+                // Add the Ad view into the ad container.
+                nativeAdLayout = view.findViewById(R.id.native_ad_container_home_2)
+                val inflater = LayoutInflater.from(context)
+                // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
+                adView =
+                    inflater.inflate(
+                        R.layout.native_ad_layout,
+                        nativeAdLayout,
+                        false
+                    ) as LinearLayout
+                nativeAdLayout!!.addView(adView)
+
+                inflateAd(nativeAdFB2!!, adView!!)
+
+                val adChoicesContainer: LinearLayout = view.findViewById(R.id.ad_choices_container)
+                val adOptionsView = AdOptionsView(context, nativeAdFB2, nativeAdLayout)
+                adChoicesContainer.removeAllViews()
+                adChoicesContainer.addView(adOptionsView, 0)
+            }
+
+            override fun onAdClicked(p0: Ad?) {
+                Log.d("TAG", "onAdClicked: onLoadFBNativeAd1")
+            }
+
+            override fun onLoggingImpression(p0: Ad?) {
+                Log.d("TAG", "onLoggingImpression: onLoadFBNativeAd1")
+            }
+
+            override fun onMediaDownloaded(p0: Ad?) {
+                Log.d("TAG", "onMediaDownloaded: onLoadFBNativeAd1")
+            }
+        }
+
+        nativeAdFB2!!.loadAd(
+            nativeAdFB2!!.buildLoadAdConfig()
+                .withAdListener(nativeAdListener)
+                .build()
+        );
     }
+    private fun inflateAd(nativeAd: NativeAd, adView: LinearLayout) {
+        nativeAd.unregisterView()
 
+        // Add the AdOptionsView
 
-    fun populateUnifiedNativeAdView(nativeAd: UnifiedNativeAd, adView: UnifiedNativeAdView) {
-//        val headlineView = adView.findViewById<TextView>(R.id.ad_headline)
-//        headlineView.text = nativeAd.headline
-//        adView.headlineView = headlineView
-//
-//        val bodyView = adView.findViewById<TextView>(R.id.ad_body)
-//        bodyView.text = nativeAd.body
-//        adView.bodyView = bodyView
+        // Create native UI using the ad metadata.
+        val nativeAdIcon: com.facebook.ads.MediaView = adView.findViewById(R.id.native_ad_icon)
+        val nativeAdTitle: TextView = adView.findViewById(R.id.native_ad_title)
+        val nativeAdMedia: com.facebook.ads.MediaView = adView.findViewById(R.id.native_ad_media)
+        val nativeAdSocialContext: TextView = adView.findViewById(R.id.native_ad_social_context)
+        val nativeAdBody: TextView = adView.findViewById(R.id.native_ad_body)
+        val sponsoredLabel: TextView = adView.findViewById(R.id.native_ad_sponsored_label)
+        val nativeAdCallToAction: Button = adView.findViewById(R.id.native_ad_call_to_action)
 
-        adView.mediaView = adView.findViewById<MediaView>(R.id.ad_media)
+        // Set the Text.
+        nativeAdTitle.text = nativeAd.advertiserName
+        nativeAdBody.text = nativeAd.adBodyText
+        nativeAdSocialContext.text = nativeAd.adSocialContext
+        nativeAdCallToAction.visibility =
+            if (nativeAd.hasCallToAction()) View.VISIBLE else View.INVISIBLE
+        nativeAdCallToAction.text = nativeAd.adCallToAction
+        sponsoredLabel.text = nativeAd.sponsoredTranslation
 
-        // Set other ad assets.
-        adView.headlineView = adView.findViewById(R.id.ad_headline)
-        adView.bodyView = adView.findViewById(R.id.ad_body)
-        adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
-        adView.iconView = adView.findViewById(R.id.ad_app_icon)
-        adView.priceView = adView.findViewById(R.id.ad_price)
-        adView.starRatingView = adView.findViewById(R.id.ad_stars)
-        adView.storeView = adView.findViewById(R.id.ad_store)
-        adView.advertiserView = adView.findViewById(R.id.ad_advertiser)
+        // Create a list of clickable views
+        val clickableViews: ArrayList<View> = ArrayList()
+        clickableViews.add(nativeAdTitle)
+        clickableViews.add(nativeAdCallToAction)
 
-        // The headline and media content are guaranteed to be in every UnifiedNativeAd.
-        (adView.headlineView as TextView).text = nativeAd.headline
-        adView.mediaView.setImageScaleType(ImageView.ScaleType.FIT_XY)
-        adView.mediaView.setMediaContent(nativeAd.mediaContent)
-
-        // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
-        // check before trying to display them.
-        if (nativeAd.body == null) {
-            adView.bodyView.visibility = View.INVISIBLE
-        } else {
-            adView.bodyView.visibility = View.VISIBLE
-            (adView.bodyView as TextView).text = nativeAd.body
-        }
-
-        if (nativeAd.callToAction == null) {
-            adView.callToActionView.visibility = View.INVISIBLE
-        } else {
-            adView.callToActionView.visibility = View.VISIBLE
-            (adView.callToActionView as Button).text = nativeAd.callToAction
-        }
-
-        if (nativeAd.icon == null) {
-            adView.iconView.visibility = View.GONE
-        } else {
-            (adView.iconView as ImageView).setImageDrawable(
-                nativeAd.icon.drawable
-            )
-            adView.iconView.visibility = View.VISIBLE
-        }
-
-        if (nativeAd.price == null) {
-            adView.priceView.visibility = View.INVISIBLE
-        } else {
-            adView.priceView.visibility = View.VISIBLE
-            (adView.priceView as TextView).text = nativeAd.price
-        }
-
-        if (nativeAd.store == null) {
-            adView.storeView.visibility = View.INVISIBLE
-        } else {
-            adView.storeView.visibility = View.VISIBLE
-            (adView.storeView as TextView).text = nativeAd.store
-        }
-
-        if (nativeAd.starRating == null) {
-            adView.starRatingView.visibility = View.INVISIBLE
-        } else {
-            (adView.starRatingView as RatingBar).rating = nativeAd.starRating!!.toFloat()
-            adView.starRatingView.visibility = View.VISIBLE
-        }
-
-        if (nativeAd.advertiser == null) {
-            adView.advertiserView.visibility = View.INVISIBLE
-        } else {
-            (adView.advertiserView as TextView).text = nativeAd.advertiser
-            adView.advertiserView.visibility = View.VISIBLE
-        }
-
-        // This method tells the Google Mobile Ads SDK that you have finished populating your
-        // native ad view with this native ad.
-        adView.setNativeAd(nativeAd)
-
+        // Register the Title and CTA button to listen for clicks.
+        nativeAd.registerViewForInteraction(
+            adView, nativeAdMedia, nativeAdIcon, clickableViews
+        )
     }
 
     override fun onDestroy() {
