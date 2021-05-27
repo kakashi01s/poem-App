@@ -154,6 +154,7 @@ class GlobalFragment : BaseFragment(), CountryItemClickListener<List<String>> {
         dialog = Dialog(context!!)
 
         globalViewModel = ViewModelProvider(activity!!).get( GlobalViewModel ::class.java)
+
         globalViewModel?.loadData()
 
         globalViewModel!!.indiaLiveData.observe(this, Observer { t ->

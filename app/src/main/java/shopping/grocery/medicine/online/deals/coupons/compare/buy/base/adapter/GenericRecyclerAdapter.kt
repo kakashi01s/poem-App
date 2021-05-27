@@ -1,23 +1,29 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.base.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.listener.BaseRecyclerListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.viewholder.BaseViewHolder
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.GlobalFragment
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.AllAppsModel
 import java.util.*
+import kotlin.collections.ArrayList
 
 abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : BaseViewHolder<T, L>?>(
     context: Context?
 ) :
     RecyclerView.Adapter<VH>() {
-    private val items: MutableList<T>?
+
+    private var items: MutableList<T>?
     private var listener: L? = null
-    private val layoutInflater: LayoutInflater
+    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
+
 
     /**
      * To be implemented in as specific adapter
@@ -40,6 +46,8 @@ abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : B
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items!![position]
         holder?.onBind(item, listener)
+
+
     }
 
     /**
@@ -60,7 +68,7 @@ abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : B
     fun setItems(items: List<T>?) {
         requireNotNull(items) { "Cannot set `null` item to the Recycler adapter" }
         this.items!!.clear()
-        this.items.addAll(items)
+        this.items!!.addAll(items)
         notifyDataSetChanged()
     }
 
@@ -91,7 +99,7 @@ abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : B
     fun add(item: T?) {
         requireNotNull(item) { "Cannot add null item to the Recycler adapter" }
         items!!.add(item)
-        notifyItemInserted(items.size - 1)
+        notifyItemInserted(items!!.size - 1)
     }
 
     /**
@@ -103,7 +111,7 @@ abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : B
     fun addAll(items: List<T>?) {
         requireNotNull(items) { "Cannot add `null` items to the Recycler adapter" }
         this.items!!.addAll(items)
-        notifyItemRangeInserted(this.items.size - items.size, items.size)
+        notifyItemRangeInserted(this.items!!.size - items.size, items.size)
     }
 
     /**
@@ -123,7 +131,7 @@ abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : B
     fun remove(item: T) {
         val position = items!!.indexOf(item)
         if (position > -1) {
-            items.removeAt(position)
+            items!!.removeAt(position)
             notifyItemRemoved(position)
         }
     }
@@ -163,7 +171,8 @@ abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : B
      */
     fun setListener(listener: L) {
         this.listener = listener
-    }/**
+    }
+    /**
      * Inflates a view.
      *
      * @param layout       layout to me inflater
@@ -193,7 +202,6 @@ abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : B
      * @param context Context needed to retrieve LayoutInflater
      */
     init {
-        layoutInflater = LayoutInflater.from(context)
         items = ArrayList()
     }
 }

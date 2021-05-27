@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/id_home"
+        android:icon="@drawable/shop"
+        app:exb_color="#FFF"
+        android:orderInCategory="1"
+        android:title="Home" />
+    <item
+        android:id="@+id/id_category"
+        android:icon="@drawable/ic_category"
+        android:orderInCategory="2"
+        app:exb_color="#FFF"
+        android:title="Category" />
+    <item
+        android:id="@+id/id_deals"
+        android:icon="@drawable/ic_deal"
+        android:orderInCategory="3"
+        app:exb_color="#FFF"
+        android:title="Deals" />
+
+    <item
+        android:id="@+id/bookmark"
+        android:icon="@drawable/ic_bookmark_border"
+        android:orderInCategory="4"
+        app:exb_color="#FFF"
+        android:title="Bookmark"/>
+
+</menu>

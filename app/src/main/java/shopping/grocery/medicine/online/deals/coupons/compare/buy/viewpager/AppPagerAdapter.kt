@@ -17,18 +17,18 @@ class AppPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(f
     }
 
     override fun getItem(position: Int): Fragment {
-        when (position){
+        return when (position){
             0 -> {
-                return DealFragment.newInstance(position, "Deals")
+                DealFragment.newInstance(position, "Deals")
             }
             1 -> {
-                return FragmentHome.newInstance(position, "Home")
+                FragmentHome.newInstance(position, "Home")
             }
             2 -> {
-                return CategoryFragment.newInstance(position, "Category")
+                CategoryFragment.newInstance(position, "Category")
             }
 
-            else -> return FragmentHome.newInstance(position, "Home")
+            else -> FragmentHome.newInstance(position, "Home")
         }
     }
 

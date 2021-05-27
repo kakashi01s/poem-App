@@ -8,7 +8,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,18 +21,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.ads.*
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.formats.MediaView
 import com.google.android.gms.ads.formats.UnifiedNativeAd
-import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageClickListener
 import com.synnapps.carouselview.ImageListener
-import kotlinx.android.synthetic.main.fragment_home.*
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseFragment
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
@@ -51,7 +48,8 @@ private const val ARG_PARAM2 = "param2"
  * Use the [FragmentHome.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, TrendingItemClickListener<List<String>> {
+class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
+    TrendingItemClickListener<List<String>> {
     // TODO: Rename and change types of parameters
     private var param1: Int? = null
     private var param2: String? = null
@@ -75,6 +73,8 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
     private var nativeAdLayout: NativeAdLayout? = null
     private var adView: LinearLayout? = null
 
+    lateinit var search: ImageView
+
     var carouselImagesList: ArrayList<List<String>>? = ArrayList()
 //
 //    var nativeAdHome1: UnifiedNativeAd? = null
@@ -84,7 +84,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
         get() = 0
     override val layoutId: Int
         get() = 0
-    var bool : Boolean = false
+    var bool: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -110,7 +110,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
         setRecyclerView()
 
-        homeViewModel = ViewModelProvider(activity!!).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
 
         homeViewModel?.loadData()
 
@@ -130,10 +130,10 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
             trendingAdapter!!.setItems(t)
         })
 
-        if(firebaseRemoteConfig!!.getBoolean(Constants().OPEN_BROWSER)) {
-            bool=true
+        if (firebaseRemoteConfig!!.getBoolean(Constants().OPEN_BROWSER)) {
+            bool = true
         } else {
-            bool=false
+            bool = false
         }
         if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
             onLoadFBNativeAd1(view, context!!)
@@ -169,7 +169,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
     }
 
-    fun onLoadCarouselImages(){
+    fun onLoadCarouselImages() {
         Log.d("TAG", "onLoadCarouselImages: " + carouselImagesList!!.size)
 
         carouselView!!.setImageListener(imageListener)
@@ -182,18 +182,18 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
     var imageClickListener: ImageClickListener = ImageClickListener { position ->
         val intent: Intent? = Intent(activity, WebActivity::class.java)
-            intent?.putExtra("title", carouselImagesList!![position][1])
-            intent?.putExtra("url", carouselImagesList!![position][2])
-            intent?.putExtra("app_icon", carouselImagesList!![position][4])
+        intent?.putExtra("title", carouselImagesList!![position][1])
+        intent?.putExtra("url", carouselImagesList!![position][2])
+        intent?.putExtra("app_icon", carouselImagesList!![position][4])
 
-            val bundle = Bundle()
-            bundle.putString("title", carouselImagesList!![position][1])
-            bundle.putString("url", carouselImagesList!![position][2])
+        val bundle = Bundle()
+        bundle.putString("title", carouselImagesList!![position][1])
+        bundle.putString("url", carouselImagesList!![position][2])
 
-            (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "carousel_images_visited", true)
+        (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "carousel_images_visited", true)
 
 
-            startActivity(intent)
+        startActivity(intent)
     }
 
 
@@ -207,6 +207,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(imageView)
     }
+
     fun onLoadFBNativeAd1(view: View, context: Context) {
         nativeAdFB1 = NativeAd(context, Constants().getFbNativeHome1())
         val nativeAdListener: NativeAdListener = object : NativeAdListener {
@@ -262,7 +263,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
         );
     }
 
-    fun onLoadFBNativeAd2(view: View,context: Context) {
+    fun onLoadFBNativeAd2(view: View, context: Context) {
         nativeAdFB2 = NativeAd(context, Constants().getFbNativeHome2())
         val nativeAdListener: NativeAdListener = object : NativeAdListener {
             override fun onError(p0: Ad?, p1: AdError?) {
@@ -316,6 +317,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
                 .build()
         );
     }
+
     private fun inflateAd(nativeAd: NativeAd, adView: LinearLayout) {
         nativeAd.unregisterView()
 
@@ -382,9 +384,9 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
     override fun onAllCardClick(item: List<String>) {
         Log.d("TAG", "onAllCardClick: " + item.get(1))
 
-        if(item[1] == "Amazon"){
+        if (item[1] == "Amazon") {
 
-            if(bool==true) {
+            if (bool == true) {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(item[2]))
                 startActivity(browserIntent)
             } else {
@@ -395,12 +397,11 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>, Tre
 
                 startActivity(intent)
             }
-        }
-        else{
-            val intent: Intent? = Intent(activity, WebActivity::class.java)
-            intent?.putExtra("title", item.get(1))
-            intent?.putExtra("url", item.get(2))
-            intent?.putExtra("app_icon", item.get(3))
+        } else {
+            val intent: Intent = Intent(activity, WebActivity::class.java)
+            intent.putExtra("title", item.get(1))
+            intent.putExtra("url", item.get(2))
+            intent.putExtra("app_icon", item.get(3))
 
             startActivity(intent)
         }

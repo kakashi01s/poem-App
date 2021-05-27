@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        app:cardCornerRadius="30sp">
+
+        <EditText
+            android:id="@+id/app_search"
+            android:drawableStart="@drawable/ic_search"
+            android:paddingHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#4ED1C6"
+            android:drawableLeft="@drawable/ic_search" />
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_rvCategoryStores"
+        android:layout_width="match_parent"
+        android:layout_height="452dp"
+        android:layout_marginTop="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.facebook.ads.NativeAdLayout
+            android:id="@+id/search_native_ad_container_dailog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

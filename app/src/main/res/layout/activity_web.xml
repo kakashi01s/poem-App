@@ -25,6 +25,45 @@
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/webViewMain"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="40dp"
+            android:src="@drawable/ic_add"
+            app:elevation="40dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/button1"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="40dp"
+            android:visibility="invisible"
+            android:src="@drawable/ic_add"
+            app:elevation="40dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_alignBottom="@+id/webViewMain"
+            android:layout_toStartOf="@+id/button1"
+            android:layout_marginBottom="20dp"
+            android:elevation="40dp"
+            android:visibility="invisible"
+            android:src="@drawable/ic_add"
+            app:elevation="40dp" />
+
     </RelativeLayout>
 
     <RelativeLayout

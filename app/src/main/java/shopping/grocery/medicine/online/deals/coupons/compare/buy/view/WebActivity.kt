@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.webkit.*
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -19,13 +20,11 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.ads.*
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import kotlinx.android.synthetic.main.activity_web.*
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
-import kotlinx.android.synthetic.main.activity_web.*
 
 
 class WebActivity : AppCompatActivity() {
@@ -53,6 +52,12 @@ class WebActivity : AppCompatActivity() {
 
     private val LOCATION_PERMISSION_CODE = 1
 
+    lateinit var btn1: FloatingActionButton
+    lateinit var btn2: FloatingActionButton
+    lateinit var btn3: FloatingActionButton
+
+    private var clicked = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
@@ -62,7 +67,7 @@ class WebActivity : AppCompatActivity() {
 
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
-        if(firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)){
+        if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
 
             onFbBannerAds()
             onLoadFbInterstitial()
@@ -78,15 +83,30 @@ class WebActivity : AppCompatActivity() {
 
         webView?.loadUrl(appUrl)
 
+        btn1.setOnClickListener {
+        //    Toast.makeText(it.context, "Clicked", Toast.LENGTH_SHORT).show()
+            onButtonClicked()
+        }
+
+        btn2.setOnClickListener {
+            Toast.makeText(it.context, "Clicked", Toast.LENGTH_SHORT).show()
+        }
+
+        btn3.setOnClickListener {
+            Toast.makeText(it.context, "Clicked", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    fun initViews(){
+    fun initViews() {
         webView = findViewById(R.id.webViewMain)
         rlWebSplash = findViewById(R.id.rlWebSplash)
         ivAppIcon = findViewById(R.id.ivAppIcon)
+        btn1 = findViewById(R.id.button1)
+        btn2 = findViewById(R.id.button2)
+        btn3 = findViewById(R.id.button3)
     }
 
-    fun initData(){
+    fun initData() {
         val bundle: Bundle? = intent.extras
         appUrl = bundle?.getString("url")
         appIcon = bundle?.getString("app_icon")
@@ -94,7 +114,58 @@ class WebActivity : AppCompatActivity() {
 
     }
 
-    fun webViewSettings(){
+    private fun onButtonClicked() {
+        if (!clicked) {
+            btn3.visibility = View.VISIBLE
+            btn2.visibility = View.VISIBLE
+        } else {
+            btn3.visibility = View.INVISIBLE
+            btn2.visibility = View.INVISIBLE
+        }
+
+        if (!clicked) {
+            btn3.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.from_left))
+            btn2.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.from_bottom
+                )
+            )
+            btn1.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.rotate_open
+                )
+            )
+        } else {
+            btn3.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.to_left))
+            btn2.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.to_bottom
+                )
+            )
+            btn1.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.rotate_close
+                )
+            )
+        }
+
+        if (!clicked) {
+            btn3.isClickable = true
+            btn2.isClickable = true
+        } else {
+            btn3.isClickable = false
+            btn2.isClickable = false
+        }
+
+
+        clicked = !clicked
+    }
+
+    fun webViewSettings() {
         webView!!.settings.loadsImagesAutomatically = true
         webView!!.settings.javaScriptEnabled = true
         webView!!.settings.allowContentAccess = true
@@ -133,7 +204,7 @@ class WebActivity : AppCompatActivity() {
             }
         }
 
-        webView!!.webChromeClient = object : WebChromeClient(){
+        webView!!.webChromeClient = object : WebChromeClient() {
 
             override fun onGeolocationPermissionsShowPrompt(
                 origin: String?,
@@ -185,7 +256,7 @@ class WebActivity : AppCompatActivity() {
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
-                if(newProgress >= 80){
+                if (newProgress >= 80) {
                     rlWebSplash!!.visibility = View.GONE
                 }
             }
@@ -219,7 +290,7 @@ class WebActivity : AppCompatActivity() {
 
     }
 
-    fun loadWebSplash(){
+    fun loadWebSplash() {
         Glide.with(ivAppIcon!!.context)
             .load(appIcon)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -316,7 +387,7 @@ class WebActivity : AppCompatActivity() {
 
     // Called before the activity is destroyed
     public override fun onDestroy() {
-        if(adView!=null){
+        if (adView != null) {
             adView!!.destroy()
         }
         super.onDestroy()
@@ -327,19 +398,19 @@ class WebActivity : AppCompatActivity() {
         if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
             super.onBackPressed()
         } else {
-            Toast.makeText(getBaseContext(), "Double click to exit!",
-                Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                getBaseContext(), "Double click to exit!",
+                Toast.LENGTH_SHORT
+            ).show();
             if (webView!!.canGoBack()) {
                 webView!!.goBack()
-            }
-            else{
-                if (interstitialFbAd!=null && interstitialFbAd!!.isAdLoaded) {
+            } else {
+                if (interstitialFbAd != null && interstitialFbAd!!.isAdLoaded) {
                     if (interstitialFbAd!!.isAdInvalidated) {
                     } else {
                         interstitialFbAd!!.show()
                     }
-                }
-                else{
+                } else {
                     super.onBackPressed()
                 }
 
