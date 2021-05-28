@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -20,6 +21,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.BuildConfig
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar
+import me.toptas.fancyshowcase.FancyShowCaseView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.CustomViewPager
@@ -34,6 +36,7 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.Deal
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.GlobalViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.HomeViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewpager.AppPagerAdapter
+
 
 class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
     ForceUpdateChecker.OnUpdateNeededListener {
@@ -120,21 +123,26 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         bottomNav.onItemSelectedListener = { view, menuItem, bool ->
             when (menuItem.id) {
                 R.id.id_home -> {
+                    fancy(view, "Home")
                     supportFragmentManager.beginTransaction().replace(R.id.frame, FragmentHome())
                         .commit()
                 }
                 R.id.id_category -> {
+                    fancy(view, "Category")
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frame, CategoryFragment())
                         .commit()
 
                 }
                 R.id.id_deals -> {
+                    fancy(view, "Deals")
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frame, DealFragment())
                         .commit()
                 }
             }
+        }
+        search.setOnClickListener {
         }
     }
 
@@ -144,6 +152,11 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 //        viewPager = findViewById(R.id.vpPager)
 //        viewPagerTab = findViewById(R.id.view_pager_tab)
         search = findViewById(R.id.search)
+    }
+
+    private fun fancy(it: View, title : String) {
+        return FancyShowCaseView.Builder(this).focusOn(it).title(title).delay(50).build()
+            .show()
     }
 
     private fun onShowStores(list: ArrayList<List<String>>) {

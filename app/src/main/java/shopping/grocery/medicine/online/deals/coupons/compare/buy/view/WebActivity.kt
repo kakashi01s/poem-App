@@ -72,7 +72,13 @@ class WebActivity : AppCompatActivity() {
             onFbBannerAds()
             onLoadFbInterstitial()
         }
+
+
+
         loadWebSplash()
+        ivAppIcon?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.zoom_in))
+
+      //  ivAppIcon?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.bounce))
 
         ActivityCompat.requestPermissions(
             this,
@@ -84,7 +90,7 @@ class WebActivity : AppCompatActivity() {
         webView?.loadUrl(appUrl)
 
         btn1.setOnClickListener {
-        //    Toast.makeText(it.context, "Clicked", Toast.LENGTH_SHORT).show()
+            //    Toast.makeText(it.context, "Clicked", Toast.LENGTH_SHORT).show()
             onButtonClicked()
         }
 
@@ -165,7 +171,7 @@ class WebActivity : AppCompatActivity() {
         clicked = !clicked
     }
 
-    fun webViewSettings() {
+    private fun webViewSettings() {
         webView!!.settings.loadsImagesAutomatically = true
         webView!!.settings.javaScriptEnabled = true
         webView!!.settings.allowContentAccess = true
