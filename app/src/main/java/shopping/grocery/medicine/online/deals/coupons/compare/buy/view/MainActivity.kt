@@ -124,6 +124,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             when (menuItem.id) {
                 R.id.id_home -> {
                     fancy(view, "Home")
+
                     supportFragmentManager.beginTransaction().replace(R.id.frame, FragmentHome())
                         .commit()
                 }
