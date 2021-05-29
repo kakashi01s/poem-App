@@ -26,6 +26,7 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.CustomViewPager
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.ForceUpdateChecker
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.helper
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.home.AllAppsAdapter
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.CategoryFragment
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.DealFragment
@@ -124,7 +125,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             when (menuItem.id) {
                 R.id.id_home -> {
                     fancy(view, "Home")
-
                     supportFragmentManager.beginTransaction().replace(R.id.frame, FragmentHome())
                         .commit()
                 }

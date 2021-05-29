@@ -11,11 +11,6 @@ import com.firebase.ui.common.BuildConfig
 class Constants {
 
 
-    fun Context.makeToast(message: String) {
-        val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
-        toast.view.setBackgroundColor(Color.parseColor("#53b9fb"))
-        toast.show()
-    }
 
     val SHOW_ADS = "show_ads"
     val OPEN_BROWSER = "open_browser"
