@@ -16,29 +16,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.ads.*
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.formats.MediaView
-import com.google.android.gms.ads.formats.UnifiedNativeAd
-import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_category.*
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseFragment
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.category.Calculator
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.category.TechnicalChart
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.MainActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.WebActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.CategoryStoresAdapter
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.CategoryStoresItemClickListener
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.viewholder.CalculatorViewHolder
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.viewholder.TechnicalChartViewHolder
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.CategoryViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -63,9 +50,6 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
 
     var firebaseRemoteConfig: FirebaseRemoteConfig? = null
     var firebaseAnalytics: FirebaseAnalytics? = null
-
-    var nativeAdCat1: UnifiedNativeAd? = null
-    var nativeAdCat2: UnifiedNativeAd? = null
     private var nativeAdFB1: NativeAd? = null
     private var nativeAdFB2: NativeAd? = null
     private var nativeAdFB3: NativeAd? = null
@@ -517,8 +501,6 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
     }
 
     override fun onDestroy() {
-        nativeAdCat1?.destroy()
-        nativeAdCat2?.destroy()
         categoryViewModel?.reset()
         super.onDestroy()
     }

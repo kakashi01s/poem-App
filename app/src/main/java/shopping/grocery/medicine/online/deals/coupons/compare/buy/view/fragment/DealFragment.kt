@@ -50,7 +50,7 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
 
     var firebaseRemoteConfig: FirebaseRemoteConfig? = null
     var btShowDeals: Button? = null
-    private var interstitialFbAd: com.facebook.ads.InterstitialAd? = null
+    private var interstitialFbAd: InterstitialAd? = null
     private var adView: AdView? = null
     var layoutShowVideo: View? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,8 +89,10 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
         })
 
         btShowDeals!!.setOnClickListener {
-            if(interstitialFbAd!!.isAdLoaded){
-                interstitialFbAd!!.show()
+            if(interstitialFbAd!=null){
+                if(interstitialFbAd!!.isAdLoaded){
+                    interstitialFbAd!!.show()
+                }
             }
             else{
                 onDisplayDeals()
@@ -111,7 +113,7 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
         dealsAdapter = DealsAdapter(context, investDataList!!, this, this)
         rvInvest.apply {
             rvInvest?.layoutManager = GridLayoutManager(context, 2)
-            rvInvest!!.addItemDecoration(SpacesItemDecoration(20))
+            rvInvest!!.addItemDecoration(SpacesItemDecoration(50))
             rvInvest?.adapter = dealsAdapter
         }
     }

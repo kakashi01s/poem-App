@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.Log
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
-import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -57,23 +56,10 @@ class Singleton : Application() {
             AdSettings.setIntegrationErrorMode(AdSettings.IntegrationErrorMode.INTEGRATION_ERROR_CRASH_DEBUG_MODE);
         }
 
-        MobileAds.initialize(this) { initializationStatus ->
-            val statusMap =
-                initializationStatus.adapterStatusMap
-            for (adapterClass in statusMap.keys) {
-                val status = statusMap[adapterClass]
-                Log.d("MyApp", String.format(
-                    "Adapter name: %s, Description: %s, Latency: %d",
-                    adapterClass, status!!.description, status.latency))
-            }
-
-            // Start loading ads here...
-        }
-
         if (BuildConfig.DEBUG){
-            AdSettings.setTestMode(true);
+            AdSettings.setTestMode(true)
         }else{
-            AdSettings.setTestMode(false);
+            AdSettings.setTestMode(false)
         }
         val firebaseRemoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 

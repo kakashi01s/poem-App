@@ -23,7 +23,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/ivDeals"
@@ -31,12 +32,14 @@
                 android:layout_weight="1"
                 android:layout_height="30dp"
                 android:textStyle="bold"
-                android:text="Deals"/>
+                android:text="Deals"
+                android:gravity="center"/>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/black_25" />
+                android:background="@color/black_25"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/tvCoupons"
@@ -45,7 +48,8 @@
                 android:layout_height="32dp"
                 android:paddingLeft="3dp"
                 android:text="Coupon"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:gravity="center"/>
 
 
         </LinearLayout>
