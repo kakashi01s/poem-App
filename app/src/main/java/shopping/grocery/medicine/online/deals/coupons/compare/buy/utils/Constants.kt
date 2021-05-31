@@ -1,10 +1,16 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.utils
 
+import android.content.Context
+import android.graphics.Color
+import android.widget.Toast
 import com.firebase.ui.common.BuildConfig
+
 //import shopping.grocery.medicine.online.deals.coupons.compare.buy.BuildConfig
 
 
 class Constants {
+
+
 
     val SHOW_ADS = "show_ads"
     val OPEN_BROWSER = "open_browser"
@@ -40,12 +46,14 @@ class Constants {
         else
             FB_NATIVE_CAT_1
     }
+
     fun getFbNativeCat2(): String {
         return if (BuildConfig.DEBUG)
             FB_ADS_TEST
         else
             FB_NATIVE_CAT_2
     }
+
     fun getFbNativeDailog(): String {
         return if (BuildConfig.DEBUG)
             FB_ADS_TEST
@@ -67,11 +75,6 @@ class Constants {
         else
             FB_INTERSTITIAL_WEB_EXIT
     }
-
-
-
-
-
 
 
 }
