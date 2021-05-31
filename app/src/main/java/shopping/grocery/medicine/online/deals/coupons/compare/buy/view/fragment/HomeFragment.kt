@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.ads.*
-import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.synnapps.carouselview.CarouselView
@@ -66,8 +65,6 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
     var firebaseRemoteConfig: FirebaseRemoteConfig? = null
     var firebaseAnalytics: FirebaseAnalytics? = null
 
-    var nativeAdHome1: UnifiedNativeAd? = null
-    var nativeAdHome2: UnifiedNativeAd? = null
     private var nativeAdFB1: NativeAd? = null
     private var nativeAdFB2: NativeAd? = null
     private var nativeAdLayout: NativeAdLayout? = null
@@ -114,35 +111,31 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
 
         homeViewModel?.loadData()
 
-        homeViewModel!!.allAppsLiveData.observe(this, Observer { t ->
+        homeViewModel!!.allAppsLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "HomeFragment Live allAppsLiveData$t")
             allAppsAdapter?.setItems(t)
         })
 
-        homeViewModel!!.carouselImagesLiveData.observe(this, Observer { t ->
+        homeViewModel!!.carouselImagesLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "HomeFragment Live carousel $t")
             carouselImagesList!!.addAll(t!!)
             onLoadCarouselImages()
         })
 
-        homeViewModel!!.trendingLiveData.observe(this, Observer { t ->
+        homeViewModel!!.trendingLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "HomeFragment Live trendingLiveData $t")
             trendingAdapter!!.setItems(t)
         })
 
-        if (firebaseRemoteConfig!!.getBoolean(Constants().OPEN_BROWSER)) {
-            bool = true
-        } else {
-            bool = false
-        }
+
         if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
-            onLoadFBNativeAd1(view, context!!)
-            onLoadFBNativeAd2(view, context!!)
+            onLoadFBNativeAd1(view, requireContext())
+            onLoadFBNativeAd2(view, requireContext())
         }
     }
 
     fun initViews(view: View) {
-        firebaseAnalytics = FirebaseAnalytics.getInstance(activity!!)
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireActivity())
         carouselView = view.findViewById(R.id.cvHome)
         rvAllApps = view.findViewById(R.id.rvAllApps)
         rvTrending = view.findViewById(R.id.rvTrending)
@@ -152,7 +145,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
         allAppsAdapter = AllAppsAdapter(context)
         allAppsAdapter!!.setListener(this)
         rvAllApps.apply {
-            rvAllApps?.layoutManager = GridLayoutManager(activity, 3)
+            rvAllApps?.layoutManager = GridLayoutManager(activity, 4)
             rvAllApps?.adapter = allAppsAdapter
         }
 
@@ -353,8 +346,6 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
     }
 
     override fun onDestroy() {
-        nativeAdHome1?.destroy()
-        nativeAdHome2?.destroy()
         homeViewModel?.reset()
         Log.d("TAG", "onDestroy: ")
         super.onDestroy()

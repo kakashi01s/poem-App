@@ -75,7 +75,7 @@ class ForceUpdateChecker(
                 context!!.getPackageManager().getPackageInfo(context.packageName, 0).versionName
             result = result.replace("[a-zA-Z]|-".toRegex(), "")
         } catch (e: PackageManager.NameNotFoundException) {
-            Log.e(TAG, e.message)
+            Log.e(TAG, e.message!!)
         }
         return result
     }

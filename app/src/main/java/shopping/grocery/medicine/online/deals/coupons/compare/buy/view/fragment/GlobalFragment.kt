@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -27,7 +26,6 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.category
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.MainActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.WebActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.CountryStoresAdapter
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.CategoryStoresItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.category.CountryItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.viewholder.CalculatorViewHolder
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.viewholder.TechnicalChartViewHolder
@@ -64,9 +62,6 @@ class GlobalFragment : BaseFragment(), CountryItemClickListener<List<String>> {
 
     var firebaseRemoteConfig: FirebaseRemoteConfig? = null
     var firebaseAnalytics: FirebaseAnalytics? = null
-
-    var nativeAdCat1: UnifiedNativeAd? = null
-    var nativeAdCat2: UnifiedNativeAd? = null
 
     //var llSuperMarts: LinearLayout? = null
     var llIndia: LinearLayout? = null
