@@ -10,7 +10,7 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.
 
 class AppPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
 
-    val NUM_ITEMS = 3;
+    val NUM_ITEMS =4 ;
 
     override fun getCount(): Int {
         return NUM_ITEMS

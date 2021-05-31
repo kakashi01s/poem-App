@@ -9,36 +9,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.ads.*
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.formats.MediaView
 import com.google.android.gms.ads.formats.UnifiedNativeAd
-import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import kotlinx.android.synthetic.main.fragment_category.*
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseFragment
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.category.Calculator
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.category.TechnicalChart
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.MainActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.WebActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.CategoryStoresAdapter
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.CategoryStoresItemClickListener
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.viewholder.CalculatorViewHolder
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.viewholder.TechnicalChartViewHolder
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.CategoryViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -136,72 +125,72 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
 
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
-        dialog = Dialog(context!!)
+        dialog = Dialog(requireContext())
 
-        categoryViewModel = ViewModelProvider(activity!!).get(CategoryViewModel::class.java)
+        categoryViewModel = ViewModelProvider(requireActivity()).get(CategoryViewModel::class.java)
         categoryViewModel?.loadData()
 
-        categoryViewModel!!.superMartLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.superMartLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: superMartLiveData $t")
             superMartList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.groceriesLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.groceriesLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: groceriesLiveData $t")
             groceriesList!!.addAll(t!!)
         })
-        categoryViewModel!!.medicinesLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.medicinesLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: medicinesLiveData $t")
             medicinesList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.supplementsLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.supplementsLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: supplementsLiveData $t")
             supplementsList!!.addAll(t!!)
         })
-        categoryViewModel!!.electronicsLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.electronicsLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: electronicsLiveData $t")
             electronicsList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.beautyLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.beautyLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: beautyLiveData $t")
             beautyList!!.addAll(t!!)
         })
-        categoryViewModel!!.jewelleryLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.jewelleryLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: jewelleryLiveData $t")
             jewelleryList!!.addAll(t!!)
         })
 
         categoryViewModel!!.kitchenAppliancesLiveData
-            .observe(this, Observer { t ->
-            Log.d("TAG", "onViewCreated: kitchenAppliancesLiveData $t")
+            .observe(viewLifecycleOwner, Observer { t ->
+                Log.d("TAG", "onViewCreated: kitchenAppliancesLiveData $t")
                 kitchenAppliancesList!!.addAll(t!!)
-        })
-        categoryViewModel!!.kidsLifestyleLiveData.observe(this, Observer { t ->
+            })
+        categoryViewModel!!.kidsLifestyleLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: kidsLifestyleLiveData $t")
             kidsLifestyleList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.babyToysLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.babyToysLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: babyToysLiveData $t")
             babyToysList!!.addAll(t!!)
         })
-        categoryViewModel!!.lingerieLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.lingerieLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: lingerieLiveData $t")
             lingerieList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.menInnerWearLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.menInnerWearLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: menInnerWearLiveData $t")
             menInnerWearList!!.addAll(t!!)
         })
-        categoryViewModel!!.booksLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.booksLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: booksLiveData $t")
             booksList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.footwearLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.footwearLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: footwearLiveData $t")
             footwearList!!.addAll(t!!)
         })
@@ -251,27 +240,26 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
         }
 
 
+    }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+
+        if (isVisibleToUser) {
+            if (firebaseRemoteConfig == null) {
+                firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+            }
+            if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
+                onLoadFBNativeAd1(requireView(), requireContext())
+                onLoadFBNativeAd2(requireView(), requireContext())
+            }
+        }
 
     }
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-             super.setUserVisibleHint(isVisibleToUser)
-
-             if(isVisibleToUser){
-                 if(firebaseRemoteConfig == null){
-                     firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-                 }
-                 if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
-                     onLoadFBNativeAd1(view!!, context!!)
-                     onLoadFBNativeAd2(view!!, context!!)
-                 }
-             }
-
-         }
 
 
-        fun initViews(view: View){
-        firebaseAnalytics = FirebaseAnalytics.getInstance(activity!!)
+    fun initViews(view: View) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireActivity())
         llSuperMarts = view.findViewById(R.id.llSuperMarts)
         llGroceries = view.findViewById(R.id.llGroceries)
         llMedicines = view.findViewById(R.id.llMedicines)
@@ -289,7 +277,7 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
 
     }
 
-    fun setRecyclerView(){
+    fun setRecyclerView() {
         categoryStoresAdapter = CategoryStoresAdapter(context)
         categoryStoresAdapter!!.setListener(this)
         rvCategoryStores.apply {
@@ -298,11 +286,13 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
         }
     }
 
-    fun onShowStores(list: ArrayList<List<String>>){
+    fun onShowStores(list: ArrayList<List<String>>) {
         dialog!!.setContentView(R.layout.dialog_show_stores)
 
-        dialog!!.window!!.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT);
+        dialog!!.window!!.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        );
 
         rvCategoryStores = dialog!!.findViewById(R.id.rvCategoryStores)
 
@@ -310,13 +300,14 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
 
         categoryStoresAdapter!!.setItems(list)
         if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
-            onLoadFBNativeAdCatDailog(context!!, dialog!!)
+            onLoadFBNativeAdCatDailog(requireContext(), dialog!!)
         }
 
 
         dialog!!.show()
 
     }
+
     fun onLoadFBNativeAd1(view: View, context: Context) {
         nativeAdFB1 = NativeAd(context, Constants().getFbNativeCat1())
         val nativeAdListener: NativeAdListener = object : NativeAdListener {
@@ -372,7 +363,7 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
         );
     }
 
-    fun onLoadFBNativeAd2(view: View,context: Context) {
+    fun onLoadFBNativeAd2(view: View, context: Context) {
         nativeAdFB2 = NativeAd(context, Constants().getFbNativeCat2())
         val nativeAdListener: NativeAdListener = object : NativeAdListener {
             override fun onError(p0: Ad?, p1: AdError?) {
@@ -426,6 +417,7 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
                 .build()
         );
     }
+
     fun onLoadFBNativeAdCatDailog(context: Context, dialog: Dialog) {
         nativeAdFB3 = NativeAd(context, Constants().getFbNativeDailog())
         val nativeAdListener: NativeAdListener = object : NativeAdListener {
@@ -550,7 +542,7 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
         val bundle = Bundle()
         bundle.putString("title", item.get(1))
         bundle.putString("url", item.get(2))
-        (activity as MainActivity?)!!.onUpdateLogEvent(bundle,"brokers_visited",true)
+        (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "brokers_visited", true)
 
         val intent: Intent? = Intent(activity, WebActivity::class.java)
         intent?.putExtra("title", item.get(1))

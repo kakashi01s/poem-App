@@ -22,7 +22,7 @@
         android:title="Deals" />
 
     <item
-        android:id="@+id/bookmark"
+        android:id="@+id/id_bookmark"
         android:icon="@drawable/ic_bookmark_border"
         android:orderInCategory="4"
         app:exb_color="#FFF"

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
@@ -17,16 +18,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.BuildConfig
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar
+import kotlinx.android.synthetic.main.activity_main.*
 import me.toptas.fancyshowcase.FancyShowCaseView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.CustomViewPager
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.ForceUpdateChecker
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.helper
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.home.AllAppsAdapter
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.CategoryFragment
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.DealFragment
@@ -54,6 +56,8 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
     private lateinit var bottomNav: ExpandableBottomBar
 
 
+    private  val prevMenuItem : MenuItem ?= null
+
     var search_rvCountryStores: RecyclerView? = null
 
     var appsList: ArrayList<List<String>>? = ArrayList()
@@ -79,7 +83,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         initViews()
         dialog = Dialog(this)
 
-//        setupViewPager()
+       setupViewPager()
 
         ForceUpdateChecker().with(this)!!.onUpdateNeeded(this).check()
 
@@ -115,27 +119,43 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 //            override fun onTabReselected(tab: TabLayout.Tab) {}
 //        })
 
+        val menu = bottomNav.menu
 
-        var menu = bottomNav.menu
         menu.select(R.id.id_home)
         supportFragmentManager.beginTransaction().replace(R.id.frame, FragmentHome())
             .commit()
+        viewPager!!.currentItem = 1
+
 
         bottomNav.onItemSelectedListener = { view, menuItem, bool ->
             when (menuItem.id) {
                 R.id.id_home -> {
+
+                    viewPager!!.currentItem = 1
                     fancy(view, "Home")
                     supportFragmentManager.beginTransaction().replace(R.id.frame, FragmentHome())
                         .commit()
+
                 }
                 R.id.id_category -> {
+
+                    viewPager!!.currentItem = 2
                     fancy(view, "Category")
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frame, CategoryFragment())
                         .commit()
-
                 }
                 R.id.id_deals -> {
+
+                    viewPager!!.currentItem = 3
+                    fancy(view, "Deals")
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.frame, DealFragment())
+                        .commit()
+                }
+                R.id.id_bookmark -> {
+
+                    viewPager!!.currentItem = 4
                     fancy(view, "Deals")
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frame, DealFragment())
@@ -143,19 +163,17 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 }
             }
         }
-        search.setOnClickListener {
-        }
     }
 
     private fun initViews() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         bottomNav = findViewById(R.id.expandable_bottom_bar)
-//        viewPager = findViewById(R.id.vpPager)
+        viewPager = findViewById(R.id.frame)
 //        viewPagerTab = findViewById(R.id.view_pager_tab)
         search = findViewById(R.id.search)
     }
 
-    private fun fancy(it: View, title : String) {
+    private fun fancy(it: View, title: String) {
         return FancyShowCaseView.Builder(this).focusOn(it).title(title).delay(50).build()
             .show()
     }
@@ -247,7 +265,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
         viewPager!!.setSwipePagingEnabled(false)
 
-        viewPagerTab!!.setupWithViewPager(viewPager)
+//        viewPagerTab!!.setupWithViewPager(viewPager)
 
     }
 
