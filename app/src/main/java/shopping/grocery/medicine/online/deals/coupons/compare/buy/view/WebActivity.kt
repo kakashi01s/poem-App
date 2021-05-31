@@ -3,26 +3,26 @@ package shopping.grocery.medicine.online.deals.coupons.compare.buy.view
 import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.webkit.*
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.ads.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import kotlinx.android.synthetic.main.activity_web.*
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
-import kotlinx.android.synthetic.main.activity_web.*
 
 
 class WebActivity : AppCompatActivity() {
@@ -48,6 +48,13 @@ class WebActivity : AppCompatActivity() {
     var mGeoLocationRequestOrigin: String? = null
     var mGeoLocationCallback: GeolocationPermissions.Callback? = null
 
+    lateinit var btn1: FloatingActionButton
+    lateinit var share: FloatingActionButton
+    private lateinit var bkmark: FloatingActionButton
+    private lateinit var bkmarkText: TextView
+    private lateinit var shareText: TextView
+    private var clicked = false
+
     private val LOCATION_PERMISSION_CODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +66,7 @@ class WebActivity : AppCompatActivity() {
 
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
-        if(firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)){
+        if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
 
             onFbBannerAds()
             onLoadFbInterstitial()
@@ -75,15 +82,32 @@ class WebActivity : AppCompatActivity() {
 
         webView?.loadUrl(appUrl!!)
 
+        btn1.setOnClickListener {
+            onButtonClicked()
+        }
+
+        share.setOnClickListener {
+            val sendIntent: Intent = Intent().setAction(Intent.ACTION_SEND)
+            sendIntent.putExtra(
+                Intent.EXTRA_TEXT, appUrl)
+            sendIntent.type = "text/simple"
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+        }
     }
 
-    fun initViews(){
+    fun initViews() {
         webView = findViewById(R.id.webViewMain)
         rlWebSplash = findViewById(R.id.rlWebSplash)
         ivAppIcon = findViewById(R.id.ivAppIcon)
+        share = findViewById(R.id.button2)
+        bkmark = findViewById(R.id.button3)
+        btn1 = findViewById(R.id.button1)
+        shareText = findViewById(R.id.share)
+        bkmarkText = findViewById(R.id.bkmark)
     }
 
-    fun initData(){
+    fun initData() {
         val bundle: Bundle? = intent.extras
         appUrl = bundle?.getString("url")
         appIcon = bundle?.getString("app_icon")
@@ -91,7 +115,7 @@ class WebActivity : AppCompatActivity() {
 
     }
 
-    fun webViewSettings(){
+    fun webViewSettings() {
         webView!!.settings.loadsImagesAutomatically = true
         webView!!.settings.javaScriptEnabled = true
         webView!!.settings.allowContentAccess = true
@@ -130,7 +154,7 @@ class WebActivity : AppCompatActivity() {
             }
         }
 
-        webView!!.webChromeClient = object : WebChromeClient(){
+        webView!!.webChromeClient = object : WebChromeClient() {
 
             override fun onGeolocationPermissionsShowPrompt(
                 origin: String?,
@@ -182,7 +206,7 @@ class WebActivity : AppCompatActivity() {
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
-                if(newProgress >= 80){
+                if (newProgress >= 80) {
                     rlWebSplash!!.visibility = View.GONE
                 }
             }
@@ -216,7 +240,7 @@ class WebActivity : AppCompatActivity() {
 
     }
 
-    fun loadWebSplash(){
+    fun loadWebSplash() {
         Glide.with(ivAppIcon!!.context)
             .load(appIcon)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -313,7 +337,7 @@ class WebActivity : AppCompatActivity() {
 
     // Called before the activity is destroyed
     public override fun onDestroy() {
-        if(adView!=null){
+        if (adView != null) {
             adView!!.destroy()
         }
         super.onDestroy()
@@ -324,19 +348,19 @@ class WebActivity : AppCompatActivity() {
         if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
             super.onBackPressed()
         } else {
-            Toast.makeText(getBaseContext(), "Double click to exit!",
-                Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                getBaseContext(), "Double click to exit!",
+                Toast.LENGTH_SHORT
+            ).show();
             if (webView!!.canGoBack()) {
                 webView!!.goBack()
-            }
-            else{
-                if (interstitialFbAd!=null && interstitialFbAd!!.isAdLoaded) {
+            } else {
+                if (interstitialFbAd != null && interstitialFbAd!!.isAdLoaded) {
                     if (interstitialFbAd!!.isAdInvalidated) {
                     } else {
                         interstitialFbAd!!.show()
                     }
-                }
-                else{
+                } else {
                     super.onBackPressed()
                 }
 
@@ -344,6 +368,94 @@ class WebActivity : AppCompatActivity() {
         }
         back_pressed = System.currentTimeMillis();
 
+    }
+
+    private fun onButtonClicked() {
+
+        if (!clicked) {
+            share.visibility = View.VISIBLE
+            bkmark.visibility = View.VISIBLE
+            shareText.visibility = View.VISIBLE
+            bkmarkText.visibility = View.VISIBLE
+        } else {
+            share.visibility = View.INVISIBLE
+            bkmark.visibility = View.INVISIBLE
+            shareText.visibility = View.INVISIBLE
+            bkmarkText.visibility = View.INVISIBLE
+        }
+
+        if (!clicked) {
+            share.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.from_bottom
+                )
+            )
+            bkmark.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.from_bottom
+                )
+            )
+            shareText.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.from_left
+                )
+            )
+            bkmarkText.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.from_left
+                )
+            )
+            btn1.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.rotate_open
+                )
+            )
+        } else {
+            share.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.to_bottom))
+            bkmark.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.to_bottom
+                )
+            )
+
+            shareText.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.to_left
+                )
+            )
+            bkmarkText.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.to_left
+                )
+            )
+            btn1.startAnimation(
+                AnimationUtils.loadAnimation(
+                    applicationContext,
+                    R.anim.rotate_close
+                )
+            )
+        }
+
+        if (!clicked) {
+            share.isClickable = true
+            bkmark.isClickable = true
+            shareText.isClickable = true
+            bkmarkText.isClickable = true
+        } else {
+            share.isClickable = false
+            bkmark.isClickable = false
+            shareText.isClickable = false
+            bkmarkText.isClickable = false
+        }
+        clicked = !clicked
     }
 //
 
