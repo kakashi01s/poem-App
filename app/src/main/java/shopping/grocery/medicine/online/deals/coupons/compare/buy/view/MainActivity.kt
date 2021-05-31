@@ -18,7 +18,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.BuildConfig
@@ -56,7 +55,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
     private lateinit var bottomNav: ExpandableBottomBar
 
 
-    private  val prevMenuItem : MenuItem ?= null
+    private val prevMenuItem: MenuItem? = null
 
     var search_rvCountryStores: RecyclerView? = null
 
@@ -131,7 +130,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             when (menuItem.id) {
                 R.id.id_home -> {
 
-               //     viewPager!!.currentItem = 0
+                    //     viewPager!!.currentItem = 0
                     fancy(view, "Home")
                     supportFragmentManager.beginTransaction().replace(R.id.frame, FragmentHome())
                         .commit()
@@ -139,7 +138,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 }
                 R.id.id_category -> {
 
-                //    viewPager!!.currentItem = 1
+                    //    viewPager!!.currentItem = 1
                     fancy(view, "Category")
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frame, CategoryFragment())
@@ -147,7 +146,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 }
                 R.id.id_deals -> {
 
-                 //   viewPager!!.currentItem = 2
+                    //   viewPager!!.currentItem = 2
                     fancy(view, "Deals")
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frame, DealFragment())
@@ -155,7 +154,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 }
                 R.id.id_bookmark -> {
 
-                //    viewPager!!.currentItem = 3
+                    //    viewPager!!.currentItem = 3
                     fancy(view, "Deals")
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frame, DealFragment())
@@ -163,7 +162,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 }
             }
         }
-
 
 
 //        setupViewPager()
@@ -178,7 +176,8 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
     }
 
     private fun fancy(it: View, title: String) {
-        return FancyShowCaseView.Builder(this).focusOn(it).title(title).delay(50).build()
+        return FancyShowCaseView.Builder(this).focusOn(it).title(title).delay(50).showOnce(title)
+            .build()
             .show()
     }
 
@@ -259,15 +258,14 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         }
     }
 
-    private fun setupViewPager()
-    {
+    private fun setupViewPager() {
 
         fragmentPagerAdapter = AppPagerAdapter(supportFragmentManager)
         viewPager!!.adapter = fragmentPagerAdapter
         val limit =
             if ((fragmentPagerAdapter as AppPagerAdapter).count > 1) (fragmentPagerAdapter as AppPagerAdapter).count - 1 else 1
         viewPager!!.offscreenPageLimit = limit;
-        viewPager!!.currentItem =0 ;
+        viewPager!!.currentItem = 0;
 
         viewPager!!.setSwipePagingEnabled(false)
 
