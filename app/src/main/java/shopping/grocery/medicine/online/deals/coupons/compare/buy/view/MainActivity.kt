@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
@@ -29,9 +28,6 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseActiv
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.CustomViewPager
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.ForceUpdateChecker
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.home.AllAppsAdapter
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.CategoryFragment
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.DealFragment
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment.FragmentHome
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.AllAppsItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.CategoryViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.DealsViewModel
@@ -95,7 +91,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             Log.d("TAG", "HomeFragment Live allAppsLiveData$t")
             appsList!!.clear()
             if (t != null) {
-                appsList?.addAll(t)
+                t.getValues()?.let { appsList?.addAll(it) }
             }
         })
 

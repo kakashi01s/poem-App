@@ -3,8 +3,10 @@ package shopping.grocery.medicine.online.deals.coupons.compare.buy.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
 import android.os.Build
@@ -69,6 +71,7 @@ class WebActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
 
+
         initViews()
         initData()
 
@@ -93,6 +96,8 @@ class WebActivity : AppCompatActivity() {
         btn1.setOnClickListener {
             onButtonClicked()
         }
+
+
 
         share.setOnClickListener {
             val sendIntent: Intent = Intent().setAction(Intent.ACTION_SEND)
@@ -135,6 +140,7 @@ class WebActivity : AppCompatActivity() {
     }
 
     fun initData() {
+
         val bundle: Bundle? = intent.extras
         appUrl = bundle?.getString("url")
         appIcon = bundle?.getString("app_icon")
@@ -144,6 +150,7 @@ class WebActivity : AppCompatActivity() {
     }
 
     private fun setBookmarks() {
+        Log.d("ShareBookmark", bookmarksList.toString())
         val bookmarksData = Gson().toJson(bookmarksList)
         Pref.instance!!.bookmarksData = bookmarksData
     }
