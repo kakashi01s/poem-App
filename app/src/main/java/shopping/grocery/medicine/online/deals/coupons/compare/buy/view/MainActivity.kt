@@ -54,9 +54,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
     private lateinit var bottomNav: ExpandableBottomBar
 
-
-    private val prevMenuItem: MenuItem? = null
-
     var search_rvCountryStores: RecyclerView? = null
 
     var appsList: ArrayList<List<String>>? = ArrayList()
@@ -106,23 +103,23 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             onShowStores(appsList!!)
         }
 //
-//        viewPagerTab!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab) {
-//                Log.d("TAG", "onTabSelected: " + tab.position)
-//                val bundleAppUsage = Bundle()
-//                bundleAppUsage.putString("tab_click", tab.text.toString())
-//                onUpdateLogEvent(bundleAppUsage, "app_usage", false)
-//            }
-//            override fun onTabUnselected(tab: TabLayout.Tab) {}
-//            override fun onTabReselected(tab: TabLayout.Tab) {}
-//        })
+        viewPagerTab!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                Log.d("TAG", "onTabSelected: " + tab.position)
+                val bundleAppUsage = Bundle()
+                bundleAppUsage.putString("tab_click", tab.text.toString())
+                onUpdateLogEvent(bundleAppUsage, "app_usage", false)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        setupViewPager()
 
         val menu = bottomNav.menu
 
         menu.select(R.id.id_home)
-
-        supportFragmentManager.beginTransaction().replace(R.id.frame, FragmentHome())
-            .commit()
 //        viewPager!!.currentItem = 0
 
 
@@ -130,48 +127,34 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             when (menuItem.id) {
                 R.id.id_home -> {
 
-                    //     viewPager!!.currentItem = 0
+                    viewPager!!.currentItem = 0
                     fancy(view, "Home")
-                    supportFragmentManager.beginTransaction().replace(R.id.frame, FragmentHome())
-                        .commit()
 
                 }
                 R.id.id_category -> {
 
-                    //    viewPager!!.currentItem = 1
+                    viewPager!!.currentItem = 1
                     fancy(view, "Category")
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame, CategoryFragment())
-                        .commit()
                 }
                 R.id.id_deals -> {
 
-                    //   viewPager!!.currentItem = 2
+                    viewPager!!.currentItem = 2
                     fancy(view, "Deals")
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame, DealFragment())
-                        .commit()
                 }
                 R.id.id_bookmark -> {
 
-                    //    viewPager!!.currentItem = 3
+                    viewPager!!.currentItem = 3
                     fancy(view, "Deals")
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame, DealFragment())
-                        .commit()
                 }
             }
         }
-
-
-//        setupViewPager()
     }
 
     private fun initViews() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         bottomNav = findViewById(R.id.expandable_bottom_bar)
-//        viewPager = findViewById(R.id.frame)
-//        viewPagerTab = findViewById(R.id.view_pager_tab)
+        viewPager = findViewById(R.id.vpPager)
+        viewPagerTab = findViewById(R.id.view_pager_tab)
         search = findViewById(R.id.search)
     }
 
@@ -265,11 +248,11 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         val limit =
             if ((fragmentPagerAdapter as AppPagerAdapter).count > 1) (fragmentPagerAdapter as AppPagerAdapter).count - 1 else 1
         viewPager!!.offscreenPageLimit = limit;
-        viewPager!!.currentItem = 0;
+        viewPager!!.currentItem = 0
 
         viewPager!!.setSwipePagingEnabled(false)
 
-//        viewPagerTab!!.setupWithViewPager(viewPager)
+        viewPagerTab!!.setupWithViewPager(viewPager)
 
     }
 

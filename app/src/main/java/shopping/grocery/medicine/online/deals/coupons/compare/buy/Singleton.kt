@@ -70,6 +70,7 @@ class Singleton : Application() {
         // set in-app defaults
         val remoteConfigDefaults = TreeMap<String?, Any?>()
         remoteConfigDefaults[Constants().SHOW_ADS] = false
+        remoteConfigDefaults[Constants().DATA_CHANGED] = false
         remoteConfigDefaults[Constants().OPEN_BROWSER] = false
         remoteConfigDefaults[ForceUpdateChecker().KEY_UPDATE_REQUIRED] = false
         remoteConfigDefaults[ForceUpdateChecker().KEY_CURRENT_VERSION] = "1.0"

@@ -1,10 +1,12 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,10 +21,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.ads.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_web.*
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.bookmark.Bookmarks
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Pref
 
 
 class WebActivity : AppCompatActivity() {
@@ -39,11 +45,11 @@ class WebActivity : AppCompatActivity() {
     private val TIME_DELAY = 2000
     private var back_pressed: Long = 0
 
-    private var interstitialFbAd: com.facebook.ads.InterstitialAd? = null
+    private var interstitialFbAd: InterstitialAd? = null
     private var adView: AdView? = null
-    lateinit var fullscreenView: View
 
     var firebaseRemoteConfig: FirebaseRemoteConfig? = null
+    var firebaseAnalytics: FirebaseAnalytics? = null
 
     var mGeoLocationRequestOrigin: String? = null
     var mGeoLocationCallback: GeolocationPermissions.Callback? = null
@@ -54,6 +60,8 @@ class WebActivity : AppCompatActivity() {
     private lateinit var bkmarkText: TextView
     private lateinit var shareText: TextView
     private var clicked = false
+
+    var bookmarksList: ArrayList<Bookmarks>? = ArrayList()
 
     private val LOCATION_PERMISSION_CODE = 1
 
@@ -94,9 +102,28 @@ class WebActivity : AppCompatActivity() {
             val shareIntent = Intent.createChooser(sendIntent, null)
             startActivity(shareIntent)
         }
+
+        bkmark.setOnClickListener {
+            val bookmarks: Bookmarks? = Bookmarks()
+            bookmarks!!.bookmarkTitle = webView!!.title
+            bookmarks.bookmarkStoreTitle = appTitle
+            bookmarks.bookmarkUrl = webView!!.url
+            bookmarks.bookmarkLogo = appIcon
+
+            bookmarksList!!.add(bookmarks)
+
+            val bundle = Bundle()
+            bundle.putString("bookmarkTitle", webView!!.title)
+            bundle.putString("bookmarkStoreTitle", appTitle)
+            bundle.putString("bookmarkUrl", webView!!.url)
+            firebaseAnalytics!!.logEvent("bookmarks_Usage", bundle)
+
+            setBookmarks()
+        }
     }
 
     fun initViews() {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this@WebActivity)
         webView = findViewById(R.id.webViewMain)
         rlWebSplash = findViewById(R.id.rlWebSplash)
         ivAppIcon = findViewById(R.id.ivAppIcon)
@@ -111,10 +138,56 @@ class WebActivity : AppCompatActivity() {
         val bundle: Bundle? = intent.extras
         appUrl = bundle?.getString("url")
         appIcon = bundle?.getString("app_icon")
+        appTitle = bundle?.getString("title")
         Log.d("TAG", "initData: " + bundle?.getString("url"))
 
     }
 
+    private fun setBookmarks() {
+        val bookmarksData = Gson().toJson(bookmarksList)
+        Pref.instance!!.bookmarksData = bookmarksData
+    }
+
+    fun removeBookmark(bookmarkurl: String?) {
+        if (bookmarksList != null) {
+            var i = 0
+            while (i < bookmarksList!!.size) {
+                val bookmarkData: Bookmarks = bookmarksList!!.get(i)
+                if (bookmarkData.getBookmarkUrlWithoutAffiliate() != null && bookmarkData.getBookmarkUrlWithoutAffiliate()
+                        .equals(bookmarkurl)
+                ) {
+                    bookmarksList!!.removeAt(i)
+                    //                    Toast.makeText(WebActivity.this,"Bookmark removed successfully",Toast.LENGTH_SHORT).show();
+                    val toast = Toast.makeText(
+                        this@WebActivity,
+                        "Item removed from wishlist",
+                        Toast.LENGTH_SHORT
+                    )
+                    val view = toast.view
+
+//Gets the actual oval background of the Toast then sets the colour filter
+                    view?.background?.setColorFilter(
+                        resources.getColor(R.color.black_75),
+                        PorterDuff.Mode.SRC_IN
+                    )
+
+//Gets the TextView from the Toast so it can be editted
+                    var text: TextView? = null
+                    if (view != null) {
+                        text = view.findViewById(android.R.id.message)
+                    }
+                    text?.setTextColor(resources.getColor(R.color.white))
+                    toast.show()
+                    Log.d("TAG", "removeBookmark: removed")
+                }
+                i++
+            }
+            setBookmarks()
+        }
+    }
+
+
+    @SuppressLint("SetJavaScriptEnabled")
     fun webViewSettings() {
         webView!!.settings.loadsImagesAutomatically = true
         webView!!.settings.javaScriptEnabled = true
