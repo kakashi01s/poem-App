@@ -23,11 +23,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.ads.*
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
 import com.synnapps.carouselview.CarouselView
 import com.synnapps.carouselview.ImageClickListener
 import com.synnapps.carouselview.ImageListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseFragment
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.AllAppsModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.MainActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.WebActivity
@@ -36,6 +38,7 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.h
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.AllAppsItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.home.TrendingItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.HomeViewModel
+import java.io.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -109,22 +112,30 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
 
         homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
 
+        val isFilePresent: Boolean = isFilePresent(requireContext(), Constants().ALL_APPS_STORAGE_FILE_NAME)
+        if (isFilePresent) {
+            Log.d("TAG", "onChanged: topCard isFilePresent $isFilePresent")
+            val allAppsModel: AllAppsModel = read(requireContext(), Constants().ALL_APPS_STORAGE_FILE_NAME)!!
+            Log.d("TAG", "onChanged: topCard jsonData " + Gson().toJson(allAppsModel))
+            allAppsAdapter?.setItems(allAppsModel.getValues())
+        }
+
         homeViewModel?.loadData()
 
         homeViewModel!!.allAppsLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "HomeFragment Live allAppsLiveData$t")
-            allAppsAdapter?.setItems(t)
+            allAppsAdapter?.setItems(t.getValues())
         })
 
         homeViewModel!!.carouselImagesLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "HomeFragment Live carousel $t")
-            carouselImagesList!!.addAll(t!!)
+            carouselImagesList!!.addAll(t.getValues()!!)
             onLoadCarouselImages()
         })
 
         homeViewModel!!.trendingLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "HomeFragment Live trendingLiveData $t")
-            trendingAdapter!!.setItems(t)
+            trendingAdapter!!.setItems(t.getValues())
         })
 
 
@@ -420,4 +431,63 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
 
         startActivity(intent)
     }
+
+    fun isFilePresent(context: Context, fileName: String): Boolean {
+        val path = context.filesDir.absolutePath + "/" + fileName
+        val file = File(path)
+        return file.exists()
+    }
+
+    fun read(context: Context, fileName: String?): AllAppsModel? {
+        var allAppsModel: AllAppsModel? = null
+        try {
+            val fileInputStream = context.openFileInput(fileName)
+            val objectInputStream = ObjectInputStream(fileInputStream)
+            allAppsModel = objectInputStream.readObject() as AllAppsModel
+            Log.d("TAG", "read: " + Gson().toJson(allAppsModel))
+            objectInputStream.close()
+            fileInputStream.close()
+        } catch (fileNotFoundException: IOException) {
+            Log.d("TAG", "read: exception " + fileNotFoundException.localizedMessage)
+            fileNotFoundException.printStackTrace()
+        } catch (fileNotFoundException: ClassNotFoundException) {
+            Log.d("TAG", "read: exception " + fileNotFoundException.localizedMessage)
+            fileNotFoundException.printStackTrace()
+        }
+        return allAppsModel
+    }
+
+    fun updateAllAppsJsonFile(allAppsModel: AllAppsModel?) {
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream =
+                requireContext().openFileOutput(Constants().ALL_APPS_STORAGE_FILE_NAME, Context.MODE_PRIVATE)
+            val objectOutputStream = ObjectOutputStream(fileOutputStream)
+            objectOutputStream.flush()
+            objectOutputStream.writeObject(allAppsModel)
+            objectOutputStream.close()
+            fileOutputStream.close()
+        } catch (fileNotFoundException: IOException) {
+            Log.d("TAG", "accept: allApps exception " + fileNotFoundException.message)
+            fileNotFoundException.printStackTrace()
+        }
+    }
+
+    fun updateJsonFile(allAppsModel: AllAppsModel?) {
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream =
+                requireContext().openFileOutput(Constants().ALL_APPS_STORAGE_FILE_NAME, Context.MODE_PRIVATE)
+            val objectOutputStream = ObjectOutputStream(fileOutputStream)
+            objectOutputStream.flush()
+            objectOutputStream.writeObject(allAppsModel)
+            objectOutputStream.close()
+            fileOutputStream.close()
+        } catch (fileNotFoundException: IOException) {
+            Log.d("TAG", "accept: allApps exception " + fileNotFoundException.message)
+            fileNotFoundException.printStackTrace()
+        }
+    }
+
+
 }

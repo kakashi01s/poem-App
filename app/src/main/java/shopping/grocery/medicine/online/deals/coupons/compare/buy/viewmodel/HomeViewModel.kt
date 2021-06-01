@@ -12,12 +12,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.AllAppsModel
 
 class HomeViewModel : ViewModel() {
 
-    var allAppsLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
-    var carouselImagesLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
-    var trendingLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
+    var allAppsLiveData: MutableLiveData<AllAppsModel> = MutableLiveData()
+    var carouselImagesLiveData: MutableLiveData<AllAppsModel> = MutableLiveData()
+    var trendingLiveData: MutableLiveData<AllAppsModel> = MutableLiveData()
     private var context: Context? = null
     var compositeDisposable: CompositeDisposable? = null
 
@@ -43,7 +44,7 @@ class HomeViewModel : ViewModel() {
             })
             ?.subscribe(Consumer { t ->
                 Log.d("TAG", "fetchAllApps Response ${t.getValues()}")
-                changeAllAppsDataSet(t.getValues())
+                changeAllAppsDataSet(t)
             })
 
         if (disposable != null) {
@@ -67,7 +68,7 @@ class HomeViewModel : ViewModel() {
             })
             ?.subscribe(Consumer { t ->
                 Log.d("TAG", "fetchCarouselImages Response ${t.getValues()}")
-                changeCarouselDataSet(t.getValues())
+                changeCarouselDataSet(t)
             })
 
         if (disposable != null) {
@@ -91,7 +92,7 @@ class HomeViewModel : ViewModel() {
             })
             ?.subscribe(Consumer { t ->
                 Log.d("TAG", "fetchTrendingData Response ${t.getValues()}")
-                changeTrendingDataSet(t.getValues())
+                changeTrendingDataSet(t)
             })
 
         if (disposable != null) {
@@ -100,15 +101,15 @@ class HomeViewModel : ViewModel() {
     }
 
 
-    fun changeAllAppsDataSet(allAppsList: List<List<String>>?){
+    fun changeAllAppsDataSet(allAppsList: AllAppsModel){
         allAppsLiveData.value = allAppsList
     }
 
-    fun changeCarouselDataSet(carouselList: List<List<String>>?){
+    fun changeCarouselDataSet(carouselList: AllAppsModel){
         carouselImagesLiveData.value = carouselList
     }
 
-    fun changeTrendingDataSet(trendingList: List<List<String>>?){
+    fun changeTrendingDataSet(trendingList: AllAppsModel){
         trendingLiveData.value = trendingList
     }
 

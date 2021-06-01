@@ -1,8 +1,5 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.utils
 
-import android.content.Context
-import android.graphics.Color
-import android.widget.Toast
 import com.firebase.ui.common.BuildConfig
 
 //import shopping.grocery.medicine.online.deals.coupons.compare.buy.BuildConfig
@@ -13,8 +10,12 @@ class Constants {
 
 
     val SHOW_ADS = "show_ads"
+    val DATA_CHANGED = "data_changed"
     val OPEN_BROWSER = "open_browser"
 
+    val ALL_APPS_STORAGE_FILE_NAME = "all_apps_storage.json"
+    val CAROUSEL_VIEW_STORAGE_FILE_NAME = "carousel_view_storage.json"
+    val TRENDING_STORAGE_FILE_NAME = "trending_storage.json"
 
     val FB_ADS_TEST = "VID_HD_9_16_39S_APP_INSTALL#YOUR_PLACEMENT_ID"
     val FB_BANNER_TEST = "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID"
