@@ -3,11 +3,10 @@ package shopping.grocery.medicine.online.deals.coupons.compare.buy.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
@@ -39,6 +38,8 @@ class WebActivity : AppCompatActivity() {
     var appTitle: String? = null
     var appUrl: String? = null
     var appIcon: String? = null
+    var color: String? = null
+    var searchUrl: String? = null
 
     var rlWebSplash: RelativeLayout? = null
     var ivAppIcon: ImageView? = null
@@ -91,7 +92,11 @@ class WebActivity : AppCompatActivity() {
 
         webViewSettings()
 
-        webView?.loadUrl(appUrl!!)
+        if (searchUrl == null) {
+            webView?.loadUrl(appUrl!!)
+        } else {
+            webView?.loadUrl(searchUrl!!)
+        }
 
         btn1.setOnClickListener {
             onButtonClicked()
@@ -102,7 +107,8 @@ class WebActivity : AppCompatActivity() {
         share.setOnClickListener {
             val sendIntent: Intent = Intent().setAction(Intent.ACTION_SEND)
             sendIntent.putExtra(
-                Intent.EXTRA_TEXT, appUrl)
+                Intent.EXTRA_TEXT, appUrl
+            )
             sendIntent.type = "text/simple"
             val shareIntent = Intent.createChooser(sendIntent, null)
             startActivity(shareIntent)
@@ -145,7 +151,12 @@ class WebActivity : AppCompatActivity() {
         appUrl = bundle?.getString("url")
         appIcon = bundle?.getString("app_icon")
         appTitle = bundle?.getString("title")
+        color = bundle?.getString("color")
+        searchUrl = bundle?.getString("search_url")
+
         Log.d("TAG", "initData: " + bundle?.getString("url"))
+        Log.d("colorweb", "initData: " + bundle?.getString("color"))
+        Log.d("search_url", "initData: " + bundle?.getString("search_url"))
 
     }
 
@@ -321,6 +332,9 @@ class WebActivity : AppCompatActivity() {
     }
 
     fun loadWebSplash() {
+
+        rlWebSplash!!.setBackgroundColor(Color.parseColor(color))
+
         Glide.with(ivAppIcon!!.context)
             .load(appIcon)
             .diskCacheStrategy(DiskCacheStrategy.ALL)

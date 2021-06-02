@@ -1,5 +1,6 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
@@ -7,10 +8,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
@@ -20,8 +24,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.BuildConfig
+import com.yalantis.contextmenu.lib.ContextMenuDialogFragment
+import com.yalantis.contextmenu.lib.MenuObject
+import com.yalantis.contextmenu.lib.MenuParams
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.bookmark_layout.*
 import me.toptas.fancyshowcase.FancyShowCaseView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseActivity
@@ -48,6 +56,8 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
     var categoryViewModel: CategoryViewModel? = null
     var firebaseAnalytics: FirebaseAnalytics? = null
 
+    private lateinit var contextMenuDialogFragment: ContextMenuDialogFragment
+
     private lateinit var bottomNav: ExpandableBottomBar
 
     var search_rvCountryStores: RecyclerView? = null
@@ -62,6 +72,8 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
     lateinit var search: ImageView
 
+    private var searchTxt: String? = null
+
     override val bindingVariable: Int
         get() = 0
     override val layoutId: Int
@@ -74,6 +86,8 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
 
         initViews()
+
+        initMenuFragment()
 
         dialog = Dialog(this)
 
@@ -215,22 +229,23 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
             val searchChar = charSequence.toString().toLowerCase()
             Log.d("filterSea", searchChar)
+            searchTxt = searchChar
 
-            val itemsModal = ArrayList<List<String>>()
-
-            for (item in filterList) {
-                if (item[1].toLowerCase().contains(searchChar)) {
-                    Log.d("filterdone", item[1])
-                    Log.d("filterChar", searchChar)
-                    itemsModal.add(item)
-                }
-            }
-
-            appsList!!.clear()
-            appsList!!.addAll(itemsModal)
-            Log.d("filterList", itemsModal.toString())
-            allAppsAdapter!!.setItems(appsList)
-            allAppsAdapter!!.notifyDataSetChanged()
+//            val itemsModal = ArrayList<List<String>>()
+//
+//            for (item in filterList) {
+//                if (item[1].toLowerCase().contains(searchChar)) {
+//                    Log.d("filterdone", item[1])
+//                    Log.d("filterChar", searchChar)
+//                    itemsModal.add(item)
+//                }
+//            }
+//
+//            appsList!!.clear()
+//            appsList!!.addAll(itemsModal)
+//            Log.d("filterList", itemsModal.toString())
+//            allAppsAdapter!!.setItems(appsList)
+//            allAppsAdapter!!.notifyDataSetChanged()
         }
 
         override fun afterTextChanged(s: Editable?) {
@@ -306,7 +321,10 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 intent.putExtra("title", item[1])
                 intent.putExtra("url", item[2])
                 intent.putExtra("app_icon", item[3])
-
+                intent.putExtra("color", item[4])
+                if (searchTxt != null) {
+                    intent.putExtra("search_url", item[5] + "$searchTxt")
+                }
                 startActivity(intent)
             }
         } else {
@@ -314,6 +332,10 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             intent.putExtra("title", item[1])
             intent.putExtra("url", item[2])
             intent.putExtra("app_icon", item[3])
+            intent.putExtra("color", item[4])
+            if (searchTxt != null) {
+                intent.putExtra("search_url", item[5] + "$searchTxt")
+            }
 
             startActivity(intent)
         }
@@ -325,5 +347,78 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         this.onUpdateLogEvent(bundle, "all_apps_visited", true)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu2, menu)
+        Log.d("menuInflate", "done")
+        return true
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        item.let {
+            when (it.itemId) {
+                R.id.context_menu -> {
+                    Log.d("Menu Item", it.itemId.toString())
+                    showContextMenuDialogFragment()
+                }
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    @SuppressLint("ResourceType")
+    private fun initMenuFragment() {
+        val menuParams = MenuParams(
+            actionBarSize = resources.getDimension(R.dimen.tool_bar_height).toInt(),
+            menuObjects = getMenuObjects(),
+            isClosableOutside = false
+        )
+
+        contextMenuDialogFragment = ContextMenuDialogFragment.newInstance(menuParams).apply {
+            menuItemClickListener = { view, position ->
+                Toast.makeText(
+                    this.requireContext(),
+                    "Clicked on position: $position",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            menuItemLongClickListener = { view, position ->
+                Toast.makeText(
+                    this.requireContext(),
+                    "Long clicked on position: $position",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun getMenuObjects() = mutableListOf<MenuObject>().apply {
+        val close = MenuObject().apply { setResourceValue(R.drawable.ic_clear_black_24dp) }
+        val moreApps = MenuObject("More apps").apply { setResourceValue(R.drawable.ic_share) }
+        val rateUs = MenuObject("Rate Us").apply {
+            setResourceValue(R.drawable.ic_share)
+
+        }
+        val feedback = MenuObject("Feedback and Suggestions").apply {
+            setResourceValue(R.drawable.ic_share)
+        }
+        val share = MenuObject("Share with friends").apply {
+            setResourceValue(R.drawable.ic_share)
+        }
+
+        add(close)
+        add(moreApps)
+        add(rateUs)
+        add(feedback)
+        add(share)
+    }
+
+    private fun showContextMenuDialogFragment() {
+        if (supportFragmentManager.findFragmentByTag(ContextMenuDialogFragment.TAG) == null) {
+            contextMenuDialogFragment.show(supportFragmentManager, ContextMenuDialogFragment.TAG)
+        }
+    }
 }
+
+
+

@@ -396,6 +396,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
                 intent?.putExtra("title", item.get(1))
                 intent?.putExtra("url", item.get(2))
                 intent?.putExtra("app_icon", item.get(3))
+                intent?.putExtra("color", item.get(4))
 
                 startActivity(intent)
             }
@@ -404,6 +405,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
             intent.putExtra("title", item.get(1))
             intent.putExtra("url", item.get(2))
             intent.putExtra("app_icon", item.get(3))
+            intent?.putExtra("color", item.get(4))
 
             startActivity(intent)
         }
@@ -421,6 +423,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
         intent?.putExtra("title", item.get(1))
         intent?.putExtra("url", item.get(2))
         intent?.putExtra("app_icon", item.get(4))
+
 
         val bundle = Bundle()
         bundle.putString("title", item.get(1))

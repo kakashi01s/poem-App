@@ -78,6 +78,8 @@ dependencies {
 
     implementation 'com.github.st235:expandablebottombar:1.4.0'
 
+    implementation 'com.github.Yalantis:Context-Menu.Android:1.1.4'
+
 
     implementation 'com.github.faruktoptas:FancyShowCaseView:1.3.5'
 
