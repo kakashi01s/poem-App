@@ -1,15 +1,27 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.fragment_bookmark.*
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.bookmark.Bookmarks
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Pref
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.RecyclerTouchListener
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.RecyclerTouchListener.OnRowClickListener
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.RecyclerTouchListener.OnSwipeOptionsClickListener
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.WebActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.BookmarkAdapter
 
 
@@ -31,15 +43,27 @@ class BookmarkFragment : Fragment() {
 
     lateinit var b_recycler: RecyclerView
     lateinit var b_adapter: BookmarkAdapter
-    var bookmarkList: String ? = null
-    var pre_bookmarkList: String ? = null
-   var list : ArrayList<String> = ArrayList()
+    var bookmarkList: ArrayList<Bookmarks> = ArrayList()
+
+    private var sharedPreferences: SharedPreferences? = null
+    private var editor: SharedPreferences.Editor? = null
+
+    val STORE_FILE_NAME = "Bookmarks_data"
+
+    private var touchListener: RecyclerTouchListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getInt(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+        }
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if(isVisibleToUser){
+            onRefreshFragment()
         }
     }
 
@@ -54,29 +78,113 @@ class BookmarkFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        sharedPreferences =
+            requireActivity().getSharedPreferences(
+                STORE_FILE_NAME,
+                Context.MODE_PRIVATE
+            )
+        editor =
+            sharedPreferences!!.edit()
 
         Pref.initializeInstance(this.context)
         Log.d("Share", Pref.instance!!.bookmarksData.toString())
 
-
-        pre_bookmarkList = bookmarkList
-        bookmarkList = Pref.instance!!.bookmarksData
-
-        Log.d("SharePre" , pre_bookmarkList.toString())
-        Log.d("Sharelist" , bookmarkList.toString())
-
-        if (bookmarkList != pre_bookmarkList) {
-            list.add(bookmarkList!!)
-        }
-        Log.d("Sharebl", list.toString())
-
         b_recycler = view.findViewById(R.id.bookmark_rec)
 
-        b_adapter = BookmarkAdapter(this.requireContext(), list)
+        b_adapter = BookmarkAdapter(this.requireContext(), bookmarkList)
 
         b_recycler.layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
         b_recycler.adapter = b_adapter
 
+
+        touchListener = RecyclerTouchListener(requireActivity(), b_recycler)
+        touchListener!!
+            .setClickable(object : OnRowClickListener {
+                override fun onRowClicked(position: Int) {
+                    val bookmarkData: Bookmarks? = bookmarkList[position]
+                    val bundle = Bundle()
+                    val intent: Intent = Intent(activity, WebActivity::class.java)
+                    intent.putExtra("title", bookmarkData.bookmarkTitle)
+                    intent.putExtra("url", bookmarkData.bookmarkUrl)
+                    intent.putExtra("app_icon", bookmarkData.bookmarkLogo)
+                    intent.putExtra("color", bookmarkData)
+
+                    startActivity(intent)
+
+//                    Toast.makeText(
+//                        context,
+//                        bookmarkList[position].bookmarkTitle,
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+                }
+
+                override fun onIndependentViewClicked(independentViewID: Int, position: Int) {}
+            })
+            .setSwipeOptionViews(R.id.delete_task, R.id.edit_task)
+            .setSwipeable(R.id.rowFG, R.id.rowBG, object : OnSwipeOptionsClickListener {
+                override fun onSwipeOptionClicked(viewID: Int, position: Int) {
+                    when (viewID) {
+                        R.id.delete_task -> {
+                            bookmarkList.removeAt(position)
+                            b_adapter.setList(bookmarkList)
+                        }
+                        R.id.edit_task -> Toast.makeText(
+                            context,
+                            "Share",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            })
+        b_recycler.addOnItemTouchListener(touchListener!!)
+
+        getBookmarks(view)
+
+    }
+
+    private fun getBookmarks(view: View) {
+        if (bookmarkList.isNotEmpty()) {
+            Log.d("TAG", "getBookmarks: list clear")
+            bookmarkList.clear()
+        }
+        val serializedObject: String =
+            sharedPreferences!!.getString(
+                "Bookmarks",
+                null
+            )!!
+        if (serializedObject != null) {
+            val gson = Gson()
+            val type = object : TypeToken<ArrayList<Bookmarks?>?>() {}.type
+            bookmarkList = gson.fromJson(serializedObject, type)
+            if (bookmarkList != null) {
+                Log.d("TAG", "getBookmarks: " + bookmarkList.size)
+            }
+            if (bookmarkList.isEmpty()) {
+                onSetEmptyLayout()
+            } else {
+                bookmark_rec.visibility = View.VISIBLE
+                emptyLayout.visibility = View.GONE
+                b_adapter.setList(bookmarkList)
+                b_adapter.notifyDataSetChanged()
+            }
+        } else {
+            onSetEmptyLayout()
+        }
+    }
+
+    private fun onSetEmptyLayout() {
+        bookmark_rec.visibility = View.GONE
+        emptyLayout.visibility = View.VISIBLE
+    }
+
+    private fun onRefreshFragment() {
+        Log.d("TAG", "onRefreshFragment: ")
+        getBookmarks(requireView())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        b_recycler.addOnItemTouchListener(touchListener!!);
     }
 
 

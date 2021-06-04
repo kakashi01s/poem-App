@@ -3,9 +3,10 @@ package shopping.grocery.medicine.online.deals.coupons.compare.buy.model
 import com.google.gson.annotations.Expose
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
-class AllAppsModel {
+class AllAppsModel: Serializable {
     @SerializedName("range")
     @Expose
     private var range: String? = null

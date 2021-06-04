@@ -5,9 +5,10 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -25,11 +26,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_web.*
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.bookmark.Bookmarks
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Pref
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Helper
+import kotlinx.android.synthetic.main.custom_toast.*
 
 
 class WebActivity : AppCompatActivity() {
@@ -57,6 +60,10 @@ class WebActivity : AppCompatActivity() {
     var mGeoLocationRequestOrigin: String? = null
     var mGeoLocationCallback: GeolocationPermissions.Callback? = null
 
+    private var sharedPreferences: SharedPreferences? = null
+    private var editor: SharedPreferences.Editor? = null
+    val STORE_FILE_NAME = "Bookmarks_data"
+
     lateinit var btn1: FloatingActionButton
     lateinit var share: FloatingActionButton
     private lateinit var bkmark: FloatingActionButton
@@ -77,6 +84,11 @@ class WebActivity : AppCompatActivity() {
         initData()
 
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+        sharedPreferences =
+            getSharedPreferences(STORE_FILE_NAME, MODE_PRIVATE)
+        editor = sharedPreferences!!.edit()
+
+        bkmark.isEnabled = false
 
         if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
 
@@ -115,21 +127,35 @@ class WebActivity : AppCompatActivity() {
         }
 
         bkmark.setOnClickListener {
-            val bookmarks: Bookmarks? = Bookmarks()
-            bookmarks!!.bookmarkTitle = webView!!.title
-            bookmarks.bookmarkStoreTitle = appTitle
-            bookmarks.bookmarkUrl = webView!!.url
-            bookmarks.bookmarkLogo = appIcon
 
-            bookmarksList!!.add(bookmarks)
+            Log.d(TAG, "onCreate: bookmarks "+bkmark.tag)
 
-            val bundle = Bundle()
-            bundle.putString("bookmarkTitle", webView!!.title)
-            bundle.putString("bookmarkStoreTitle", appTitle)
-            bundle.putString("bookmarkUrl", webView!!.url)
-            firebaseAnalytics!!.logEvent("bookmarks_Usage", bundle)
+            if (bkmark.tag as Int === R.drawable.ic_bookmark) {
+                val bookmarks: Bookmarks? = Bookmarks()
+                bookmarks!!.bookmarkTitle = webView!!.title
+                bookmarks.bookmarkStoreTitle = appTitle
+                bookmarks.bookmarkUrl = webView!!.url
+                bookmarks.setBookmarkUrlWithoutAffiliate(getUrlWithoutParameters(webView!!.url!!))
+                bookmarks.bookmarkLogo = appIcon
 
-            setBookmarks()
+                bookmarksList!!.add(bookmarks)
+
+                val bundle = Bundle()
+                bundle.putString("bookmarkTitle", webView!!.title)
+                bundle.putString("bookmarkStoreTitle", appTitle)
+                bundle.putString("bookmarkUrl", webView!!.url)
+                firebaseAnalytics!!.logEvent("bookmarks_Usage", bundle)
+
+                setBookmarks()
+
+                Helper().makeToast("Item added to your wishlist",this@WebActivity)
+                bkmark.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_bookmark_fill))
+                bkmark.tag = R.drawable.ic_baseline_bookmark_fill
+            } else {
+                bkmark.setImageDrawable(resources.getDrawable(R.drawable.ic_bookmark))
+                bkmark.tag = R.drawable.ic_bookmark
+                removeBookmark(webView!!.url)
+            }
         }
     }
 
@@ -162,8 +188,7 @@ class WebActivity : AppCompatActivity() {
 
     private fun setBookmarks() {
         Log.d("ShareBookmark", bookmarksList.toString())
-        val bookmarksData = Gson().toJson(bookmarksList)
-        Pref.instance!!.bookmarksData = bookmarksData
+        editor!!.putString("Bookmarks", Gson().toJson(bookmarksList)).apply()
     }
 
     fun removeBookmark(bookmarkurl: String?) {
@@ -175,32 +200,56 @@ class WebActivity : AppCompatActivity() {
                         .equals(bookmarkurl)
                 ) {
                     bookmarksList!!.removeAt(i)
-                    //                    Toast.makeText(WebActivity.this,"Bookmark removed successfully",Toast.LENGTH_SHORT).show();
-                    val toast = Toast.makeText(
-                        this@WebActivity,
-                        "Item removed from wishlist",
-                        Toast.LENGTH_SHORT
-                    )
-                    val view = toast.view
-
-//Gets the actual oval background of the Toast then sets the colour filter
-                    view?.background?.setColorFilter(
-                        resources.getColor(R.color.black_75),
-                        PorterDuff.Mode.SRC_IN
-                    )
-
-//Gets the TextView from the Toast so it can be editted
-                    var text: TextView? = null
-                    if (view != null) {
-                        text = view.findViewById(android.R.id.message)
-                    }
-                    text?.setTextColor(resources.getColor(R.color.white))
-                    toast.show()
-                    Log.d("TAG", "removeBookmark: removed")
+                    Helper().makeToast("Item removed from wishlist",this@WebActivity)
                 }
                 i++
             }
             setBookmarks()
+        }
+    }
+
+    fun isBookmarked(webUrl: String?): Boolean {
+        getBookmarks()
+        if (bookmarksList != null) {
+            var i = 0
+            while (i < bookmarksList!!.size) {
+                val bookmarkData: Bookmarks = bookmarksList!![i]
+                Log.d(TAG, "isBookmarked: "+bookmarkData.getBookmarkUrlWithoutAffiliate())
+                if (bookmarkData.getBookmarkUrlWithoutAffiliate() != null && bookmarkData.getBookmarkUrlWithoutAffiliate()
+                        .equals(webUrl)
+                ) {
+                    return true
+                }
+                i++
+            }
+        }
+        return false
+    }
+
+    private fun getUrlWithoutParameters(url: String): String? {
+        try {
+            return if (url.contains("?")) {
+                url.substring(0, url.indexOf("?"))
+            } else {
+                url
+            }
+        } catch (s: StringIndexOutOfBoundsException) {
+            Log.d("TAG", "getUrlWithoutParameters: " + s.localizedMessage)
+        }
+        return null
+    }
+
+
+    private fun getBookmarks() {
+        if (bookmarksList != null && !bookmarksList!!.isEmpty()) {
+            bookmarksList!!.clear()
+        }
+        if(sharedPreferences!!.getString("Bookmarks", null) != null){
+            val serializedObject: String = sharedPreferences!!.getString("Bookmarks", null)!!
+            val gson = Gson()
+            val type = object : TypeToken<ArrayList<Bookmarks?>?>() {}.type
+            bookmarksList = gson.fromJson<ArrayList<Bookmarks>>(serializedObject, type)
+            Log.d(TAG, "getBookmarks: "+bookmarksList!!.size)
         }
     }
 
@@ -242,6 +291,17 @@ class WebActivity : AppCompatActivity() {
                     view.loadUrl(request.url.toString())
                 }
                 return false
+            }
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                if (isBookmarked(getUrlWithoutParameters(view!!.getUrl()!!))) {
+                        bkmark.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_bookmark_fill))
+                        bkmark.tag = R.drawable.ic_baseline_bookmark_fill
+                    } else {
+                    bkmark.setImageDrawable(resources.getDrawable(R.drawable.ic_bookmark))
+                    bkmark.tag = R.drawable.ic_bookmark
+                }
             }
         }
 
@@ -297,8 +357,9 @@ class WebActivity : AppCompatActivity() {
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
-                if (newProgress >= 80) {
+                if (newProgress >= 90) {
                     rlWebSplash!!.visibility = View.GONE
+                    bkmark.setEnabled(true)
                 }
             }
 
@@ -333,7 +394,9 @@ class WebActivity : AppCompatActivity() {
 
     fun loadWebSplash() {
 
-        rlWebSplash!!.setBackgroundColor(Color.parseColor(color))
+        if(color.isNullOrEmpty()){
+            rlWebSplash!!.setBackgroundColor(Color.parseColor(color))
+        }
 
         Glide.with(ivAppIcon!!.context)
             .load(appIcon)

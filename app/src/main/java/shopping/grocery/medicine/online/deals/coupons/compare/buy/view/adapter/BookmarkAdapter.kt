@@ -1,17 +1,20 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.chauthai.swipereveallayout.ViewBinderHelper
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.bookmark.Bookmarks
 
-class BookmarkAdapter(var context: Context, var list: ArrayList<String>) :
+class BookmarkAdapter(var context: Context, var list: ArrayList<Bookmarks>) :
     RecyclerView.Adapter<BookmarkAdapter.SwipeViewHolder>() {
 
 
@@ -23,18 +26,16 @@ class BookmarkAdapter(var context: Context, var list: ArrayList<String>) :
 
     override fun onBindViewHolder(holder: SwipeViewHolder, position: Int) {
 
+        var bookmarks: Bookmarks = list[position]
 
+        holder.text.text = bookmarks.bookmarkTitle
+        holder.url.text = bookmarks.bookmarkUrl
 
-        ViewBinderHelper().setOpenOnlyOne(true)
-        ViewBinderHelper().bind(holder.swipeRevealLayout, list[position][1].toString())
-        ViewBinderHelper().closeLayout(list[position][1].toString())
-
-        holder.text.text = list[position][1].toString()
-
-//        Glide.with(context).load(list[position].bookmarkUrl).into(holder.image)
+        Glide.with(context).load(bookmarks.bookmarkLogo).into(holder.image)
     }
 
     override fun getItemCount(): Int {
+        Log.d("TAG", "getItemCount: bookmarks"+list.size)
         return list.size
     }
 
@@ -42,12 +43,18 @@ class BookmarkAdapter(var context: Context, var list: ArrayList<String>) :
     class SwipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val image: ImageView = itemView.findViewById(R.id.bkmark_image)
-        val text: TextView = itemView.findViewById(R.id.bkmark_text)
-        val delete: TextView = itemView.findViewById(R.id.delete)
-        val more: TextView = itemView.findViewById(R.id.more)
-        val swipeRevealLayout: SwipeRevealLayout = itemView.findViewById(R.id.swipe_layout)
+        val text: TextView = itemView.findViewById(R.id.bkmark_title)
+        val url: TextView = itemView.findViewById(R.id.bkmark_url)
 
 
+    }
+
+    @JvmName("setList1")
+    fun setList(list: ArrayList<Bookmarks>){
+        if(this.list.isNotEmpty()){
+            this.list.clear()
+        }
+        this.list.addAll(list)
     }
 
 }

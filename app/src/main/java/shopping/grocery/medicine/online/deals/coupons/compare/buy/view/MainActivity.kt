@@ -1,15 +1,13 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view
 
-import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
@@ -24,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.BuildConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment
 import com.yalantis.contextmenu.lib.MenuObject
 import com.yalantis.contextmenu.lib.MenuParams
@@ -33,8 +32,10 @@ import kotlinx.android.synthetic.main.bookmark_layout.*
 import me.toptas.fancyshowcase.FancyShowCaseView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseActivity
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.CustomViewPager
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.ForceUpdateChecker
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Pref
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.home.AllAppsAdapter
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.AllAppsItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.CategoryViewModel
@@ -74,6 +75,8 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
     private var searchTxt: String? = null
 
+    var firebaseRemoteConfig: FirebaseRemoteConfig? = null
+
     override val bindingVariable: Int
         get() = 0
     override val layoutId: Int
@@ -87,7 +90,20 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
         initViews()
 
+//        initToolbar()
         initMenuFragment()
+
+        Pref.initializeInstance(this)
+
+        firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+
+        if (Pref.instance!!.dataChanged!!) {
+            Pref.instance!!.dataChanged = false
+        }
+
+        if(firebaseRemoteConfig!!.getBoolean(Constants().DATA_CHANGED)){
+            Pref.instance!!.dataChanged = true
+        }
 
         dialog = Dialog(this)
 
@@ -158,6 +174,10 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 }
             }
         }
+
+        ivMenu.setOnClickListener {
+            showContextMenuDialogFragment()
+        }
     }
 
     private fun initViews() {
@@ -167,6 +187,16 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         viewPagerTab = findViewById(R.id.view_pager_tab)
         search = findViewById(R.id.search)
     }
+
+//    private fun initToolbar() {
+//        setSupportActionBar(toolbar)
+//
+//        supportActionBar?.apply {
+//            setHomeButtonEnabled(false)
+//            setDisplayHomeAsUpEnabled(false)
+//            setDisplayShowTitleEnabled(false)
+//        }
+//    }
 
     private fun fancy(it: View, title: String) {
         return FancyShowCaseView.Builder(this).focusOn(it).title(title).delay(50).showOnce(title)
@@ -347,63 +377,110 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         this.onUpdateLogEvent(bundle, "all_apps_visited", true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu2, menu)
-        Log.d("menuInflate", "done")
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu2, menu)
+//        Log.d("menuInflate", "done")
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        item.let {
+//            when (it.itemId) {
+//                R.id.context_menu -> {
+//                    Log.d("Menu Item", it.itemId.toString())
+//                    showContextMenuDialogFragment()
+//                }
+//            }
+//        }
+//
+//        return super.onOptionsItemSelected(item)
+//    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        item.let {
-            when (it.itemId) {
-                R.id.context_menu -> {
-                    Log.d("Menu Item", it.itemId.toString())
-                    showContextMenuDialogFragment()
-                }
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
-    @SuppressLint("ResourceType")
     private fun initMenuFragment() {
         val menuParams = MenuParams(
-            actionBarSize = resources.getDimension(R.dimen.tool_bar_height).toInt(),
+            actionBarSize = resources.getDimension(R.dimen.menu).toInt(),
             menuObjects = getMenuObjects(),
-            isClosableOutside = false
+            isClosableOutside = true
         )
 
         contextMenuDialogFragment = ContextMenuDialogFragment.newInstance(menuParams).apply {
             menuItemClickListener = { view, position ->
-                Toast.makeText(
-                    this.requireContext(),
-                    "Clicked on position: $position",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            menuItemLongClickListener = { view, position ->
-                Toast.makeText(
-                    this.requireContext(),
-                    "Long clicked on position: $position",
-                    Toast.LENGTH_SHORT
-                ).show()
+                when(position){
+                    1 -> {
+                        try {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/dev?id=6823602592155636380")))
+                        } catch (e: ActivityNotFoundException) {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=6823602592155636380")))
+                        }
+                    }
+                    2 -> {
+                        try {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=shopping.grocery.medicine.online.deals.coupons.compare.buy")))
+                        } catch (e: ActivityNotFoundException) {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=shopping.grocery.medicine.online.deals.coupons.compare.buy")))
+                        }
+                    }
+                    2 -> {
+                        val i = Intent(Intent.ACTION_SEND)
+                        i.type = "message/rfc822"
+                        i.putExtra(Intent.EXTRA_EMAIL, arrayOf("infinitywebapps@gmail.com"))
+                        i.putExtra(Intent.EXTRA_SUBJECT, "Feedback "+resources.getString(R.string.app_name))
+                        i.putExtra(Intent.EXTRA_TEXT, "Feedback :: ")
+                        try {
+                            startActivity(Intent.createChooser(i, "Send feedback..."))
+                        } catch (ex: ActivityNotFoundException) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "There are no email clients installed.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                    2 -> {
+                        val intent = Intent(Intent.ACTION_SEND)
+                        /*This will be the actual content you wish you share.*/
+                        /*This will be the actual content you wish you share.*/
+                        val shareBody = "Use this "
+                        /*The type of the content is text, obviously.*/
+                        /*The type of the content is text, obviously.*/intent.type = "text/plain"
+                        /*Applying information Subject and Body.*/
+                        /*Applying information Subject and Body.*/
+                        intent.putExtra(Intent.EXTRA_TEXT, shareBody)
+                        /*Fire!*/
+                        /*Fire!*/startActivity(
+                            Intent.createChooser(
+                                intent,
+                                "Share via"
+                            )
+                        )
+                    }
+
+                }
             }
         }
     }
 
-    private fun getMenuObjects() = mutableListOf<MenuObject>().apply {
-        val close = MenuObject().apply { setResourceValue(R.drawable.ic_clear_black_24dp) }
-        val moreApps = MenuObject("More apps").apply { setResourceValue(R.drawable.ic_share) }
-        val rateUs = MenuObject("Rate Us").apply {
-            setResourceValue(R.drawable.ic_share)
 
+    private fun getMenuObjects() = mutableListOf<MenuObject>().apply {
+        val close = MenuObject().apply {
+            setResourceValue(R.drawable.ic_baseline_close)
+            setBgColorValue(resources.getColor(R.color.colorPrimary))
         }
-        val feedback = MenuObject("Feedback and Suggestions").apply {
-            setResourceValue(R.drawable.ic_share)
+        val moreApps = MenuObject("More apps").apply {
+            setResourceValue(R.drawable.ic_baseline_store)
+            setBgColorValue(resources.getColor(R.color.colorPrimary))
         }
-        val share = MenuObject("Share with friends").apply {
+        val rateUs = MenuObject("Rate Us").apply {
+            setResourceValue(R.drawable.ic_baseline_star_rate)
+            setBgColorValue(resources.getColor(R.color.colorPrimary))
+        }
+        val feedback = MenuObject("Feedback").apply {
+            setResourceValue(R.drawable.ic_baseline_feedback)
+            setBgColorValue(resources.getColor(R.color.colorPrimary))
+        }
+        val share = MenuObject("Share").apply {
             setResourceValue(R.drawable.ic_share)
+            setBgColorValue(resources.getColor(R.color.colorPrimary))
         }
 
         add(close)
@@ -414,6 +491,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
     }
 
     private fun showContextMenuDialogFragment() {
+        Log.d("TAG", "showContextMenuDialogFragment: ")
         if (supportFragmentManager.findFragmentByTag(ContextMenuDialogFragment.TAG) == null) {
             contextMenuDialogFragment.show(supportFragmentManager, ContextMenuDialogFragment.TAG)
         }

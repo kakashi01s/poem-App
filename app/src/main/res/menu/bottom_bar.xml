@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/id_home"
-        android:icon="@drawable/shop"
+        android:icon="@drawable/ic_baseline_home"
         app:exb_color="#FFF"
         android:orderInCategory="1"
         android:title="Home" />

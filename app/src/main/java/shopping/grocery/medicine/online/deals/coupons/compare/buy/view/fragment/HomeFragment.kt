@@ -31,6 +31,7 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseFragment
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.AllAppsModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Pref
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.MainActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.WebActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.home.AllAppsAdapter
@@ -110,38 +111,66 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
 
         setRecyclerView()
 
+        Pref.initializeInstance(context)
+
         homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
 
-        val isFilePresent: Boolean = isFilePresent(requireContext(), Constants().ALL_APPS_STORAGE_FILE_NAME)
-        if (isFilePresent) {
-            Log.d("TAG", "onChanged: topCard isFilePresent $isFilePresent")
-            val allAppsModel: AllAppsModel = read(requireContext(), Constants().ALL_APPS_STORAGE_FILE_NAME)!!
-            Log.d("TAG", "onChanged: topCard jsonData " + Gson().toJson(allAppsModel))
-            allAppsAdapter?.setItems(allAppsModel.getValues())
-        }
+        if(!Pref.instance!!.dataChanged!!){
+            val isAllAppsFilePresent: Boolean = isFilePresent(requireContext(), Constants().ALL_APPS_STORAGE_FILE_NAME)
+            if (isAllAppsFilePresent) {
+                Log.d("TAG", "onChanged: isAllAppsFilePresent isFilePresent $isAllAppsFilePresent")
+                val allAppsModel: AllAppsModel = read(requireContext(), Constants().ALL_APPS_STORAGE_FILE_NAME)!!
+                Log.d("TAG", "onChanged: isAllAppsFilePresent jsonData " + Gson().toJson(allAppsModel))
+                allAppsAdapter?.setItems(allAppsModel.getValues())
+            }
 
+            val isCarouselFilePresent: Boolean = isFilePresent(requireContext(), Constants().CAROUSEL_VIEW_STORAGE_FILE_NAME)
+            if (isCarouselFilePresent) {
+                Log.d("TAG", "onChanged: isCarouselFilePresent isFilePresent $isCarouselFilePresent")
+                val allAppsModel: AllAppsModel = read(requireContext(), Constants().CAROUSEL_VIEW_STORAGE_FILE_NAME)!!
+                Log.d("TAG", "onChanged: isCarouselFilePresent jsonData " + Gson().toJson(allAppsModel))
+                carouselImagesList!!.addAll(allAppsModel.getValues()!!)
+                onLoadCarouselImages()
+            }
+
+            val isTrendingFilePresent: Boolean = isFilePresent(requireContext(), Constants().TRENDING_STORAGE_FILE_NAME)
+            if (isTrendingFilePresent) {
+                Log.d("TAG", "onChanged: isTrendingFilePresent isFilePresent $isTrendingFilePresent")
+                val allAppsModel: AllAppsModel = read(requireContext(), Constants().TRENDING_STORAGE_FILE_NAME)!!
+                Log.d("TAG", "onChanged: isTrendingFilePresent jsonData " + Gson().toJson(allAppsModel))
+                trendingAdapter?.setItems(allAppsModel.getValues())
+            }
+        }
         homeViewModel?.loadData()
 
         homeViewModel!!.allAppsLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "HomeFragment Live allAppsLiveData$t")
-            allAppsAdapter?.setItems(t.getValues())
+            if(Pref.instance!!.dataChanged!!){
+                updateAllAppsJsonFile(t)
+                allAppsAdapter?.setItems(t.getValues())
+            }
         })
 
         homeViewModel!!.carouselImagesLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "HomeFragment Live carousel $t")
-            carouselImagesList!!.addAll(t.getValues()!!)
-            onLoadCarouselImages()
+            if(Pref.instance!!.dataChanged!!){
+                updateCarouselJsonFile(t)
+                carouselImagesList!!.addAll(t.getValues()!!)
+                onLoadCarouselImages()
+            }
         })
 
         homeViewModel!!.trendingLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "HomeFragment Live trendingLiveData $t")
-            trendingAdapter!!.setItems(t.getValues())
+            if(Pref.instance!!.dataChanged!!){
+                updateTrendingJsonFile(t)
+                trendingAdapter!!.setItems(t.getValues())
+            }
         })
 
 
         if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
             onLoadFBNativeAd1(view, requireContext())
-            onLoadFBNativeAd2(view, requireContext())
         }
     }
 
@@ -266,62 +295,6 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
                 .build()
         );
     }
-
-    fun onLoadFBNativeAd2(view: View, context: Context) {
-        nativeAdFB2 = NativeAd(context, Constants().getFbNativeHome2())
-        val nativeAdListener: NativeAdListener = object : NativeAdListener {
-            override fun onError(p0: Ad?, p1: AdError?) {
-                Log.d("TAG", "onError: onLoadFBNativeAd1 " + p1!!.errorMessage)
-            }
-
-            override fun onAdLoaded(ad: Ad?) {
-
-                // Race condition, load() called again before last ad was displayed
-                if (nativeAdFB2 == null || nativeAdFB2 !== ad) {
-                    return
-                }
-                // Inflate Native Ad into Container
-
-                // Add the Ad view into the ad container.
-                nativeAdLayout = view.findViewById(R.id.native_ad_container_home_2)
-                val inflater = LayoutInflater.from(context)
-                // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-                adView =
-                    inflater.inflate(
-                        R.layout.native_ad_layout,
-                        nativeAdLayout,
-                        false
-                    ) as LinearLayout
-                nativeAdLayout!!.addView(adView)
-
-                inflateAd(nativeAdFB2!!, adView!!)
-
-                val adChoicesContainer: LinearLayout = view.findViewById(R.id.ad_choices_container)
-                val adOptionsView = AdOptionsView(context, nativeAdFB2, nativeAdLayout)
-                adChoicesContainer.removeAllViews()
-                adChoicesContainer.addView(adOptionsView, 0)
-            }
-
-            override fun onAdClicked(p0: Ad?) {
-                Log.d("TAG", "onAdClicked: onLoadFBNativeAd1")
-            }
-
-            override fun onLoggingImpression(p0: Ad?) {
-                Log.d("TAG", "onLoggingImpression: onLoadFBNativeAd1")
-            }
-
-            override fun onMediaDownloaded(p0: Ad?) {
-                Log.d("TAG", "onMediaDownloaded: onLoadFBNativeAd1")
-            }
-        }
-
-        nativeAdFB2!!.loadAd(
-            nativeAdFB2!!.buildLoadAdConfig()
-                .withAdListener(nativeAdListener)
-                .build()
-        );
-    }
-
     private fun inflateAd(nativeAd: NativeAd, adView: LinearLayout) {
         nativeAd.unregisterView()
 
@@ -402,10 +375,10 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
             }
         } else {
             val intent: Intent = Intent(activity, WebActivity::class.java)
-            intent.putExtra("title", item.get(1))
-            intent.putExtra("url", item.get(2))
-            intent.putExtra("app_icon", item.get(3))
-            intent?.putExtra("color", item.get(4))
+            intent.putExtra("title", item[1])
+            intent.putExtra("url", item[2])
+            intent.putExtra("app_icon", item[3])
+            intent.putExtra("color", item[4])
 
             startActivity(intent)
         }
@@ -476,18 +449,34 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
         }
     }
 
-    fun updateJsonFile(allAppsModel: AllAppsModel?) {
+    fun updateCarouselJsonFile(allAppsModel: AllAppsModel?) {
         var fileOutputStream: FileOutputStream? = null
         try {
             fileOutputStream =
-                requireContext().openFileOutput(Constants().ALL_APPS_STORAGE_FILE_NAME, Context.MODE_PRIVATE)
+                requireContext().openFileOutput(Constants().CAROUSEL_VIEW_STORAGE_FILE_NAME, Context.MODE_PRIVATE)
             val objectOutputStream = ObjectOutputStream(fileOutputStream)
             objectOutputStream.flush()
             objectOutputStream.writeObject(allAppsModel)
             objectOutputStream.close()
             fileOutputStream.close()
         } catch (fileNotFoundException: IOException) {
-            Log.d("TAG", "accept: allApps exception " + fileNotFoundException.message)
+            Log.d("TAG", "accept: updateCarouselJsonFile exception " + fileNotFoundException.message)
+            fileNotFoundException.printStackTrace()
+        }
+    }
+
+    fun updateTrendingJsonFile(allAppsModel: AllAppsModel?) {
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream =
+                requireContext().openFileOutput(Constants().TRENDING_STORAGE_FILE_NAME, Context.MODE_PRIVATE)
+            val objectOutputStream = ObjectOutputStream(fileOutputStream)
+            objectOutputStream.flush()
+            objectOutputStream.writeObject(allAppsModel)
+            objectOutputStream.close()
+            fileOutputStream.close()
+        } catch (fileNotFoundException: IOException) {
+            Log.d("TAG", "accept: updateTrendingJsonFile exception " + fileNotFoundException.message)
             fileNotFoundException.printStackTrace()
         }
     }

@@ -14,6 +14,8 @@
     <color name="black_50">#80000000</color>
     <color name="black_25">#40000000</color>
 
+    <color name="light_grey">#DFDFDF</color>
+
     <color name="background">#f3f5f5</color>
     <color name="transparent">#00ffffff</color>
     <color name="transparent_black">#9A0E0E0E</color>
