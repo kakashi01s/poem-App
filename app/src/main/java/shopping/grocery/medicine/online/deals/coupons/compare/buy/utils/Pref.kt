@@ -25,7 +25,7 @@ class Pref(private val context: Context?) {
 
     var dataChangedDate: String?
         get() {
-            return preferences.getString(DATA_CHANGED_DATE, null)
+            return preferences.getString(DATA_CHANGED_DATE, "0")
         }
         set(interval) {
             preferences.edit().putString(DATA_CHANGED_DATE, interval)

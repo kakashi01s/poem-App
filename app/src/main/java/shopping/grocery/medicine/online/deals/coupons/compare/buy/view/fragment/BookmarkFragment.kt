@@ -147,27 +147,33 @@ class BookmarkFragment : Fragment() {
             Log.d("TAG", "getBookmarks: list clear")
             bookmarkList.clear()
         }
-        val serializedObject: String =
-            sharedPreferences!!.getString(
-                "Bookmarks",
-                null
-            )!!
-        if (serializedObject != null) {
-            val gson = Gson()
-            val type = object : TypeToken<ArrayList<Bookmarks?>?>() {}.type
-            bookmarkList = gson.fromJson(serializedObject, type)
-            if (bookmarkList != null) {
-                Log.d("TAG", "getBookmarks: " + bookmarkList.size)
-            }
-            if (bookmarkList.isEmpty()) {
-                onSetEmptyLayout()
+        if(sharedPreferences!!.getString("Bookmarks", null) != null){
+            val serializedObject: String =
+                sharedPreferences!!.getString(
+                    "Bookmarks",
+                    null
+                )!!
+            if (serializedObject != null) {
+                val gson = Gson()
+                val type = object : TypeToken<ArrayList<Bookmarks?>?>() {}.type
+                bookmarkList = gson.fromJson(serializedObject, type)
+                if (bookmarkList != null) {
+                    Log.d("TAG", "getBookmarks: " + bookmarkList.size)
+                }
+                if (bookmarkList.isEmpty()) {
+                    onSetEmptyLayout()
+                } else {
+                    bookmark_rec.visibility = View.VISIBLE
+                    emptyLayout.visibility = View.GONE
+                    b_adapter.setList(bookmarkList)
+                    b_adapter.notifyDataSetChanged()
+                }
             } else {
-                bookmark_rec.visibility = View.VISIBLE
-                emptyLayout.visibility = View.GONE
-                b_adapter.setList(bookmarkList)
-                b_adapter.notifyDataSetChanged()
+                onSetEmptyLayout()
             }
-        } else {
+
+        }
+        else {
             onSetEmptyLayout()
         }
     }
