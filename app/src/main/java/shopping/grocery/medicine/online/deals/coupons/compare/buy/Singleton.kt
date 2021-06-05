@@ -70,7 +70,8 @@ class Singleton : Application() {
         // set in-app defaults
         val remoteConfigDefaults = TreeMap<String?, Any?>()
         remoteConfigDefaults[Constants().SHOW_ADS] = false
-        remoteConfigDefaults[Constants().DATA_CHANGED] = false
+        remoteConfigDefaults[Constants().DATA_CHANGED_DATE] = "1622868730040"
+        remoteConfigDefaults[Constants().DEALS_URL] = "https://inrdeals.com/embed/deals?user=ayu619462617"
         remoteConfigDefaults[Constants().OPEN_BROWSER] = false
         remoteConfigDefaults[ForceUpdateChecker().KEY_UPDATE_REQUIRED] = false
         remoteConfigDefaults[ForceUpdateChecker().KEY_CURRENT_VERSION] = "1.0"

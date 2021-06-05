@@ -23,6 +23,15 @@ class Pref(private val context: Context?) {
                 .apply()
         }
 
+    var dataChangedDate: String?
+        get() {
+            return preferences.getString(DATA_CHANGED_DATE, null)
+        }
+        set(interval) {
+            preferences.edit().putString(DATA_CHANGED_DATE, interval)
+                .apply()
+        }
+
     var dataChanged: Boolean?
         get() {
             return preferences.getBoolean(DATA_CHANGED, false)
@@ -90,6 +99,7 @@ class Pref(private val context: Context?) {
         private var sInstance: Pref? = null
         private val BOOKMARK_DATA: String = "bookmark_data"
         private val DATA_CHANGED: String = "data_changed"
+        private val DATA_CHANGED_DATE: String = "data_changed_date"
 
         @Synchronized
         fun initializeInstance(context: Context?) {

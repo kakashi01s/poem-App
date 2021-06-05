@@ -97,12 +97,14 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
-        if (Pref.instance!!.dataChanged!!) {
-            Pref.instance!!.dataChanged = false
-        }
+        Log.d("TAG", "onCreate: currentTime "+System.currentTimeMillis())
 
-        if(firebaseRemoteConfig!!.getBoolean(Constants().DATA_CHANGED)){
+        if(!Pref.instance!!.dataChangedDate.equals(firebaseRemoteConfig!!.getString(Constants().DATA_CHANGED_DATE))){
             Pref.instance!!.dataChanged = true
+            Pref.instance!!.dataChangedDate = firebaseRemoteConfig!!.getString(Constants().DATA_CHANGED_DATE)
+        }
+        else{
+            Pref.instance!!.dataChanged = false
         }
 
         dialog = Dialog(this)

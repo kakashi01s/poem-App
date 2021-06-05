@@ -2,8 +2,9 @@
     <gradient
         android:type="linear"
         android:startColor="@color/colorPrimary"
-        android:endColor="@color/colorPrimary"
-        android:gradientRadius="150dp"
+        android:centerColor="#12D8FA"
+        android:endColor="#A6FFCB"
+        android:angle="36"
         />
     <size android:height="400dp"
         android:width="250dp"/>

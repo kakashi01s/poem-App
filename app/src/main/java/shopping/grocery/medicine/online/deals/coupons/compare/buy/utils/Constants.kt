@@ -10,8 +10,9 @@ class Constants {
 
 
     val SHOW_ADS = "show_ads"
-    val DATA_CHANGED = "data_changed"
+    val DATA_CHANGED_DATE = "data_changed"
     val OPEN_BROWSER = "open_browser"
+    val DEALS_URL = "deals_url"
 
     val ALL_APPS_STORAGE_FILE_NAME = "all_apps_storage.json"
     val CAROUSEL_VIEW_STORAGE_FILE_NAME = "carousel_view_storage.json"

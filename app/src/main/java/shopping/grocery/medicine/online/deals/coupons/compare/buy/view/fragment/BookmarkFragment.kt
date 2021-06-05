@@ -104,10 +104,10 @@ class BookmarkFragment : Fragment() {
                     val bookmarkData: Bookmarks? = bookmarkList[position]
                     val bundle = Bundle()
                     val intent: Intent = Intent(activity, WebActivity::class.java)
-                    intent.putExtra("title", bookmarkData.bookmarkTitle)
+                    intent.putExtra("title", bookmarkData!!.bookmarkTitle)
                     intent.putExtra("url", bookmarkData.bookmarkUrl)
                     intent.putExtra("app_icon", bookmarkData.bookmarkLogo)
-                    intent.putExtra("color", bookmarkData)
+                    intent.putExtra("color", bookmarkData.webSplash)
 
                     startActivity(intent)
 

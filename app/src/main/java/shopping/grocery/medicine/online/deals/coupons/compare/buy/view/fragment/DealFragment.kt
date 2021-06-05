@@ -1,14 +1,21 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -37,7 +44,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [DealFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
+class DealFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: Int? = null
     private var param2: String? = null
@@ -61,6 +68,8 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
         }
     }
 
+    var webViewDeals: WebView? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,28 +83,31 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
 
         initViews(view)
 
-        setRecyclerView()
-
-        dealsViewModel = ViewModelProvider(activity!!).get(DealsViewModel::class.java)
-        firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        dealsViewModel?.loadData()
-        if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
-            onLoadFbInterstitial()
+        if (firebaseRemoteConfig == null) {
+            firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         }
-        dealsViewModel!!.dealsLiveData.observe(this, Observer { t ->
-            Log.d("TAG", "onViewCreated: Deals ${t?.size}")
-            investDataList?.addAll(t!!)
-            dealsAdapter?.notifyDataSetChanged()
-        })
+        if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
+            if (interstitialFbAd == null) {
+                getDisplayAdsLayout()
+                onLoadFbInterstitial()
+            }
+        } else {
+            getDisplayDeals()
+        }
+
+        webViewSettings(webViewDeals!!)
+        webViewDeals!!.loadUrl(firebaseRemoteConfig!!.getString(Constants().DEALS_URL))
 
         btShowDeals!!.setOnClickListener {
-            if(interstitialFbAd!=null){
-                if(interstitialFbAd!!.isAdLoaded){
-                    interstitialFbAd!!.show()
-                }
-            }
-            else{
-                onDisplayDeals()
+            if (interstitialFbAd!!.isAdLoaded) {
+                interstitialFbAd!!.show()
+            } else {
+                Toast.makeText(
+                    context,
+                    "Congrats!! now you're able fetch fantastic stuff here!!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                getDisplayDeals()
             }
         }
 
@@ -103,74 +115,52 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
     }
 
     fun initViews(view: View){
-        firebaseAnalytics = FirebaseAnalytics.getInstance(activity!!)
-        rvInvest = view.findViewById(R.id.rvInvest)
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireActivity())
         layoutShowVideo = view.findViewById(R.id.layoutShowVideo)
         btShowDeals = layoutShowVideo!!.findViewById(R.id.btShowDeals)
+        webViewDeals = view.findViewById(R.id.webViewDeals)
     }
 
-    fun setRecyclerView(){
-        dealsAdapter = DealsAdapter(context, investDataList!!, this, this)
-        rvInvest.apply {
-            rvInvest?.layoutManager = GridLayoutManager(context, 2)
-            rvInvest!!.addItemDecoration(SpacesItemDecoration(50))
-            rvInvest?.adapter = dealsAdapter
-        }
-    }
-
-    private class SpacesItemDecoration(private val space: Int) : ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect, view: View,
-            parent: RecyclerView, state: RecyclerView.State
-        ) {
-            outRect.top = space
-            outRect.bottom = space
-
-            // Add top margin only for the first item to avoid double space between items
-            if (parent.getChildLayoutPosition(view) % 2 == 0) {
-                outRect.left = space
-                outRect.right = space
-            } else {
-                outRect.left = space
-                outRect.right = 0
-            }
-        }
-    }
     fun onLoadFbInterstitial() {
         interstitialFbAd = InterstitialAd(context, Constants().getFbInterstitialWebExit())
 
         val interstitialAdListener: InterstitialAdListener = object : InterstitialAdListener {
             override fun onInterstitialDisplayed(ad: Ad) {
                 // Interstitial ad displayed callback
-                Log.e(TAG, "Interstitial ad displayed.")
+                Log.e("TAG", "Interstitial ad displayed.")
             }
 
             override fun onInterstitialDismissed(ad: Ad) {
                 // Interstitial dismissed callback
-                Log.e(TAG, "Interstitial ad dismissed.")
-
+                Log.e("TAG", "Interstitial ad dismissed.")
+                getDisplayDeals()
+                Toast.makeText(
+                    context,
+                    "Congrats!! now you're able fetch fantastic stuff here!!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             override fun onError(ad: Ad?, adError: AdError) {
                 // Ad error callback
-                Log.e(TAG, "Interstitial ad failed to load: " + adError.getErrorMessage())
+                Log.e("TAG", "Interstitial ad failed to load: " + adError.getErrorMessage())
             }
 
             override fun onAdLoaded(ad: Ad) {
                 // Interstitial ad is loaded and ready to be displayed
-                Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!")
+                Log.d("TAG", "Interstitial ad is loaded and ready to be displayed!")
                 // Show the ad
 //                interstitialFbAd.show()
             }
 
             override fun onAdClicked(ad: Ad) {
                 // Ad clicked callback
-                Log.d(TAG, "Interstitial ad clicked!")
+                Log.d("TAG", "Interstitial ad clicked!")
             }
 
             override fun onLoggingImpression(ad: Ad) {
                 // Ad impression logged callback
-                Log.d(TAG, "Interstitial ad impression logged!")
+                Log.d("TAG", "Interstitial ad impression logged!")
             }
         }
 
@@ -182,15 +172,23 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
 
     }
 
-    fun onDisplayDeals(){
-        if(layoutShowVideo!!.visibility == View.VISIBLE){
+    fun getDisplayDeals() {
+        if (layoutShowVideo!!.visibility == View.VISIBLE) {
             layoutShowVideo!!.visibility = View.GONE
         }
-        if(rvInvest!!.visibility == View.GONE){
-            rvInvest!!.visibility = View.VISIBLE
+        if (webViewDeals!!.visibility == View.GONE) {
+            webViewDeals!!.visibility = View.VISIBLE
         }
     }
 
+    fun getDisplayAdsLayout() {
+        if (webViewDeals!!.visibility == View.VISIBLE) {
+            webViewDeals!!.visibility = View.GONE
+        }
+        if (layoutShowVideo!!.visibility == View.GONE) {
+            layoutShowVideo!!.visibility = View.VISIBLE
+        }
+    }
 
     override fun onDestroy() {
         dealsViewModel?.reset()
@@ -217,32 +215,63 @@ class DealFragment : Fragment(), CouponInfoClickListener, DealClickListener {
             }
     }
 
-    override fun onClickDeal(item: List<String>) {
+    @SuppressLint("SetJavaScriptEnabled")
+    fun webViewSettings(webView: WebView){
+        webView.settings.loadsImagesAutomatically = true
+        webView.settings.javaScriptEnabled = true
+        webView.settings.allowContentAccess = true
+        webView.evaluateJavascript("\$(function() {\n" +
+                "    var style = document.createElement('style');\n" +
+                "    style.innerHTML = `\n" +
+                "    .ShopNewBtn > img {\n" +
+                "    display: none;\n" +
+                "    }\n" +
+                "    .original_price_p{\n" +
+                "      color:red;\n" +
+                "    }\n" +
+                "    .ShopNewBtn{\n" +
+                "      background-color: red;\n" +
+                "    }\n" +
+                "    .CuponMain{\n" +
+                "      border: 1px solid red;\n" +
+                "    }\n" +
+                "    .button-colors-green{\n" +
+                "      background-color:red;\n" +
+                "      border: 1px solid red;\n" +
+                "    }\n" +
+                "    `;\n" +
+                "    document.head.appendChild(style);\n" +
+                "});",null)
+        webView.settings.useWideViewPort = true
+        webView.settings.loadWithOverviewMode = true
+        webView.settings.domStorageEnabled = true
+        webView.clearView()
+        webView.isHorizontalScrollBarEnabled = false
+        webView.settings.setAppCacheEnabled(true)
+        webView.isVerticalScrollBarEnabled = false
+        webView.settings.builtInZoomControls = true
+        webView.settings.displayZoomControls = false
+        webView.settings.allowFileAccess = true
+        webView.settings.pluginState = WebSettings.PluginState.OFF
+        webView.isScrollbarFadingEnabled = false
+        webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+        webView.settings.defaultZoom = WebSettings.ZoomDensity.FAR
+        webView.webViewClient = WebViewClient()
+        webView.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        webView.setInitialScale(1)
 
-        val bundle = Bundle()
-        bundle.putString("title", item.get(1))
-        bundle.putString("url", item.get(3))
-        (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "deals_visited", true)
-
-        val intent: Intent? = Intent(activity, WebActivity::class.java)
-        intent?.putExtra("title", item.get(1))
-        intent?.putExtra("url", item.get(3))
-        intent?.putExtra("app_icon", item.get(2))
-        startActivity(intent)
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                request: WebResourceRequest
+            ): Boolean {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    view.loadUrl(request.url.toString())
+                }
+                return false
+            }
+        }
     }
 
-    override fun onClickCoupon(item: List<String>) {
-
-        val bundle = Bundle()
-        bundle.putString("title", item.get(1))
-        bundle.putString("url", item.get(4))
-        (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "coupons_visited", true)
-
-        val intent: Intent? = Intent(activity, WebActivity::class.java)
-        intent?.putExtra("title", item.get(1))
-        intent?.putExtra("url", item.get(4))
-        intent?.putExtra("app_icon", item.get(2))
-        startActivity(intent)
-    }
 
 }

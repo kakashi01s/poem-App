@@ -137,6 +137,7 @@ class WebActivity : AppCompatActivity() {
                 bookmarks.bookmarkUrl = webView!!.url
                 bookmarks.setBookmarkUrlWithoutAffiliate(getUrlWithoutParameters(webView!!.url!!))
                 bookmarks.bookmarkLogo = appIcon
+                bookmarks.webSplash = color
 
                 bookmarksList!!.add(bookmarks)
 
@@ -259,7 +260,6 @@ class WebActivity : AppCompatActivity() {
         webView!!.settings.loadsImagesAutomatically = true
         webView!!.settings.javaScriptEnabled = true
         webView!!.settings.allowContentAccess = true
-
         webView!!.settings.useWideViewPort = true
         webView!!.settings.loadWithOverviewMode = true
         webView!!.settings.domStorageEnabled = true

@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Press this button and watch a rewarded video to grab some amazing deals and coupons."
+        android:text="Press this button and watch a video to grab some amazing deals and coupons."
         android:textSize="18sp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"

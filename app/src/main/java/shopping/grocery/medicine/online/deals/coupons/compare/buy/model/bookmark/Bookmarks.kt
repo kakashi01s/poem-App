@@ -4,6 +4,8 @@ class Bookmarks {
      var bookmarkTitle: String? = null
      var bookmarkUrl: String? = null
 
+    var webSplash: String? = null
+
     @JvmName("isDelete1")
     fun isDelete(): Boolean {
         return isDelete
