@@ -119,9 +119,7 @@ class WebActivity : AppCompatActivity() {
 
         share.setOnClickListener {
 
-
-
-
+            onButtonClicked()
 
             val sendIntent: Intent = Intent().setAction(Intent.ACTION_SEND)
             sendIntent.putExtra(
@@ -133,6 +131,8 @@ class WebActivity : AppCompatActivity() {
         }
 
         bkmark.setOnClickListener {
+
+            onButtonClicked()
 
             Log.d(TAG, "onCreate: bookmarks " + bkmark.tag)
 
