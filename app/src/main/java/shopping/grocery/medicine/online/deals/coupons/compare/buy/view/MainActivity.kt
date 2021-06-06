@@ -4,13 +4,11 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -86,6 +84,14 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            val window = this.window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.statusBarColor = this.resources.getColor(R.color.colorPrimaryDark)
+        }
 
 
 
@@ -165,28 +171,23 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         menu.select(R.id.id_home)
 //        viewPager!!.currentItem = 0
 
+        fancy(bottomNav.getChildAt(1), "Category")
+        fancy(bottomNav.getChildAt(2), "Deals")
+        fancy(bottomNav.getChildAt(3), "bookmark")
 
         bottomNav.onItemSelectedListener = { view, menuItem, bool ->
             when (menuItem.id) {
                 R.id.id_home -> {
-
                     viewPager!!.currentItem = 0
-
                 }
                 R.id.id_category -> {
-
                     viewPager!!.currentItem = 1
-                    fancy(view, "Category")
                 }
                 R.id.id_deals -> {
-
                     viewPager!!.currentItem = 2
-                    fancy(view, "Deals")
                 }
                 R.id.id_bookmark -> {
-
                     viewPager!!.currentItem = 3
-                    fancy(view, "Bookmark")
                 }
             }
         }
@@ -249,58 +250,71 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             search_rvCountryStores?.layoutManager = GridLayoutManager(this@MainActivity, 3)
             search_rvCountryStores?.adapter = allAppsAdapter
 
-            val appSearchView: EditText = dialog!!.findViewById(R.id.app_search)
+            val appSearchView: android.widget.SearchView = dialog!!.findViewById(R.id.app_search)
             filterList.clear()
             filterList.addAll(appsList!!)
 
-            appSearchView.addTextChangedListener(textwatcher)
+
+            appSearchView.setOnQueryTextListener(object :
+                android.widget.SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    searchTxt = query
+                    Log.d("QuerySearch", searchTxt.toString())
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    searchTxt = newText
+                    return false
+                }
+            })
         }
     }
 
-    private val textwatcher = object : TextWatcher {
-
-
-        override fun beforeTextChanged(
-            charSequence: CharSequence?,
-            start: Int,
-            count: Int,
-            after: Int
-        ) {
-        }
-
-        override fun onTextChanged(
-            charSequence: CharSequence?,
-            start: Int,
-            before: Int,
-            count: Int
-        ) {
-
-            Log.d("Filter", filterList.toString())
-
-            val searchChar = charSequence.toString().toLowerCase()
-            Log.d("filterSea", searchChar)
-            searchTxt = searchChar
-
-//            val itemsModal = ArrayList<List<String>>()
+//    private val textwatcher = object : TextWatcher {
 //
-//            for (item in filterList) {
-//                if (item[1].toLowerCase().contains(searchChar)) {
-//                    Log.d("filterdone", item[1])
-//                    Log.d("filterChar", searchChar)
-//                    itemsModal.add(item)
-//                }
-//            }
 //
-//            appsList!!.clear()
-//            appsList!!.addAll(itemsModal)
-//            Log.d("filterList", itemsModal.toString())
-//            allAppsAdapter!!.setItems(appsList)
-//            allAppsAdapter!!.notifyDataSetChanged()
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-        }
-    }
+//        override fun beforeTextChanged(
+//            charSequence: CharSequence?,
+//            start: Int,
+//            count: Int,
+//            after: Int
+//        ) {
+//        }
+//
+//        override fun onTextChanged(
+//            charSequence: CharSequence?,
+//            start: Int,
+//            before: Int,
+//            count: Int
+//        ) {
+//
+//            Log.d("Filter", filterList.toString())
+//
+//            val searchChar = charSequence.toString().toLowerCase()
+//            Log.d("filterSea", searchChar)
+//            searchTxt = searchChar
+//
+////            val itemsModal = ArrayList<List<String>>()
+////
+////            for (item in filterList) {
+////                if (item[1].toLowerCase().contains(searchChar)) {
+////                    Log.d("filterdone", item[1])
+////                    Log.d("filterChar", searchChar)
+////                    itemsModal.add(item)
+////                }
+////            }
+////
+////            appsList!!.clear()
+////            appsList!!.addAll(itemsModal)
+////            Log.d("filterList", itemsModal.toString())
+////            allAppsAdapter!!.setItems(appsList)
+////            allAppsAdapter!!.notifyDataSetChanged()
+//        }
+//
+//        override fun afterTextChanged(s: Editable?) {
+//        }
+//    }
 
     private fun setupViewPager() {
 

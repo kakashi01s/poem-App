@@ -3,7 +3,6 @@ package shopping.grocery.medicine.online.deals.coupons.compare.buy.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,9 +11,9 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.webkit.*
 import android.widget.*
@@ -31,7 +30,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_web.*
 import kotlinx.android.synthetic.main.custom_toast.*
-import me.toptas.fancyshowcase.FancyShowCaseView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.bookmark.Bookmarks
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
@@ -395,7 +393,16 @@ class WebActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("ResourceType")
     fun loadWebSplash() {
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            val window = this.window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.setStatusBarColor(Color.parseColor(color))
+        }
+
 
         if (color.isNullOrEmpty()) {
             rlWebSplash!!.setBackgroundColor(Color.parseColor(color))

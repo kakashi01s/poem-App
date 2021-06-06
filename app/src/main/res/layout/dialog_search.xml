@@ -14,14 +14,14 @@
         android:background="@color/white"
         app:cardCornerRadius="30sp">
 
-        <EditText
+        <SearchView
             android:id="@+id/app_search"
             android:drawableStart="@drawable/ic_search"
-            android:paddingHorizontal="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorAccent"
-            android:drawableLeft="@drawable/ic_search" />
+            app:queryHint="Search Here !"
+            app:iconifiedByDefault="false"
+            android:background="@color/colorAccent" />
 
 
     </androidx.cardview.widget.CardView>

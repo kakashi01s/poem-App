@@ -3,20 +3,20 @@ package shopping.grocery.medicine.online.deals.coupons.compare.buy.view.fragment
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.Toast
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_bookmark.*
-import kotlinx.android.synthetic.main.fragment_bookmark.view.*
 import me.toptas.fancyshowcase.FancyShowCaseView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.bookmark.Bookmarks
@@ -67,10 +67,6 @@ class BookmarkFragment : Fragment() {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
             onRefreshFragment()
-
-            if (this.requireView().bookmark_rec != null) {
-                fancyShowCase(this.requireView().bookmark_rec, "Left Swipe to share and delete")
-            }
         }
     }
 
@@ -98,13 +94,18 @@ class BookmarkFragment : Fragment() {
         Pref.initializeInstance(this.context)
         Log.d("Share", Pref.instance!!.bookmarksData.toString())
 
+
+//        adapter.setClickListener(View.OnClickListener { v ->
+//            focus(v)
+//        })
+
+
         b_recycler = view.findViewById(R.id.bookmark_rec)
 
         b_adapter = BookmarkAdapter(this.requireContext(), bookmarkList, this)
 
         b_recycler.layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
         b_recycler.adapter = b_adapter
-
 
 
         touchListener = RecyclerTouchListener(requireActivity(), b_recycler)
