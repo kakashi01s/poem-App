@@ -3,6 +3,7 @@ package shopping.grocery.medicine.online.deals.coupons.compare.buy.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
@@ -11,6 +12,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -28,11 +30,12 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_web.*
+import kotlinx.android.synthetic.main.custom_toast.*
+import me.toptas.fancyshowcase.FancyShowCaseView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.bookmark.Bookmarks
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Helper
-import kotlinx.android.synthetic.main.custom_toast.*
 
 
 class WebActivity : AppCompatActivity() {
@@ -128,7 +131,7 @@ class WebActivity : AppCompatActivity() {
 
         bkmark.setOnClickListener {
 
-            Log.d(TAG, "onCreate: bookmarks "+bkmark.tag)
+            Log.d(TAG, "onCreate: bookmarks " + bkmark.tag)
 
             if (bkmark.tag as Int === R.drawable.ic_bookmark) {
                 val bookmarks: Bookmarks? = Bookmarks()
@@ -149,7 +152,7 @@ class WebActivity : AppCompatActivity() {
 
                 setBookmarks()
 
-                Helper().makeToast("Item added to your wishlist",this@WebActivity)
+                Helper().makeToast("Item added to your wishlist", this@WebActivity)
                 bkmark.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_bookmark_fill))
                 bkmark.tag = R.drawable.ic_baseline_bookmark_fill
             } else {
@@ -201,7 +204,7 @@ class WebActivity : AppCompatActivity() {
                         .equals(bookmarkurl)
                 ) {
                     bookmarksList!!.removeAt(i)
-                    Helper().makeToast("Item removed from wishlist",this@WebActivity)
+                    Helper().makeToast("Item removed from wishlist", this@WebActivity)
                 }
                 i++
             }
@@ -215,7 +218,7 @@ class WebActivity : AppCompatActivity() {
             var i = 0
             while (i < bookmarksList!!.size) {
                 val bookmarkData: Bookmarks = bookmarksList!![i]
-                Log.d(TAG, "isBookmarked: "+bookmarkData.getBookmarkUrlWithoutAffiliate())
+                Log.d(TAG, "isBookmarked: " + bookmarkData.getBookmarkUrlWithoutAffiliate())
                 if (bookmarkData.getBookmarkUrlWithoutAffiliate() != null && bookmarkData.getBookmarkUrlWithoutAffiliate()
                         .equals(webUrl)
                 ) {
@@ -245,12 +248,12 @@ class WebActivity : AppCompatActivity() {
         if (bookmarksList != null && !bookmarksList!!.isEmpty()) {
             bookmarksList!!.clear()
         }
-        if(sharedPreferences!!.getString("Bookmarks", null) != null){
+        if (sharedPreferences!!.getString("Bookmarks", null) != null) {
             val serializedObject: String = sharedPreferences!!.getString("Bookmarks", null)!!
             val gson = Gson()
             val type = object : TypeToken<ArrayList<Bookmarks?>?>() {}.type
             bookmarksList = gson.fromJson<ArrayList<Bookmarks>>(serializedObject, type)
-            Log.d(TAG, "getBookmarks: "+bookmarksList!!.size)
+            Log.d(TAG, "getBookmarks: " + bookmarksList!!.size)
         }
     }
 
@@ -296,9 +299,9 @@ class WebActivity : AppCompatActivity() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 if (isBookmarked(getUrlWithoutParameters(view!!.getUrl()!!))) {
-                        bkmark.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_bookmark_fill))
-                        bkmark.tag = R.drawable.ic_baseline_bookmark_fill
-                    } else {
+                    bkmark.setImageDrawable(resources.getDrawable(R.drawable.ic_baseline_bookmark_fill))
+                    bkmark.tag = R.drawable.ic_baseline_bookmark_fill
+                } else {
                     bkmark.setImageDrawable(resources.getDrawable(R.drawable.ic_bookmark))
                     bkmark.tag = R.drawable.ic_bookmark
                 }
@@ -394,7 +397,7 @@ class WebActivity : AppCompatActivity() {
 
     fun loadWebSplash() {
 
-        if(color.isNullOrEmpty()){
+        if (color.isNullOrEmpty()) {
             rlWebSplash!!.setBackgroundColor(Color.parseColor(color))
         }
 
@@ -402,6 +405,7 @@ class WebActivity : AppCompatActivity() {
             .load(appIcon)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(ivAppIcon!!)
+
     }
 
     fun onLoadFbInterstitial() {

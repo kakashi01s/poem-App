@@ -1,5 +1,6 @@
 package shopping.grocery.medicine.online.deals.coupons.compare.buy.view.viewholder
 
+import android.app.Activity
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -7,8 +8,10 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import me.toptas.fancyshowcase.FancyShowCaseView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.viewholder.BaseViewHolder
+import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.WebActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.AllAppsItemClickListener
 
 class AllAppsViewHolder(itemView: View?) :
@@ -38,4 +41,11 @@ class AllAppsViewHolder(itemView: View?) :
             listener?.onAllCardClick(item)
         }
     }
+
+//    fun showcase(acc: Activity, it : View, title : String)
+//    {
+//        FancyShowCaseView.Builder(acc).focusOn(it).title(title).delay(50).showOnce(title)
+//            .build()
+//            .show()
+//    }
 }

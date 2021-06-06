@@ -9,12 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_bookmark.*
+import kotlinx.android.synthetic.main.fragment_bookmark.view.*
+import me.toptas.fancyshowcase.FancyShowCaseView
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.bookmark.Bookmarks
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Pref
@@ -62,8 +65,12 @@ class BookmarkFragment : Fragment() {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if(isVisibleToUser){
+        if (isVisibleToUser) {
             onRefreshFragment()
+
+            if (this.requireView().bookmark_rec != null) {
+                fancyShowCase(this.requireView().bookmark_rec, "Left Swipe to share and delete")
+            }
         }
     }
 
@@ -78,30 +85,33 @@ class BookmarkFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
+
         sharedPreferences =
             requireActivity().getSharedPreferences(
                 STORE_FILE_NAME,
                 Context.MODE_PRIVATE
             )
-        editor =
-            sharedPreferences!!.edit()
+        editor = sharedPreferences!!.edit()
 
         Pref.initializeInstance(this.context)
         Log.d("Share", Pref.instance!!.bookmarksData.toString())
 
         b_recycler = view.findViewById(R.id.bookmark_rec)
 
-        b_adapter = BookmarkAdapter(this.requireContext(), bookmarkList)
+        b_adapter = BookmarkAdapter(this.requireContext(), bookmarkList, this)
 
         b_recycler.layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
         b_recycler.adapter = b_adapter
+
 
 
         touchListener = RecyclerTouchListener(requireActivity(), b_recycler)
         touchListener!!
             .setClickable(object : OnRowClickListener {
                 override fun onRowClicked(position: Int) {
-                    val bookmarkData: Bookmarks? = bookmarkList[position]
+                    val bookmarkData: Bookmarks = bookmarkList[position]
                     val bundle = Bundle()
                     val intent: Intent = Intent(activity, WebActivity::class.java)
                     intent.putExtra("title", bookmarkData!!.bookmarkTitle)
@@ -138,8 +148,18 @@ class BookmarkFragment : Fragment() {
             })
         b_recycler.addOnItemTouchListener(touchListener!!)
 
+
         getBookmarks(view)
 
+    }
+
+    fun fancyShowCase(it: View, title: String) {
+        Log.d("Fancy", "Run")
+        return FancyShowCaseView.Builder(this.requireActivity()).focusOn(it).title(title).delay(50)
+            .titleSize(14, 2)
+            .showOnce(title)
+            .build()
+            .show()
     }
 
     private fun getBookmarks(view: View) {
@@ -147,7 +167,7 @@ class BookmarkFragment : Fragment() {
             Log.d("TAG", "getBookmarks: list clear")
             bookmarkList.clear()
         }
-        if(sharedPreferences!!.getString("Bookmarks", null) != null){
+        if (sharedPreferences!!.getString("Bookmarks", null) != null) {
             val serializedObject: String =
                 sharedPreferences!!.getString(
                     "Bookmarks",
@@ -172,8 +192,7 @@ class BookmarkFragment : Fragment() {
                 onSetEmptyLayout()
             }
 
-        }
-        else {
+        } else {
             onSetEmptyLayout()
         }
     }

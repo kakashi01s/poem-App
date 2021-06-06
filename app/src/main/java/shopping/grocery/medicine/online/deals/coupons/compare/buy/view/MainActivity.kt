@@ -88,25 +88,38 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         setContentView(R.layout.activity_main)
 
 
-        initViews()
 
+        initViews()
 //        initToolbar()
         initMenuFragment()
+
+
+        fancy(findViewById(R.id.search), "Search Here !")
+
+        fancy(findViewById(R.id.ivMenu), "Menu items")
+
+
 
         Pref.initializeInstance(this)
 
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
-        Log.d("TAG", "onCreate: currentTime "+System.currentTimeMillis())
+        Log.d("TAG", "onCreate: currentTime " + System.currentTimeMillis())
 
-        if(!Pref.instance!!.dataChangedDate.equals(firebaseRemoteConfig!!.getString(Constants().DATA_CHANGED_DATE))){
+        if (!Pref.instance!!.dataChangedDate.equals(firebaseRemoteConfig!!.getString(Constants().DATA_CHANGED_DATE))) {
             Pref.instance!!.dataChanged = true
-            Pref.instance!!.dataChangedDate = firebaseRemoteConfig!!.getString(Constants().DATA_CHANGED_DATE)
-            Log.d("TAG", "onCreate: dataChanged "+Pref.instance!!.dataChanged+" dataChangedDate "+Pref.instance!!.dataChangedDate)
-        }
-        else{
+            Pref.instance!!.dataChangedDate =
+                firebaseRemoteConfig!!.getString(Constants().DATA_CHANGED_DATE)
+            Log.d(
+                "TAG",
+                "onCreate: dataChanged " + Pref.instance!!.dataChanged + " dataChangedDate " + Pref.instance!!.dataChangedDate
+            )
+        } else {
             Pref.instance!!.dataChanged = false
-            Log.d("TAG", "onCreate: dataChanged "+Pref.instance!!.dataChanged+" dataChangedDate "+Pref.instance!!.dataChangedDate)
+            Log.d(
+                "TAG",
+                "onCreate: dataChanged " + Pref.instance!!.dataChanged + " dataChangedDate " + Pref.instance!!.dataChangedDate
+            )
         }
 
         dialog = Dialog(this)
@@ -130,7 +143,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         })
 
         search.setOnClickListener {
-            onShowStores(appsList!!)
+            onShowStores(appsList!!, it)
         }
 //
         viewPagerTab!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -158,7 +171,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 R.id.id_home -> {
 
                     viewPager!!.currentItem = 0
-                    fancy(view, "Home")
 
                 }
                 R.id.id_category -> {
@@ -174,7 +186,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 R.id.id_bookmark -> {
 
                     viewPager!!.currentItem = 3
-                    fancy(view, "Deals")
+                    fancy(view, "Bookmark")
                 }
             }
         }
@@ -190,6 +202,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         viewPager = findViewById(R.id.vpPager)
         viewPagerTab = findViewById(R.id.view_pager_tab)
         search = findViewById(R.id.search)
+
     }
 
 //    private fun initToolbar() {
@@ -202,14 +215,17 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 //        }
 //    }
 
-    private fun fancy(it: View, title: String) {
+    fun fancy(it: View, title: String) {
         return FancyShowCaseView.Builder(this).focusOn(it).title(title).delay(50).showOnce(title)
+            .titleSize(14, 2)
             .build()
             .show()
     }
 
-    private fun onShowStores(list: ArrayList<List<String>>) {
+    private fun onShowStores(list: ArrayList<List<String>>, view: View) {
         dialog!!.setContentView(R.layout.dialog_search)
+
+        fancy(view, "Search Here !")
 
         dialog!!.window!!.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -359,6 +375,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                 if (searchTxt != null) {
                     intent.putExtra("search_url", item[5] + "$searchTxt")
                 }
+
                 startActivity(intent)
             }
         } else {
@@ -409,26 +426,49 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
         contextMenuDialogFragment = ContextMenuDialogFragment.newInstance(menuParams).apply {
             menuItemClickListener = { view, position ->
-                when(position){
+                when (position) {
                     1 -> {
                         try {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/dev?id=6823602592155636380")))
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://play.google.com/store/apps/dev?id=6823602592155636380")
+                                )
+                            )
                         } catch (e: ActivityNotFoundException) {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=6823602592155636380")))
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://play.google.com/store/apps/details?id=6823602592155636380")
+                                )
+                            )
                         }
                     }
                     2 -> {
                         try {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=shopping.grocery.medicine.online.deals.coupons.compare.buy")))
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://play.google.com/store/apps/details?id=shopping.grocery.medicine.online.deals.coupons.compare.buy")
+                                )
+                            )
                         } catch (e: ActivityNotFoundException) {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=shopping.grocery.medicine.online.deals.coupons.compare.buy")))
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://play.google.com/store/apps/details?id=shopping.grocery.medicine.online.deals.coupons.compare.buy")
+                                )
+                            )
                         }
                     }
                     2 -> {
                         val i = Intent(Intent.ACTION_SEND)
                         i.type = "message/rfc822"
                         i.putExtra(Intent.EXTRA_EMAIL, arrayOf("infinitywebapps@gmail.com"))
-                        i.putExtra(Intent.EXTRA_SUBJECT, "Feedback "+resources.getString(R.string.app_name))
+                        i.putExtra(
+                            Intent.EXTRA_SUBJECT,
+                            "Feedback " + resources.getString(R.string.app_name)
+                        )
                         i.putExtra(Intent.EXTRA_TEXT, "Feedback :: ")
                         try {
                             startActivity(Intent.createChooser(i, "Send feedback..."))
