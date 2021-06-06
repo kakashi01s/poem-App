@@ -175,6 +175,8 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         fancy(bottomNav.getChildAt(2), "Deals")
         fancy(bottomNav.getChildAt(3), "bookmark")
 
+
+
         bottomNav.onItemSelectedListener = { view, menuItem, bool ->
             when (menuItem.id) {
                 R.id.id_home -> {

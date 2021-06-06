@@ -118,6 +118,11 @@ class WebActivity : AppCompatActivity() {
 
 
         share.setOnClickListener {
+
+
+
+
+
             val sendIntent: Intent = Intent().setAction(Intent.ACTION_SEND)
             sendIntent.putExtra(
                 Intent.EXTRA_TEXT, appUrl
@@ -404,7 +409,7 @@ class WebActivity : AppCompatActivity() {
         }
 
 
-        if (color.isNullOrEmpty()) {
+        if (color != null) {
             rlWebSplash!!.setBackgroundColor(Color.parseColor(color))
         }
 
