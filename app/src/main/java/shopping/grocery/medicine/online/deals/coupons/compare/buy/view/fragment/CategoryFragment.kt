@@ -89,9 +89,6 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
 
 
     var dialog: Dialog? = null
-//
-//    var nativeAdCat1: UnifiedNativeAd? = null
-//    var nativeAdCat2: UnifiedNativeAd? = null
 
     override val bindingVariable: Int
         get() = 0

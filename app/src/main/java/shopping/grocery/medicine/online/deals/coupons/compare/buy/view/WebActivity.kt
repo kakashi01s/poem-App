@@ -181,15 +181,21 @@ class WebActivity : AppCompatActivity() {
     fun initData() {
 
         val bundle: Bundle? = intent.extras
-        appUrl = bundle?.getString("url")
-        appIcon = bundle?.getString("app_icon")
-        appTitle = bundle?.getString("title")
-        color = bundle?.getString("color")
-        searchUrl = bundle?.getString("search_url")
-
-        Log.d("TAG", "initData: " + bundle?.getString("url"))
-        Log.d("colorweb", "initData: " + bundle?.getString("color"))
-        Log.d("search_url", "initData: " + bundle?.getString("search_url"))
+        if (bundle?.getString("url") != null) {
+            appUrl = bundle?.getString("url")
+        }
+        if (bundle?.getString("app_icon") != null) {
+            appIcon = bundle?.getString("app_icon")
+        }
+        if (bundle?.getString("title") != null) {
+            appTitle = bundle?.getString("title")
+        }
+        if (bundle?.getString("color") != null) {
+            color = bundle?.getString("color")
+        }
+        if (bundle?.getString("search_url") != null) {
+            searchUrl = bundle?.getString("search_url")
+        }
 
     }
 

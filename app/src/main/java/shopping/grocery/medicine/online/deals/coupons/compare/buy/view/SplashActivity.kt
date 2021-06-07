@@ -26,13 +26,7 @@ class SplashActivity : BaseActivity() {
         }
 
 
-        Handler().postDelayed({ //                if(Pref.getInstance().getViewPager()){
-            //                    openActivity(null, IntroSlider.class);
-            //                }
-            //                else {
-            //                    openActivity(null, MainActivity.class);
-            //                    finish();
-            //                }
+        Handler().postDelayed({
             openActivity(null, MainActivity::class.java)
             finish()
         }, 3000)

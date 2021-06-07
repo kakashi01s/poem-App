@@ -38,7 +38,6 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.adapter.h
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.listener.AllAppsItemClickListener
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.CategoryViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.DealsViewModel
-import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.GlobalViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.HomeViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewpager.AppPagerAdapter
 
@@ -50,7 +49,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
     var viewPagerTab: TabLayout? = null
     var fragmentPagerAdapter: FragmentPagerAdapter? = null
     var homeViewModel: HomeViewModel? = null
-    var globalViewModel: GlobalViewModel? = null
     var dealsViewModel: DealsViewModel? = null
     var categoryViewModel: CategoryViewModel? = null
     var firebaseAnalytics: FirebaseAnalytics? = null
@@ -135,7 +133,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         dealsViewModel = ViewModelProvider(this).get(DealsViewModel::class.java)
         categoryViewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
-        globalViewModel = ViewModelProvider(this).get(GlobalViewModel::class.java)
 
 
         homeViewModel?.loadData()
@@ -208,16 +205,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
     }
 
-//    private fun initToolbar() {
-//        setSupportActionBar(toolbar)
-//
-//        supportActionBar?.apply {
-//            setHomeButtonEnabled(false)
-//            setDisplayHomeAsUpEnabled(false)
-//            setDisplayShowTitleEnabled(false)
-//        }
-//    }
-
     fun fancy(it: View, title: String) {
         return FancyShowCaseView.Builder(this).focusOn(it).title(title).delay(50).showOnce(title)
             .titleSize(14, 2)
@@ -273,51 +260,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         }
     }
 
-//    private val textwatcher = object : TextWatcher {
-//
-//
-//        override fun beforeTextChanged(
-//            charSequence: CharSequence?,
-//            start: Int,
-//            count: Int,
-//            after: Int
-//        ) {
-//        }
-//
-//        override fun onTextChanged(
-//            charSequence: CharSequence?,
-//            start: Int,
-//            before: Int,
-//            count: Int
-//        ) {
-//
-//            Log.d("Filter", filterList.toString())
-//
-//            val searchChar = charSequence.toString().toLowerCase()
-//            Log.d("filterSea", searchChar)
-//            searchTxt = searchChar
-//
-////            val itemsModal = ArrayList<List<String>>()
-////
-////            for (item in filterList) {
-////                if (item[1].toLowerCase().contains(searchChar)) {
-////                    Log.d("filterdone", item[1])
-////                    Log.d("filterChar", searchChar)
-////                    itemsModal.add(item)
-////                }
-////            }
-////
-////            appsList!!.clear()
-////            appsList!!.addAll(itemsModal)
-////            Log.d("filterList", itemsModal.toString())
-////            allAppsAdapter!!.setItems(appsList)
-////            allAppsAdapter!!.notifyDataSetChanged()
-//        }
-//
-//        override fun afterTextChanged(s: Editable?) {
-//        }
-//    }
-
     private fun setupViewPager() {
 
         fragmentPagerAdapter = AppPagerAdapter(supportFragmentManager)
@@ -335,7 +277,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 
     override fun onDestroy() {
         homeViewModel?.reset()
-        globalViewModel?.reset()
         dealsViewModel?.reset()
         categoryViewModel?.reset()
         super.onDestroy()
@@ -414,25 +355,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         this.onUpdateLogEvent(bundle, "all_apps_visited", true)
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.menu2, menu)
-//        Log.d("menuInflate", "done")
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        item.let {
-//            when (it.itemId) {
-//                R.id.context_menu -> {
-//                    Log.d("Menu Item", it.itemId.toString())
-//                    showContextMenuDialogFragment()
-//                }
-//            }
-//        }
-//
-//        return super.onOptionsItemSelected(item)
-//    }
-
     private fun initMenuFragment() {
         val menuParams = MenuParams(
             actionBarSize = resources.getDimension(R.dimen.menu).toInt(),
@@ -477,7 +399,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                             )
                         }
                     }
-                    2 -> {
+                    3 -> {
                         val i = Intent(Intent.ACTION_SEND)
                         i.type = "message/rfc822"
                         i.putExtra(Intent.EXTRA_EMAIL, arrayOf("infinitywebapps@gmail.com"))
@@ -496,7 +418,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                             ).show()
                         }
                     }
-                    2 -> {
+                    4 -> {
                         val intent = Intent(Intent.ACTION_SEND)
                         /*This will be the actual content you wish you share.*/
                         /*This will be the actual content you wish you share.*/
@@ -514,6 +436,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                             )
                         )
                     }
+
 
                 }
             }

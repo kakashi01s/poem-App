@@ -11,15 +11,6 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.view.SplashAct
 
 class AppNotificationOpenHandler(val context: Context): OneSignal.OSNotificationOpenedHandler {
     override fun notificationOpened(result: OSNotificationOpenedResult?) {
-//        val actionId = result.action.actionId
-//            val type: String =
-//                result.action.type.toString() // "ActionTaken" | "Opened"
-//            val title = result.notification.title
-
-//            val intent: Intent? = Intent(this, WebActivity::class.java)
-//                    intent!!.putExtra("url",result.notification.additionalData.getJSONObject("website").toString())
-//                    startActivity(intent)
-
         Log.d(
             "OSNotification",
             "result.notification.toJSONObject(): " + result!!.notification.toJSONObject()
@@ -74,11 +65,6 @@ class AppNotificationOpenHandler(val context: Context): OneSignal.OSNotification
             )
         }
 
-//            val data: JSONObject = result.notification.additionalData
-//
-//            if(result.notification.additionalData!=null){
-//                Log.d("TAG", "onCreate: oneSignal notification "+data.getString("website"))
-////
-//            }
+
     }
 }

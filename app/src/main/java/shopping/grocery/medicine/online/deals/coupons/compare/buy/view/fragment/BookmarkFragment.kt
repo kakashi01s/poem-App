@@ -95,9 +95,6 @@ class BookmarkFragment : Fragment() {
         Log.d("Share", Pref.instance!!.bookmarksData.toString())
 
 
-//        adapter.setClickListener(View.OnClickListener { v ->
-//            focus(v)
-//        })
 
 
         b_recycler = view.findViewById(R.id.bookmark_rec)
@@ -122,11 +119,7 @@ class BookmarkFragment : Fragment() {
 
                     startActivity(intent)
 
-//                    Toast.makeText(
-//                        context,
-//                        bookmarkList[position].bookmarkTitle,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
+
                 }
 
                 override fun onIndependentViewClicked(independentViewID: Int, position: Int) {}
