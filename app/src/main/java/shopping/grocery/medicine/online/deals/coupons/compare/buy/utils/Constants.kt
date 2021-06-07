@@ -17,6 +17,7 @@ class Constants {
     val ALL_APPS_STORAGE_FILE_NAME = "all_apps_storage.json"
     val CAROUSEL_VIEW_STORAGE_FILE_NAME = "carousel_view_storage.json"
     val TRENDING_STORAGE_FILE_NAME = "trending_storage.json"
+    val BOOKMARKS_DATA = "bookmarks_data_file"
 
     val FB_ADS_TEST = "VID_HD_9_16_39S_APP_INSTALL#YOUR_PLACEMENT_ID"
     val FB_BANNER_TEST = "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID"

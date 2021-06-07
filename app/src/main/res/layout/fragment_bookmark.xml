@@ -22,14 +22,27 @@
         android:fontFamily="@font/montserrat_semibold"
         android:text="My Wishlist"
         android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tvDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/text"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="Do swipe left the bookmark\nto explore more options"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bookmark_rec"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/text"
+        android:layout_below="@id/tvDesc"
         android:layout_marginTop="20dp"
         tools:listitem="@layout/bookmark_layout"/>
 

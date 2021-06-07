@@ -220,28 +220,28 @@ class DealFragment : Fragment() {
         webView.settings.loadsImagesAutomatically = true
         webView.settings.javaScriptEnabled = true
         webView.settings.allowContentAccess = true
-        webView.evaluateJavascript("\$(function() {\n" +
-                "    var style = document.createElement('style');\n" +
-                "    style.innerHTML = `\n" +
-                "    .ShopNewBtn > img {\n" +
-                "    display: none;\n" +
-                "    }\n" +
-                "    .original_price_p{\n" +
-                "      color:red;\n" +
-                "    }\n" +
-                "    .ShopNewBtn{\n" +
-                "      background-color: red;\n" +
-                "    }\n" +
-                "    .CuponMain{\n" +
-                "      border: 1px solid red;\n" +
-                "    }\n" +
-                "    .button-colors-green{\n" +
-                "      background-color:red;\n" +
-                "      border: 1px solid red;\n" +
-                "    }\n" +
-                "    `;\n" +
-                "    document.head.appendChild(style);\n" +
-                "});",null)
+//        webView.evaluateJavascript("\$(function() {\n" +
+//                "    var style = document.createElement('style');\n" +
+//                "    style.innerHTML = `\n" +
+//                "    .ShopNewBtn > img {\n" +
+//                "    display: none;\n" +
+//                "    }\n" +
+//                "    .original_price_p{\n" +
+//                "      color:red;\n" +
+//                "    }\n" +
+//                "    .ShopNewBtn{\n" +
+//                "      background-color: red;\n" +
+//                "    }\n" +
+//                "    .CuponMain{\n" +
+//                "      border: 1px solid red;\n" +
+//                "    }\n" +
+//                "    .button-colors-green{\n" +
+//                "      background-color:red;\n" +
+//                "      border: 1px solid red;\n" +
+//                "    }\n" +
+//                "    `;\n" +
+//                "    document.head.appendChild(style);\n" +
+//                "});",null)
         webView.settings.useWideViewPort = true
         webView.settings.loadWithOverviewMode = true
         webView.settings.domStorageEnabled = true
@@ -261,14 +261,56 @@ class DealFragment : Fragment() {
         webView.setInitialScale(1)
 
         webView.webViewClient = object : WebViewClient() {
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                webView.loadUrl("javascript:\$(function() {\n" +
+                        "    var style = document.createElement('style');\n" +
+                        "    style.innerHTML = `\n" +
+                        "    .ShopNewBtn > img {\n" +
+                        "    display: none;\n" +
+                        "    }\n" +
+                        "    .original_price_p{\n" +
+                        "      color:#53b9fb;\n" +
+                        "    }\n" +
+                        "    .ShopNewBtn{\n" +
+                        "      background-color: #53b9fb;\n" +
+                        "    }\n" +
+                        "    .CuponMain{\n" +
+                        "      border: 1px solid #53b9fb;\n" +
+                        "    }\n" +
+                        "    .button-colors-green{\n" +
+                        "      background-color:#53b9fb;\n" +
+                        "      border: 1px solid #53b9fb;\n" +
+                        "    }\n" +
+                        "    `;\n" +
+                        "    document.head.appendChild(style);\n" +
+                        "});")
+            }
+
             override fun shouldOverrideUrlLoading(
                 view: WebView,
                 request: WebResourceRequest
             ): Boolean {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    view.loadUrl(request.url.toString())
+                    Log.d(TAG, "shouldOverrideUrlLoading: deals "+request.url.toString())
+                    val intent = Intent(activity, WebActivity::class.java)
+                    intent.putExtra("title", webView.title)
+                    intent.putExtra("url", request.url.toString())
+                    intent.putExtra("app_icon", "https://firebasestorage.googleapis.com/v0/b/shopping-crate.appspot.com/o/hot-sale.png?alt=media&token=796d1a38-deba-41ec-9516-2fdb9b451b31")
+                    intent.putExtra("color", "#666666")
+
+
+                    val bundle = Bundle()
+                    bundle.putString("title", webView.title)
+                    bundle.putString("url", request.url.toString())
+
+                    (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "deals_visited", true)
+
+
+                    startActivity(intent)
                 }
-                return false
+                return true
             }
         }
     }

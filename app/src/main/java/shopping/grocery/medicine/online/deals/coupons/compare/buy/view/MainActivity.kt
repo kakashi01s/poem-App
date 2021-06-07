@@ -7,11 +7,17 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +33,10 @@ import com.yalantis.contextmenu.lib.MenuParams
 import github.com.st235.lib_expandablebottombar.ExpandableBottomBar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookmark_layout.*
+import kotlinx.android.synthetic.main.dialog_search.*
+import me.toptas.fancyshowcase.FancyShowCaseQueue
 import me.toptas.fancyshowcase.FancyShowCaseView
+import me.toptas.fancyshowcase.FocusShape
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.base.BaseActivity
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
@@ -40,6 +49,8 @@ import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.Cate
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.DealsViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewmodel.HomeViewModel
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.viewpager.AppPagerAdapter
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
@@ -68,10 +79,20 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
     var allAppsAdapter: AllAppsAdapter? = null
 
     lateinit var search: ImageView
+    lateinit var llTextContainer: LinearLayout
+    lateinit var tvQuery: TextView
 
     private var searchTxt: String? = null
 
     var firebaseRemoteConfig: FirebaseRemoteConfig? = null
+
+    var fancyCategories: FancyShowCaseView? = null
+    var fancyHome: FancyShowCaseView? = null
+    var fancyBookmarks: FancyShowCaseView? = null
+    var fancyDeals: FancyShowCaseView? = null
+    var fancySearchView: FancyShowCaseView? = null
+    var fancyMenu: FancyShowCaseView? = null
+    var fancyShowCaseQueue: FancyShowCaseQueue? = null
 
     override val bindingVariable: Int
         get() = 0
@@ -88,7 +109,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             val window = this.window
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.statusBarColor = this.resources.getColor(R.color.colorPrimaryDark)
+            window.statusBarColor = this.resources.getColor(R.color.colorPrimary)
         }
 
 
@@ -97,12 +118,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
 //        initToolbar()
         initMenuFragment()
 
-
-        fancy(findViewById(R.id.search), "Search Here !")
-
-        fancy(findViewById(R.id.ivMenu), "Menu items")
-
-
+        onShowIntro()
 
         Pref.initializeInstance(this)
 
@@ -168,11 +184,6 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         menu.select(R.id.id_home)
 //        viewPager!!.currentItem = 0
 
-        fancy(bottomNav.getChildAt(1), "Category")
-        fancy(bottomNav.getChildAt(2), "Deals")
-        fancy(bottomNav.getChildAt(3), "bookmark")
-
-
 
         bottomNav.onItemSelectedListener = { view, menuItem, bool ->
             when (menuItem.id) {
@@ -202,26 +213,18 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
         viewPager = findViewById(R.id.vpPager)
         viewPagerTab = findViewById(R.id.view_pager_tab)
         search = findViewById(R.id.search)
-
-    }
-
-    fun fancy(it: View, title: String) {
-        return FancyShowCaseView.Builder(this).focusOn(it).title(title).delay(50).showOnce(title)
-            .titleSize(14, 2)
-            .build()
-            .show()
     }
 
     private fun onShowStores(list: ArrayList<List<String>>, view: View) {
         dialog!!.setContentView(R.layout.dialog_search)
 
-        fancy(view, "Search Here !")
-
         dialog!!.window!!.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT
-        );
+        )
 
+        llTextContainer = dialog!!.findViewById(R.id.llTextContainer)
+        tvQuery = dialog!!.findViewById(R.id.tvQuery)
         search_rvCountryStores = dialog!!.findViewById(R.id.search_rvCategoryStores)
 
         setRecyclerView()
@@ -239,16 +242,44 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             search_rvCountryStores?.layoutManager = GridLayoutManager(this@MainActivity, 3)
             search_rvCountryStores?.adapter = allAppsAdapter
 
-            val appSearchView: android.widget.SearchView = dialog!!.findViewById(R.id.app_search)
+            val appSearchView: SearchView = dialog!!.findViewById(R.id.app_search)
             filterList.clear()
             filterList.addAll(appsList!!)
 
+            appSearchView.queryHint = "Search for products here"
+
+            appSearchView.setOnClickListener(View.OnClickListener {
+                appSearchView.setIconifiedByDefault(true)
+                appSearchView.setIconified(false)
+            })
+
+            val searchCloseButtonId: Int = appSearchView.context.resources
+                .getIdentifier("android:id/search_close_btn", null, null)
+            val closeButton = appSearchView.findViewById<View>(R.id.search_close_btn) as ImageView
+// Set on click listener
+            // Set on click listener
+            closeButton.setOnClickListener { // Manage this event.
+                searchTxt = null
+                if(llTextContainer.visibility == View.VISIBLE){
+                    llTextContainer.visibility = View.GONE
+                }
+                appSearchView.setQuery("", false)
+                appSearchView.isIconified = false
+                appSearchView.clearFocus()
+            }
 
             appSearchView.setOnQueryTextListener(object :
-                android.widget.SearchView.OnQueryTextListener {
+                SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     searchTxt = query
                     Log.d("QuerySearch", searchTxt.toString())
+                    if(llTextContainer.visibility == View.GONE){
+                        llTextContainer.visibility = View.VISIBLE
+                    }
+                    tvQuery.text = "\'"+searchTxt+"\'"
+                    appSearchView.setIconified(false)
+                    appSearchView.clearFocus()
+                    hideKeyboard()
                     return false
                 }
 
@@ -387,14 +418,14 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                             startActivity(
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse("https://play.google.com/store/apps/details?id=shopping.grocery.medicine.online.deals.coupons.compare.buy")
+                                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
                                 )
                             )
                         } catch (e: ActivityNotFoundException) {
                             startActivity(
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse("https://play.google.com/store/apps/details?id=shopping.grocery.medicine.online.deals.coupons.compare.buy")
+                                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
                                 )
                             )
                         }
@@ -422,7 +453,7 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
                         val intent = Intent(Intent.ACTION_SEND)
                         /*This will be the actual content you wish you share.*/
                         /*This will be the actual content you wish you share.*/
-                        val shareBody = "Use this "
+                        val shareBody = resources.getString(R.string.app_name)+" - "+"Make your shopping experience better!!"+"\n"+"https://play.google.com/store/apps/details?id=$packageName"
                         /*The type of the content is text, obviously.*/
                         /*The type of the content is text, obviously.*/intent.type = "text/plain"
                         /*Applying information Subject and Body.*/
@@ -479,6 +510,84 @@ class MainActivity : BaseActivity(), AllAppsItemClickListener<List<String>>,
             contextMenuDialogFragment.show(supportFragmentManager, ContextMenuDialogFragment.TAG)
         }
     }
+
+    fun onShowIntro() {
+
+        val typeface =
+            ResourcesCompat.getFont(this, R.font.montserrat_semibold)
+
+        fancyHome = FancyShowCaseView.Builder(this@MainActivity)
+            .focusOn(Objects.requireNonNull(bottomNav.getChildAt(0)))
+            .focusShape(FocusShape.ROUNDED_RECTANGLE)
+            .roundRectRadius(90)
+            .titleGravity(Gravity.CENTER)
+            .titleSize(28, TypedValue.COMPLEX_UNIT_SP)
+            .enableAutoTextPosition()
+            .typeface(typeface)
+            .showOnce("FANCY_HOME")
+            .title("Multiple stores and brands are compiled here")
+            .build()
+        fancyCategories = FancyShowCaseView.Builder(this@MainActivity)
+            .focusOn(Objects.requireNonNull(bottomNav.getChildAt(1)))
+            .focusShape(FocusShape.CIRCLE)
+            .roundRectRadius(90)
+            .titleGravity(Gravity.CENTER)
+            .titleSize(28, TypedValue.COMPLEX_UNIT_SP)
+            .typeface(typeface)
+            .enableAutoTextPosition()
+            .showOnce("FANCY_CATEGORIES")
+            .title("Shop conferring to distinct categories")
+            .build()
+        fancyDeals = FancyShowCaseView.Builder(this@MainActivity)
+            .focusOn(Objects.requireNonNull(bottomNav.getChildAt(2)))
+            .focusShape(FocusShape.CIRCLE)
+            .roundRectRadius(90)
+            .titleGravity(Gravity.CENTER)
+            .titleSize(28, TypedValue.COMPLEX_UNIT_SP)
+            .typeface(typeface)
+            .enableAutoTextPosition()
+            .showOnce("FANCY_DEALS")
+            .title("Offers and deals for every store")
+            .build()
+        fancyBookmarks = FancyShowCaseView.Builder(this@MainActivity)
+            .focusOn(Objects.requireNonNull(bottomNav.getChildAt(3)))
+            .focusShape(FocusShape.CIRCLE)
+            .roundRectRadius(90)
+            .titleGravity(Gravity.CENTER)
+            .titleSize(28, TypedValue.COMPLEX_UNIT_SP)
+            .typeface(typeface)
+            .enableAutoTextPosition()
+            .showOnce("FANCY_BOOKMARKS")
+            .title("Create a list of your favourite item(s) to buy later")
+            .build()
+        fancySearchView = FancyShowCaseView.Builder(this@MainActivity)
+            .focusOn(Objects.requireNonNull(search))
+            .focusShape(FocusShape.CIRCLE)
+            .roundRectRadius(90)
+            .titleGravity(Gravity.CENTER)
+            .titleSize(28, TypedValue.COMPLEX_UNIT_SP)
+            .typeface(typeface)
+            .enableAutoTextPosition()
+            .showOnce("FANCY_SEARCH")
+            .title("Search for your interest across the stores")
+            .build()
+        fancyMenu = FancyShowCaseView.Builder(this@MainActivity)
+            .focusOn(Objects.requireNonNull(ivMenu))
+            .focusShape(FocusShape.CIRCLE)
+            .roundRectRadius(90)
+            .titleGravity(Gravity.CENTER)
+            .titleSize(28, TypedValue.COMPLEX_UNIT_SP)
+            .typeface(typeface)
+            .enableAutoTextPosition()
+            .showOnce("FANCY_MENU")
+            .title("Checkout more app features here")
+            .build()
+        fancyShowCaseQueue = FancyShowCaseQueue()
+        fancyShowCaseQueue!!.add(fancyHome!!).add(fancyCategories!!)
+            .add(fancyDeals!!).add(fancyBookmarks!!).add(fancySearchView!!).add(fancyMenu!!)
+        fancyShowCaseQueue!!.show()
+    }
+
 }
 
 

@@ -12,6 +12,8 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
@@ -20,6 +22,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.facebook.ads.*
@@ -30,6 +33,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_web.*
 import kotlinx.android.synthetic.main.custom_toast.*
+import me.toptas.fancyshowcase.FancyShowCaseView
+import me.toptas.fancyshowcase.FocusShape
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.R
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.model.bookmark.Bookmarks
 import shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.Constants
@@ -63,7 +68,6 @@ class WebActivity : AppCompatActivity() {
 
     private var sharedPreferences: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null
-    val STORE_FILE_NAME = "Bookmarks_data"
 
     lateinit var btn1: FloatingActionButton
     lateinit var share: FloatingActionButton
@@ -84,9 +88,24 @@ class WebActivity : AppCompatActivity() {
         initViews()
         initData()
 
+        val typeface =
+            ResourcesCompat.getFont(this, R.font.montserrat_semibold)
+
+        FancyShowCaseView.Builder(this)
+            .focusOn(btn1)
+            .focusShape(FocusShape.CIRCLE)
+            .roundRectRadius(90)
+            .titleGravity(Gravity.CENTER)
+            .titleSize(28, TypedValue.COMPLEX_UNIT_SP)
+            .typeface(typeface)
+            .enableAutoTextPosition()
+            .showOnce("FANCY_FAB")
+            .title("Click to add this item to your wishlist to explore later and also to share this item where you want!!")
+            .build()
+
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         sharedPreferences =
-            getSharedPreferences(STORE_FILE_NAME, MODE_PRIVATE)
+            getSharedPreferences(Constants().BOOKMARKS_DATA, MODE_PRIVATE)
         editor = sharedPreferences!!.edit()
 
         bkmark.isEnabled = false
@@ -121,13 +140,22 @@ class WebActivity : AppCompatActivity() {
 
             onButtonClicked()
 
-            val sendIntent: Intent = Intent().setAction(Intent.ACTION_SEND)
-            sendIntent.putExtra(
-                Intent.EXTRA_TEXT, appUrl
+            val intent = Intent(Intent.ACTION_SEND)
+            /*This will be the actual content you wish you share.*/
+            /*This will be the actual content you wish you share.*/
+            val shareBody = "Hey!! checkout this product"+"\n"+ webView!!.url
+            /*The type of the content is text, obviously.*/
+            /*The type of the content is text, obviously.*/intent.type = "text/plain"
+            /*Applying information Subject and Body.*/
+            /*Applying information Subject and Body.*/
+            intent.putExtra(Intent.EXTRA_TEXT, shareBody)
+            /*Fire!*/
+            /*Fire!*/startActivity(
+            Intent.createChooser(
+                intent,
+                "Share via"
             )
-            sendIntent.type = "text/simple"
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
+        )
         }
 
         bkmark.setOnClickListener {

@@ -214,10 +214,11 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
     }
 
     var imageClickListener: ImageClickListener = ImageClickListener { position ->
-        val intent: Intent? = Intent(activity, WebActivity::class.java)
-        intent?.putExtra("title", carouselImagesList!![position][1])
-        intent?.putExtra("url", carouselImagesList!![position][2])
-        intent?.putExtra("app_icon", carouselImagesList!![position][4])
+        val intent: Intent = Intent(activity, WebActivity::class.java)
+        intent.putExtra("title", carouselImagesList!![position][1])
+        intent.putExtra("url", carouselImagesList!![position][2])
+        intent.putExtra("app_icon", carouselImagesList!![position][4])
+        intent.putExtra("color", "#666666")
 
         val bundle = Bundle()
         bundle.putString("title", carouselImagesList!![position][1])
@@ -231,6 +232,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
 
 
     var imageListener: ImageListener = ImageListener { position, imageView ->
+        imageView.scaleType = ImageView.ScaleType.FIT_XY
         Log.d(
             "TAG",
             "onLoadCarouselImages: position " + position + " data " + carouselImagesList!![position][3]
@@ -396,6 +398,7 @@ class FragmentHome : BaseFragment(), AllAppsItemClickListener<List<String>>,
         intent?.putExtra("title", item.get(1))
         intent?.putExtra("url", item.get(2))
         intent?.putExtra("app_icon", item.get(4))
+        intent?.putExtra("color", "#ffffff")
 
 
         val bundle = Bundle()

@@ -123,67 +123,67 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
         categoryViewModel = ViewModelProvider(requireActivity()).get(CategoryViewModel::class.java)
         categoryViewModel?.loadData()
 
-        categoryViewModel!!.superMartLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.superMartLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: superMartLiveData $t")
             superMartList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.groceriesLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.groceriesLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: groceriesLiveData $t")
             groceriesList!!.addAll(t!!)
         })
-        categoryViewModel!!.medicinesLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.medicinesLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: medicinesLiveData $t")
             medicinesList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.supplementsLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.supplementsLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: supplementsLiveData $t")
             supplementsList!!.addAll(t!!)
         })
-        categoryViewModel!!.electronicsLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.electronicsLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: electronicsLiveData $t")
             electronicsList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.beautyLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.beautyLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: beautyLiveData $t")
             beautyList!!.addAll(t!!)
         })
-        categoryViewModel!!.jewelleryLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.jewelleryLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: jewelleryLiveData $t")
             jewelleryList!!.addAll(t!!)
         })
 
         categoryViewModel!!.kitchenAppliancesLiveData
-            .observe(this, Observer { t ->
+            .observe(viewLifecycleOwner, Observer { t ->
                 Log.d("TAG", "onViewCreated: kitchenAppliancesLiveData $t")
                 kitchenAppliancesList!!.addAll(t!!)
             })
-        categoryViewModel!!.kidsLifestyleLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.kidsLifestyleLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: kidsLifestyleLiveData $t")
             kidsLifestyleList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.babyToysLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.babyToysLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: babyToysLiveData $t")
             babyToysList!!.addAll(t!!)
         })
-        categoryViewModel!!.lingerieLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.lingerieLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: lingerieLiveData $t")
             lingerieList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.menInnerWearLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.menInnerWearLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: menInnerWearLiveData $t")
             menInnerWearList!!.addAll(t!!)
         })
-        categoryViewModel!!.booksLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.booksLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: booksLiveData $t")
             booksList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.footwearLiveData.observe(this, Observer { t ->
+        categoryViewModel!!.footwearLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: footwearLiveData $t")
             footwearList!!.addAll(t!!)
         })
@@ -240,10 +240,10 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
             if (firebaseRemoteConfig == null) {
                 firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
             }
-            if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
-                onLoadFBNativeAd1(view!!, context!!)
-                onLoadFBNativeAd2(view!!, context!!)
-            }
+//            if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
+//                onLoadFBNativeAd1(view!!, context!!)
+//                onLoadFBNativeAd2(view!!, context!!)
+//            }
         }
 
     }
@@ -291,7 +291,7 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
 
         categoryStoresAdapter!!.setItems(list)
         if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
-            onLoadFBNativeAdCatDailog(context!!, dialog!!)
+            onLoadFBNativeAdCatDailog(requireContext(), dialog!!)
         }
 
 
@@ -299,115 +299,115 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
 
     }
 
-    fun onLoadFBNativeAd1(view: View, context: Context) {
-        nativeAdFB1 = NativeAd(context, Constants().getFbNativeCat1())
-        val nativeAdListener: NativeAdListener = object : NativeAdListener {
-            override fun onError(p0: Ad?, p1: AdError?) {
-                Log.d("TAG", "onError: onLoadFBNativeAd1 " + p1!!.errorMessage)
-            }
+//    fun onLoadFBNativeAd1(view: View, context: Context) {
+//        nativeAdFB1 = NativeAd(context, Constants().getFbNativeCat1())
+//        val nativeAdListener: NativeAdListener = object : NativeAdListener {
+//            override fun onError(p0: Ad?, p1: AdError?) {
+//                Log.d("TAG", "onError: onLoadFBNativeAd1 " + p1!!.errorMessage)
+//            }
+//
+//            override fun onAdLoaded(ad: Ad?) {
+//
+//                // Race condition, load() called again before last ad was displayed
+//                if (nativeAdFB1 == null || nativeAdFB1 !== ad) {
+//                    return
+//                }
+//                // Inflate Native Ad into Container
+//
+//                // Add the Ad view into the ad container.
+//                nativeAdLayout = view.findViewById(R.id.native_ad_container_cat_1)
+//                val inflater = LayoutInflater.from(context)
+//                // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
+//                adView =
+//                    inflater.inflate(
+//                        R.layout.native_ad_layout,
+//                        nativeAdLayout,
+//                        false
+//                    ) as LinearLayout
+//                nativeAdLayout!!.addView(adView)
+//
+//                inflateAd(nativeAdFB1!!, adView!!)
+//
+//                val adChoicesContainer: LinearLayout = view.findViewById(R.id.ad_choices_container)
+//                val adOptionsView = AdOptionsView(context, nativeAdFB1, nativeAdLayout)
+//                adChoicesContainer.removeAllViews()
+//                adChoicesContainer.addView(adOptionsView, 0)
+//            }
+//
+//            override fun onAdClicked(p0: Ad?) {
+//                Log.d("TAG", "onAdClicked: onLoadFBNativeAd1")
+//            }
+//
+//            override fun onLoggingImpression(p0: Ad?) {
+//                Log.d("TAG", "onLoggingImpression: onLoadFBNativeAd1")
+//            }
+//
+//            override fun onMediaDownloaded(p0: Ad?) {
+//                Log.d("TAG", "onMediaDownloaded: onLoadFBNativeAd1")
+//            }
+//        }
+//
+//        nativeAdFB1!!.loadAd(
+//            nativeAdFB1!!.buildLoadAdConfig()
+//                .withAdListener(nativeAdListener)
+//                .build()
+//        );
+//    }
 
-            override fun onAdLoaded(ad: Ad?) {
-
-                // Race condition, load() called again before last ad was displayed
-                if (nativeAdFB1 == null || nativeAdFB1 !== ad) {
-                    return
-                }
-                // Inflate Native Ad into Container
-
-                // Add the Ad view into the ad container.
-                nativeAdLayout = view.findViewById(R.id.native_ad_container_cat_1)
-                val inflater = LayoutInflater.from(context)
-                // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-                adView =
-                    inflater.inflate(
-                        R.layout.native_ad_layout,
-                        nativeAdLayout,
-                        false
-                    ) as LinearLayout
-                nativeAdLayout!!.addView(adView)
-
-                inflateAd(nativeAdFB1!!, adView!!)
-
-                val adChoicesContainer: LinearLayout = view.findViewById(R.id.ad_choices_container)
-                val adOptionsView = AdOptionsView(context, nativeAdFB1, nativeAdLayout)
-                adChoicesContainer.removeAllViews()
-                adChoicesContainer.addView(adOptionsView, 0)
-            }
-
-            override fun onAdClicked(p0: Ad?) {
-                Log.d("TAG", "onAdClicked: onLoadFBNativeAd1")
-            }
-
-            override fun onLoggingImpression(p0: Ad?) {
-                Log.d("TAG", "onLoggingImpression: onLoadFBNativeAd1")
-            }
-
-            override fun onMediaDownloaded(p0: Ad?) {
-                Log.d("TAG", "onMediaDownloaded: onLoadFBNativeAd1")
-            }
-        }
-
-        nativeAdFB1!!.loadAd(
-            nativeAdFB1!!.buildLoadAdConfig()
-                .withAdListener(nativeAdListener)
-                .build()
-        );
-    }
-
-    fun onLoadFBNativeAd2(view: View, context: Context) {
-        nativeAdFB2 = NativeAd(context, Constants().getFbNativeCat2())
-        val nativeAdListener: NativeAdListener = object : NativeAdListener {
-            override fun onError(p0: Ad?, p1: AdError?) {
-                Log.d("TAG", "onError: onLoadFBNativeAd1 " + p1!!.errorMessage)
-            }
-
-            override fun onAdLoaded(ad: Ad?) {
-
-                // Race condition, load() called again before last ad was displayed
-                if (nativeAdFB2 == null || nativeAdFB2 !== ad) {
-                    return
-                }
-                // Inflate Native Ad into Container
-
-                // Add the Ad view into the ad container.
-                nativeAdLayout = view.findViewById(R.id.native_ad_container_cat_2)
-                val inflater = LayoutInflater.from(context)
-                // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-                adView =
-                    inflater.inflate(
-                        R.layout.native_ad_layout,
-                        nativeAdLayout,
-                        false
-                    ) as LinearLayout
-                nativeAdLayout!!.addView(adView)
-
-                inflateAd(nativeAdFB2!!, adView!!)
-
-                val adChoicesContainer: LinearLayout = view.findViewById(R.id.ad_choices_container)
-                val adOptionsView = AdOptionsView(context, nativeAdFB2, nativeAdLayout)
-                adChoicesContainer.removeAllViews()
-                adChoicesContainer.addView(adOptionsView, 0)
-            }
-
-            override fun onAdClicked(p0: Ad?) {
-                Log.d("TAG", "onAdClicked: onLoadFBNativeAd1")
-            }
-
-            override fun onLoggingImpression(p0: Ad?) {
-                Log.d("TAG", "onLoggingImpression: onLoadFBNativeAd1")
-            }
-
-            override fun onMediaDownloaded(p0: Ad?) {
-                Log.d("TAG", "onMediaDownloaded: onLoadFBNativeAd1")
-            }
-        }
-
-        nativeAdFB2!!.loadAd(
-            nativeAdFB2!!.buildLoadAdConfig()
-                .withAdListener(nativeAdListener)
-                .build()
-        );
-    }
+//    fun onLoadFBNativeAd2(view: View, context: Context) {
+//        nativeAdFB2 = NativeAd(context, Constants().getFbNativeCat2())
+//        val nativeAdListener: NativeAdListener = object : NativeAdListener {
+//            override fun onError(p0: Ad?, p1: AdError?) {
+//                Log.d("TAG", "onError: onLoadFBNativeAd1 " + p1!!.errorMessage)
+//            }
+//
+//            override fun onAdLoaded(ad: Ad?) {
+//
+//                // Race condition, load() called again before last ad was displayed
+//                if (nativeAdFB2 == null || nativeAdFB2 !== ad) {
+//                    return
+//                }
+//                // Inflate Native Ad into Container
+//
+//                // Add the Ad view into the ad container.
+//                nativeAdLayout = view.findViewById(R.id.native_ad_container_cat_2)
+//                val inflater = LayoutInflater.from(context)
+//                // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
+//                adView =
+//                    inflater.inflate(
+//                        R.layout.native_ad_layout,
+//                        nativeAdLayout,
+//                        false
+//                    ) as LinearLayout
+//                nativeAdLayout!!.addView(adView)
+//
+//                inflateAd(nativeAdFB2!!, adView!!)
+//
+//                val adChoicesContainer: LinearLayout = view.findViewById(R.id.ad_choices_container)
+//                val adOptionsView = AdOptionsView(context, nativeAdFB2, nativeAdLayout)
+//                adChoicesContainer.removeAllViews()
+//                adChoicesContainer.addView(adOptionsView, 0)
+//            }
+//
+//            override fun onAdClicked(p0: Ad?) {
+//                Log.d("TAG", "onAdClicked: onLoadFBNativeAd1")
+//            }
+//
+//            override fun onLoggingImpression(p0: Ad?) {
+//                Log.d("TAG", "onLoggingImpression: onLoadFBNativeAd1")
+//            }
+//
+//            override fun onMediaDownloaded(p0: Ad?) {
+//                Log.d("TAG", "onMediaDownloaded: onLoadFBNativeAd1")
+//            }
+//        }
+//
+//        nativeAdFB2!!.loadAd(
+//            nativeAdFB2!!.buildLoadAdConfig()
+//                .withAdListener(nativeAdListener)
+//                .build()
+//        );
+//    }
 
     fun onLoadFBNativeAdCatDailog(context: Context, dialog: Dialog) {
         nativeAdFB3 = NativeAd(context, Constants().getFbNativeDailog())
@@ -529,13 +529,15 @@ class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<St
         Log.d("TAG", "onAllBrokersCardClick: " + item.get(1))
 
         val bundle = Bundle()
-        bundle.putString("title", item.get(1))
-        bundle.putString("url", item.get(2))
-        (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "brokers_visited", true)
+        bundle.putString("title", item[1])
+        bundle.putString("url", item[2])
+        (activity as MainActivity?)!!.onUpdateLogEvent(bundle, "category_visited", true)
 
         val intent: Intent? = Intent(activity, WebActivity::class.java)
-        intent?.putExtra("title", item.get(1))
-        intent?.putExtra("url", item.get(2))
+        intent?.putExtra("title", item[1])
+        intent?.putExtra("url", item[2])
+        intent?.putExtra("app_icon", item[3])
+        intent?.putExtra("color", item[4])
         startActivity(intent)
     }
 }
