@@ -68,13 +68,13 @@
         app:tabTextAppearance="@style/tab_text" />
 
 
-    <shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.CustomViewPager
+    <world.live.tv.channels.hd.global.free.online.guide.map.utils.CustomViewPager
         android:id="@+id/vpPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar">
 
-    </shopping.grocery.medicine.online.deals.coupons.compare.buy.utils.CustomViewPager>
+    </world.live.tv.channels.hd.global.free.online.guide.map.utils.CustomViewPager>
 
     <github.com.st235.lib_expandablebottombar.ExpandableBottomBar
         android:id="@+id/expandable_bottom_bar"

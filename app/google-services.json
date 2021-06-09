@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "382459289952",
-    "firebase_url": "https://shopping-crate.firebaseio.com",
-    "project_id": "shopping-crate",
-    "storage_bucket": "shopping-crate.appspot.com"
+    "project_number": "594414316892",
+    "project_id": "global-tv-channels",
+    "storage_bucket": "global-tv-channels.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:382459289952:android:884f3d0081333632dcfe05",
+        "mobilesdk_app_id": "1:594414316892:android:90dd620ce3636abf5aa599",
         "android_client_info": {
-          "package_name": "shopping.grocery.medicine.online.deals.coupons.compare.buy"
+          "package_name": "world.live.tv.channels.hd.global.free.online.guide.map"
         }
       },
       "oauth_client": [
         {
-          "client_id": "382459289952-ngd47gslg4d9londc2rrqk4d81m9rnt5.apps.googleusercontent.com",
+          "client_id": "594414316892-r0kk23gkmio5m7142di73riqnjc6j49n.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDdX1pz2bBXYlZFHqlAWUI83v0_j2xOuFg"
+          "current_key": "AIzaSyCANMG2wzSKUeM8AbqQ14Zj48VK5-cBQzI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "382459289952-ngd47gslg4d9londc2rrqk4d81m9rnt5.apps.googleusercontent.com",
+              "client_id": "594414316892-r0kk23gkmio5m7142di73riqnjc6j49n.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
