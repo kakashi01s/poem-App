@@ -17,7 +17,7 @@
             android:padding="20dp">
 
             <LinearLayout
-                android:id="@+id/llSports"
+                android:id="@+id/llmedicine"
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
@@ -29,12 +29,12 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="90dp"
-                    android:src="@drawable/news" />
+                    android:src="@drawable/medicine" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:text="World News"
+                    android:text="Medicine"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginTop="10dp"/>
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"/>
 
             <LinearLayout
-                android:id="@+id/llBusiness"
+                android:id="@+id/llhealthyfood"
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
@@ -59,12 +59,12 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="90dp"
-                    android:src="@drawable/business_news_logo"/>
+                    android:src="@drawable/healthyfood"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:text="Stock Martket"
+                    android:text="Healthy Food"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginTop="10dp"/>
@@ -93,7 +93,7 @@
             android:padding="20dp">
 
             <LinearLayout
-                android:id="@+id/llEntertainment"
+                android:id="@+id/llhealth"
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
@@ -105,12 +105,12 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="90dp"
-                    android:src="@drawable/currency"/>
+                    android:src="@drawable/health"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:text="Currency"
+                    android:text="Health"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"/>
 
             <LinearLayout
-                android:id="@+id/llPolitics"
+                android:id="@+id/llfitness"
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
@@ -136,12 +136,12 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="90dp"
-                    android:src="@drawable/cryptocurreny"/>
+                    android:src="@drawable/fitness"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:text="Cryptocurrency"
+                    android:text="Fitness"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:layout_marginTop="10dp"/>
@@ -150,66 +150,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp">
-
-            <LinearLayout
-                android:id="@+id/llWeather"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:padding="20dp"
-                android:background="@drawable/card_bg_primary">
-
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="90dp"
-                    android:src="@drawable/weather_news_logo"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:text="Weather News"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="10dp"/>
-
-            </LinearLayout>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="wrap_content"/>
-
-            <LinearLayout
-                android:id="@+id/llHealth"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:padding="20dp"
-                android:background="@drawable/card_bg_primary">
-
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="90dp"
-                    android:src="@drawable/world_tour"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:text="World Tour"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="10dp"/>
-
-            </LinearLayout>
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

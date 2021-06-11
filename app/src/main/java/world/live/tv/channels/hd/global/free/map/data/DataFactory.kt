@@ -7,9 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 class DataFactory {
 
 
-    val URL_ALL_APPS = BASE_URL + "1ct-vYLuOlMd4sUpecFW6-Bg75gPiSJ7pR_l90GaO1FM/values/Sheet1!A2:E/"
-    val URL_CAROUSEL_IMAGES = BASE_URL + "1tZG0Z-E8AmJm1M5mAh7TR5eAA5QLKMNvUXBYopGmyZw/values/Sheet1!A2:E/"
-    val URL_TOP_INTERNATIONAL = BASE_URL + "1x26LGgz5XEYQbBWGmbzyLIFhZEBvSlHLeSQW8kIaCfU/values/Sheet1!A2:E/"
+    val URL_ALL_APPS = BASE_URL + "1cjeDVcK15fmQfMFR9GPk-Vn3kshlPT-fOoivNMbM6s4/values/Sheet1!A2:E/"
+    val URL_CAROUSEL_IMAGES = BASE_URL + "19up5GOYq4hVG99sfDgRmXZrjkosolZtiH858GC_CC7k/values/Sheet1!A2:E/"
+    val URL_TOP_INTERNATIONAL = BASE_URL + "1SzIVZL0l_sZyYUmP2-lpv38sZGBGE4NhF5Mr2tQzNVs/values/Sheet1!A2:E/"
     val URL_INDIA = BASE_URL + "1Qzz66uLh0SgN5bgOVOOujeHR2hwp70mEChpcpZ02-u4/values/Sheet1!A2:E/"
     val URL_USA = BASE_URL + "1eSzMHeBNFGzejZa6ZWik8okXh18du7VNFhFNs8E-iQE/values/Sheet1!A2:E/"
     val URL_RUSSIA = BASE_URL + "1vg1IdR7Pm3faWNbtsPFedeqWUTOx2-i-dI0WjExoPb4/values/Sheet1!A2:E/"
@@ -54,7 +54,12 @@ class DataFactory {
     val URL_WEATHER_NEWS = BASE_URL + "1fB3Yy3i6izQybhHJhbZdZsFKnIi7KS4MqAVdHrxLCc8/values/Sheet1!A2:E/"
     val URL_WORLD_TOUR = BASE_URL + "1fB3Yy3i6izQybhHJhbZdZsFKnIi7KS4MqAVdHrxLCc8/values/Sheet1!A2:E/"
     val URL_LIVE_NEWS_CHANNELS = BASE_URL + "1moZsfGxYoBJrzSI4FLGSzlCgTo8Uiufmp4ppHt3CHgY/values/Sheet1!A2:E/"
-    val URL_MOST_USEFUL_APPS = BASE_URL + "1BlpRHcgtOQJ-0w_qLyS4n9XXssV4sAjz2uM1WvdUdBg/values/Sheet1!A2:E/"
+    val URL_MEDICINE = BASE_URL + "1Qo31dfuPUmNa-Pd5vWMaxcidDSMRbhtE03wc8Z6ApoQ/values/Sheet1!A2:E/"
+    val URL_HEALTH = BASE_URL + "1Jm6nChQHXH6zE9x7afocawOHEDeRIbjsI9f975-a2jg/values/Sheet1!A2:E/"
+    val URL_FITNESS = BASE_URL + "1tpf4sZastciSSD9aOkOfAgS8XS_OKC6D0ENRPT-YxSs/values/Sheet1!A2:E/"
+    val URL_HEALTHYFOOD = BASE_URL + "1kykyy8nh8Z72udd6qanWSFeA3TlIoZWpvpD6QXru0Qo/values/Sheet1!A2:E/"
+
+    val URL_MOST_USEFUL_APPS = BASE_URL + "1cyp9bLtxqdbe_9zCvd8Igwnids4DffpMqo3M9ssRtgk/values/Sheet1!A2:E/"
 
     val KEY = "AIzaSyCANMG2wzSKUeM8AbqQ14Zj48VK5-cBQzI"
 

@@ -14,12 +14,12 @@ import world.live.tv.channels.hd.global.free.online.guide.map.data.DataFactory
 import world.live.tv.channels.hd.global.free.online.guide.map.data.DataService
 
 class CategoryViewModel : ViewModel() {
-    var sportsLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
-    var businessLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
-    var entertainmentLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
-    var politicsLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
-    var weatherLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
+
     var healthLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
+    var sportsLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
+    var medicineLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
+    var healthyfoodLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
+    var fitnessLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
     var mostUsefulAppsData: MutableLiveData<List<List<String>>?> = MutableLiveData()
 
 
@@ -30,11 +30,11 @@ class CategoryViewModel : ViewModel() {
         Log.d("TAG", "loadData: ")
         compositeDisposable = CompositeDisposable()
         fetchSports()
-        fetchBusiness()
-        fetchEntertainment()
-        fetchPolitics()
-        fetchWeather()
-        fetchHealth()
+
+        fetchmedicine()
+        fetchhealth()
+        fetchfitness()
+        fetchhealthyfood()
         fetchMostUsefulApps()
     }
 
@@ -61,37 +61,16 @@ class CategoryViewModel : ViewModel() {
         }
     }
 
-    private fun fetchBusiness(){
-        Log.d("TAG", "fetchBusiness: ")
 
-        val singleton: Singleton? = Singleton.get()
-        val dataService: DataService? = singleton!!.getDataService()
 
-        val disposable: Disposable?
-        disposable = dataService?.fetchAllApps(DataFactory().URL_STOCK, DataFactory().KEY)
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.doOnError(Consumer { t ->
-                Log.d("TAG", "fetchBusiness Error ${t.localizedMessage}")
-            })
-            ?.subscribe(Consumer { t ->
-                Log.d("TAG", "fetchBusiness Response ${t.getValues()}")
-                changeBusinessDataSet(t.getValues())
-            })
-
-        if (disposable != null) {
-            compositeDisposable?.add(disposable)
-        }
-    }
-
-    private fun fetchEntertainment(){
+    private fun fetchfitness(){
         Log.d("TAG", "fetchEntertainment: ")
 
         val singleton: Singleton? = Singleton.get()
         val dataService: DataService? = singleton!!.getDataService()
 
         val disposable: Disposable?
-        disposable = dataService?.fetchAllApps(DataFactory().URL_CURRENCY, DataFactory().KEY)
+        disposable = dataService?.fetchAllApps(DataFactory().URL_FITNESS, DataFactory().KEY)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnError(Consumer { t ->
@@ -99,7 +78,7 @@ class CategoryViewModel : ViewModel() {
             })
             ?.subscribe(Consumer { t ->
                 Log.d("TAG", "fetchEntertainment Response ${t.getValues()}")
-                changeEntertainmentDataSet(t.getValues())
+                changefitnessDataSet(t.getValues())
             })
 
         if (disposable != null) {
@@ -107,14 +86,14 @@ class CategoryViewModel : ViewModel() {
         }
     }
 
-    private fun fetchPolitics(){
+    private fun fetchhealth(){
         Log.d("TAG", "fetchPolitics: ")
 
         val singleton: Singleton? = Singleton.get()
         val dataService: DataService? = singleton!!.getDataService()
 
         val disposable: Disposable?
-        disposable = dataService?.fetchAllApps(DataFactory().URL_CRYPTOCURRENCY, DataFactory().KEY)
+        disposable = dataService?.fetchAllApps(DataFactory().URL_HEALTH, DataFactory().KEY)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnError(Consumer { t ->
@@ -122,7 +101,7 @@ class CategoryViewModel : ViewModel() {
             })
             ?.subscribe(Consumer { t ->
                 Log.d("TAG", "fetchPolitics Response ${t.getValues()}")
-                changePoliticsDataSet(t.getValues())
+                changehealthDataSet(t.getValues())
             })
 
         if (disposable != null) {
@@ -130,14 +109,14 @@ class CategoryViewModel : ViewModel() {
         }
     }
 
-    private fun fetchWeather(){
+    private fun fetchhealthyfood(){
         Log.d("TAG", "fetchWeather: ")
 
         val singleton: Singleton? = Singleton.get()
         val dataService: DataService? = singleton!!.getDataService()
 
         val disposable: Disposable?
-        disposable = dataService?.fetchAllApps(DataFactory().URL_WEATHER_NEWS, DataFactory().KEY)
+        disposable = dataService?.fetchAllApps(DataFactory().URL_HEALTHYFOOD, DataFactory().KEY)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnError(Consumer { t ->
@@ -145,7 +124,7 @@ class CategoryViewModel : ViewModel() {
             })
             ?.subscribe(Consumer { t ->
                 Log.d("TAG", "fetchWeather Response ${t.getValues()}")
-                changeWeatherDataSet(t.getValues())
+                changehealthyfoodDataSet(t.getValues())
             })
 
         if (disposable != null) {
@@ -153,14 +132,14 @@ class CategoryViewModel : ViewModel() {
         }
     }
 
-    private fun fetchHealth(){
+    private fun fetchmedicine(){
         Log.d("TAG", "fetchHealth: ")
 
         val singleton: Singleton? = Singleton.get()
         val dataService: DataService? = singleton!!.getDataService()
 
         val disposable: Disposable?
-        disposable = dataService?.fetchAllApps(DataFactory().URL_WORLD_TOUR, DataFactory().KEY)
+        disposable = dataService?.fetchAllApps(DataFactory().URL_MEDICINE, DataFactory().KEY)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnError(Consumer { t ->
@@ -168,7 +147,7 @@ class CategoryViewModel : ViewModel() {
             })
             ?.subscribe(Consumer { t ->
                 Log.d("TAG", "fetchHealth Response ${t.getValues()}")
-                changeHealthDataSet(t.getValues())
+                changemedicineDataSet(t.getValues())
             })
 
         if (disposable != null) {
@@ -205,25 +184,22 @@ class CategoryViewModel : ViewModel() {
         sportsLiveData.value = allAppsList
     }
 
-    fun changeBusinessDataSet(allAppsList: List<List<String>>?){
-        businessLiveData.value = allAppsList
-    }
-
-    fun changeEntertainmentDataSet(allAppsList: List<List<String>>?){
-        entertainmentLiveData.value = allAppsList
-    }
-
-    fun changePoliticsDataSet(allAppsList: List<List<String>>?){
-        politicsLiveData.value = allAppsList
-    }
-
-    fun changeWeatherDataSet(allAppsList: List<List<String>>?){
-        weatherLiveData.value = allAppsList
-    }
-
-    fun changeHealthDataSet(allAppsList: List<List<String>>?){
+    fun changehealthDataSet(allAppsList: List<List<String>>?){
         healthLiveData.value = allAppsList
     }
+
+    fun changehealthyfoodDataSet(allAppsList: List<List<String>>?){
+        healthyfoodLiveData.value = allAppsList
+    }
+
+    fun changemedicineDataSet(allAppsList: List<List<String>>?){
+        medicineLiveData.value = allAppsList
+    }
+
+    fun changefitnessDataSet(allAppsList: List<List<String>>?){
+        fitnessLiveData.value = allAppsList
+    }
+    
     fun changeMostUsefulAppsSet(allAppsList: List<List<String>>?){
         mostUsefulAppsData.value = allAppsList
     }

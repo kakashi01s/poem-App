@@ -71,11 +71,11 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
     var rvMostUsefulApps: RecyclerView? = null
     var mostUsefulAppsAdapter: MostUsefulAppsAdapter? = null
 
-    var llNews: LinearLayout? = null
-    var llStock: LinearLayout? = null
-    var llCurrency: LinearLayout? = null
-    var llCryptoCurrency: LinearLayout? = null
-    var llWeather: LinearLayout? = null
+    var llmedicine: LinearLayout? = null
+    var llhealthyfood: LinearLayout? = null
+    var llmostuseful: LinearLayout? = null
+    var llfitness: LinearLayout? = null
+    var llhealth: LinearLayout? = null
     var llWorld: LinearLayout? = null
     //    var llWorldTour: LinearLayout? = null
     var llStockMarket: LinearLayout? = null
@@ -86,6 +86,11 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
     private var currencyList: ArrayList<List<String>>? = ArrayList()
     private var financeList: ArrayList<List<String>>? = ArrayList()
     private var stockMarketList: ArrayList<List<String>>? = ArrayList()
+
+    private var healthList: ArrayList<List<String>>? = ArrayList()
+    private var healthyfoodList: ArrayList<List<String>>? = ArrayList()
+    private var medicineList: ArrayList<List<String>>? = ArrayList()
+    private var fitnessList: ArrayList<List<String>>? = ArrayList()
 
     var dialog: Dialog? = null
 
@@ -133,22 +138,22 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
             calculatorsList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.businessLiveData.observe(viewLifecycleOwner, Observer { t ->
+        categoryViewModel!!.healthLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: cryptoLiveData $t")
-            cryptoList!!.addAll(t!!)
+            healthList!!.addAll(t!!)
         })
-        categoryViewModel!!.entertainmentLiveData.observe(viewLifecycleOwner, Observer { t ->
+        categoryViewModel!!.healthyfoodLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: ntertainmentLiveData $t")
-            measurementList!!.addAll(t!!)
+            healthyfoodList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.weatherLiveData.observe(viewLifecycleOwner, Observer { t ->
+        categoryViewModel!!.medicineLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: pakistanLiveData $t")
-            currencyList!!.addAll(t!!)
+            medicineList!!.addAll(t!!)
         })
-        categoryViewModel!!.politicsLiveData.observe(viewLifecycleOwner, Observer { t ->
+        categoryViewModel!!.fitnessLiveData.observe(viewLifecycleOwner, Observer { t ->
             Log.d("TAG", "onViewCreated: financeLiveData $t")
-            financeList!!.addAll(t!!)
+            fitnessList!!.addAll(t!!)
         })
 
         categoryViewModel!!.healthLiveData.observe(viewLifecycleOwner, Observer { t ->
@@ -162,24 +167,20 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
             mostUsefulAppsAdapter?.notifyDataSetChanged()
         })
 
-        llNews!!.setOnClickListener {
-            onShowStores(calculatorsList!!,view)
+        llfitness!!.setOnClickListener {
+            onShowStores(fitnessList!!,view)
         }
-        llStock!!.setOnClickListener {
-            onShowStores(cryptoList!!,view)
+        llhealth!!.setOnClickListener {
+            onShowStores(healthList!!,view)
         }
-        llCurrency!!.setOnClickListener {
-            onShowStores(measurementList!!,view)
+        llhealthyfood!!.setOnClickListener {
+            onShowStores(healthyfoodList!!,view)
         }
-        llCryptoCurrency!!.setOnClickListener {
-            onShowStores(currencyList!!,view)
+        llmedicine!!.setOnClickListener {
+            onShowStores(medicineList!!,view)
         }
-        llWeather!!.setOnClickListener {
-            onShowStores(financeList!!,view)
-        }
-        llWorld!!.setOnClickListener {
-            onShowStores(stockMarketList!!, view)
-        }
+
+
 
     }
 
@@ -204,14 +205,13 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireActivity())
 
 
-        llNews = view.findViewById(R.id.llSports)
-        llStock = view.findViewById(R.id.llBusiness)
-        llCurrency = view.findViewById(R.id.llEntertainment)
-        llCryptoCurrency = view.findViewById(R.id.llWeather)
+        llmedicine = view.findViewById(R.id.llmedicine)
+        llhealthyfood = view.findViewById(R.id.llhealthyfood)
+        llfitness = view.findViewById(R.id.llfitness)
+        llhealth = view.findViewById(R.id.llhealth)
 
 //        llWorldTour = view.findViewById(R.id.llWorldTour)
-        llWeather = view.findViewById(R.id.llPolitics)
-        llWorld = view.findViewById(R.id.llHealth)
+
         rvMostUsefulApps = view.findViewById(R.id.rvMostUsefulApps)
     }
 
