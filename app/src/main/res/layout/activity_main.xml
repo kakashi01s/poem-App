@@ -68,13 +68,13 @@
         app:tabTextAppearance="@style/tab_text" />
 
 
-    <medicine.health.lab.test.medical.online.fitness.food.shopping.pregnancy.utils.CustomViewPager
+    <shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.utils.CustomViewPager
         android:id="@+id/vpPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar">
 
-    </medicine.health.lab.test.medical.online.fitness.food.shopping.pregnancy.utils.CustomViewPager>
+    </shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.utils.CustomViewPager>
 
     <github.com.st235.lib_expandablebottombar.ExpandableBottomBar
         android:id="@+id/expandable_bottom_bar"

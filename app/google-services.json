@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "594414316892",
-    "project_id": "global-tv-channels",
-    "storage_bucket": "global-tv-channels.appspot.com"
+    "project_number": "1032294004941",
+    "project_id": "status-app-d65cc",
+    "storage_bucket": "status-app-d65cc.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:594414316892:android:90dd620ce3636abf5aa599",
+        "mobilesdk_app_id": "1:1032294004941:android:bc0d5ef88dedc53395d184",
         "android_client_info": {
-          "package_name": "world.live.tv.channels.hd.global.free.online.guide.map"
+          "package_name": "shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone"
         }
       },
       "oauth_client": [
         {
-          "client_id": "594414316892-r0kk23gkmio5m7142di73riqnjc6j49n.apps.googleusercontent.com",
+          "client_id": "1032294004941-0o5ueesphrdb1ubtdiklvq33nthqsgt8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone",
+            "certificate_hash": "0e9a81e81b75b4654c7c98887fb3b5760ae00d44"
+          }
+        },
+        {
+          "client_id": "1032294004941-e6hkeuvsjanu0mub49e9lpv3omdcnp6q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCANMG2wzSKUeM8AbqQ14Zj48VK5-cBQzI"
+          "current_key": "AIzaSyA43K2T1ffox-3HIhdW_Ot0dwvRmhWr-wU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "594414316892-r0kk23gkmio5m7142di73riqnjc6j49n.apps.googleusercontent.com",
+              "client_id": "1032294004941-e6hkeuvsjanu0mub49e9lpv3omdcnp6q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Medicine App</string>
+    <string name="app_name">Gif App</string>
 
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 
@@ -54,5 +54,6 @@
     <string name="portugul">Portugul</string>
     <string name="australia">Australia</string>
     <string name="greece">Greece</string>
+    <string name="latestpoems">Latest Poems</string>
 
 </resources>
