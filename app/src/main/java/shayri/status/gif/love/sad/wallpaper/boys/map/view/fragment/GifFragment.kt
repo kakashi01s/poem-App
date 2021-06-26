@@ -6,11 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.R
+import shayri.status.gif.love.sad.wallpaper.boys.map.data.giphy.Data
 import shayri.status.gif.love.sad.wallpaper.boys.map.data.giphy.GiphyData
+import shayri.status.gif.love.sad.wallpaper.boys.map.data.giphy.Images
 import shayri.status.gif.love.sad.wallpaper.boys.map.view.adapter.GifAdapter
 import shayri.status.gif.love.sad.wallpaper.boys.map.view.apiService.gifService
 
@@ -31,7 +35,9 @@ class GifFragment : Fragment() {
     private var param2: String? = null
 
     var gifAdapter : GifAdapter? = null
+    var rv_gif: RecyclerView ?= null
 
+    private var layoutManager: RecyclerView.LayoutManager?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,22 +55,34 @@ class GifFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_gif, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
-            getgif()
-            }
-    fun getgif() {
+        rv_gif = view.findViewById(R.id.rv_gif)
+
+        layoutManager = LinearLayoutManager(view.context)
+        rv_gif?.layoutManager = layoutManager
+
+        getgif(rv_gif!!,layoutManager!!)
+    }
+
+    fun getgif(rv : RecyclerView,manager: RecyclerView.LayoutManager) {
         var giphy = gifService.GifInstance.getGif()
         giphy.enqueue(object : Callback<GiphyData> {
             override fun onResponse(call: Call<GiphyData>, response: Response<GiphyData>) {
                 var items = response.body()
                 if (items != null) {
-                    for (url in items.data) {
-                        Log.d("nithik", url.images.toString())
-                       // gifAdapter = GifAdapter(context!!, url.images.toString())
+                    var ImgObjs: MutableList<Images> = arrayListOf()
+                    var i = 0
+                    for (sample in items.data) {
+                        Log.d("SAMPLE", sample.images.original.url)
+                        //Log.d("nithik", sample.images.toString())
+                        ImgObjs.add(i,sample.images)
+                       //gifAdapter = GifAdapter(context!!, url.images.toString())
 
                     }
-
+                    gifAdapter = GifAdapter(context!!, ImgObjs)
+                    rv.adapter = gifAdapter
                 }
             }
 

@@ -229,11 +229,21 @@ class PoemmFragment : BaseFragment(), PoemClickListener<List<String>> {
     }
 
     override fun Onpoemcardclick(item: List<String>) {
+        Log.d("ITEM",item.toString())
         sharepoem?.setOnClickListener {
             Sharebody = poembody!!.text.toString()
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.putExtra("body",Sharebody)
-            startActivity(Intent.createChooser(intent,"Send to..."))
+//            val intent = Intent(Intent.ACTION_SEND)
+//            intent.putExtra("body",Sharebody)
+//            startActivity(Intent.createChooser(intent,"Send to..."))
+
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, Sharebody)
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
     }
 }

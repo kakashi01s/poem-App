@@ -1,10 +1,13 @@
 package shayri.status.gif.love.sad.wallpaper.boys.map.view.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import pl.droidsonroids.gif.GifImageView
@@ -29,14 +32,27 @@ class GifAdapter(var context: Context, var gif: List<Images>) :
             .load(gifx)
             .into(holder.gifimage)
 
+        holder.shareBtn.setOnClickListener {
+
+            //Toast.makeText(holder.itemView.context,gifx,Toast.LENGTH_SHORT).show()
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, gifx)
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            holder.itemView.context.startActivity(shareIntent)
+        }
+
     }
     override fun getItemCount(): Int {
         return gif.size
     }
 
     class GifViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var Gifid = itemView.findViewById<TextView>(R.id.gif_id)
         var gifimage = itemView.findViewById<GifImageView>(R.id.gif_card)
+        var shareBtn = itemView.findViewById<ImageView>(R.id.share_gif)
     }
 
 
