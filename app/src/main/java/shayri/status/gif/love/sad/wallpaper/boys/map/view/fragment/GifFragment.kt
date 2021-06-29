@@ -5,6 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +38,9 @@ class GifFragment : Fragment() {
     private var param2: String? = null
 
     var gifAdapter : GifAdapter? = null
-    var rv_gif: RecyclerView ?= null
+    var rv_gif: RecyclerView?= null
+    var searchgif : SearchView? = null
+    var searchbutton : ImageButton? = null
 
     private var layoutManager: RecyclerView.LayoutManager?= null
 
@@ -55,19 +60,19 @@ class GifFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_gif, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rv_gif = view.findViewById(R.id.rv_gif)
 
         layoutManager = LinearLayoutManager(view.context)
         rv_gif?.layoutManager = layoutManager
+        getgif(rv_gif!!, layoutManager!!)
 
-        getgif(rv_gif!!,layoutManager!!)
+
     }
-
     fun getgif(rv : RecyclerView,manager: RecyclerView.LayoutManager) {
-        var giphy = gifService.GifInstance.getGif()
+
+        var giphy = gifService.GifInstance.getGif("hello")
         giphy.enqueue(object : Callback<GiphyData> {
             override fun onResponse(call: Call<GiphyData>, response: Response<GiphyData>) {
                 var items = response.body()
@@ -79,7 +84,6 @@ class GifFragment : Fragment() {
                         //Log.d("nithik", sample.images.toString())
                         ImgObjs.add(i,sample.images)
                        //gifAdapter = GifAdapter(context!!, url.images.toString())
-
                     }
                     gifAdapter = GifAdapter(context!!, ImgObjs)
                     rv.adapter = gifAdapter

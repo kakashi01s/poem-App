@@ -46,12 +46,10 @@ private const val ARG_PARAM2 = "param2"
  * Use the [TopicsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<String>>,CategoryStoresItemClickListener<List<String>>  {
-
+class CategoryFragment : BaseFragment(), CategoryStoresItemClickListener<List<String>> {
+    // TODO: Rename and change types of parameters
     private var param1: Int? = null
     private var param2: String? = null
-
-    var rvTechnicalChart: RecyclerView? = null
 
 
     var rvCategoryStores: RecyclerView? = null
@@ -60,42 +58,48 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
 
     var firebaseRemoteConfig: FirebaseRemoteConfig? = null
     var firebaseAnalytics: FirebaseAnalytics? = null
+
+    private var nativeAdFB1: NativeAd? = null
+    private var nativeAdFB2: NativeAd? = null
+    private var nativeAdFB4: NativeAd? = null
+    private var nativeAdLayout: NativeAdLayout? = null
+    private var adView: LinearLayout? = null
+
+    var llSuperMarts: LinearLayout? = null
+    var llGroceries: LinearLayout? = null
+    var llMedicines: LinearLayout? = null
+    var llSupplements: LinearLayout? = null
+    var llElectronics: LinearLayout? = null
+    var llBeauty: LinearLayout? = null
+    var llJewellery: LinearLayout? = null
+    var llKitchenAppliances: LinearLayout? = null
+    var llKidsLifestyle: LinearLayout? = null
+    var llBabyToys: LinearLayout? = null
+    var llLingerie: LinearLayout? = null
+    var llMenInnerWear: LinearLayout? = null
+    var llBooks: LinearLayout? = null
+    var llFootwear: LinearLayout? = null
+
+    var superMartList: ArrayList<List<String>>? = ArrayList()
+    var groceriesList: ArrayList<List<String>>? = ArrayList()
+    var medicinesList: ArrayList<List<String>>? = ArrayList()
+    var supplementsList: ArrayList<List<String>>? = ArrayList()
+    var electronicsList: ArrayList<List<String>>? = ArrayList()
+    var beautyList: ArrayList<List<String>>? = ArrayList()
+    var jewelleryList: ArrayList<List<String>>? = ArrayList()
+    var kitchenAppliancesList: ArrayList<List<String>>? = ArrayList()
+    var kidsLifestyleList: ArrayList<List<String>>? = ArrayList()
+    var babyToysList: ArrayList<List<String>>? = ArrayList()
+    var lingerieList: ArrayList<List<String>>? = ArrayList()
+    var menInnerWearList: ArrayList<List<String>>? = ArrayList()
+    var booksList: ArrayList<List<String>>? = ArrayList()
+    var footwearList: ArrayList<List<String>>? = ArrayList()
+
+
+    var dialog: Dialog? = null
 //
 //    var nativeAdCat1: UnifiedNativeAd? = null
 //    var nativeAdCat2: UnifiedNativeAd? = null
-
-    private var nativeAdLayout: NativeAdLayout? = null
-    private var adView: LinearLayout? = null
-    private var nativeAdFB1: NativeAd? = null
-    private var nativeAdFB2: NativeAd? = null
-
-    var rvMostUsefulApps: RecyclerView? = null
-    var mostUsefulAppsAdapter: MostUsefulAppsAdapter? = null
-
-    var llmedicine: LinearLayout? = null
-    var llhealthyfood: LinearLayout? = null
-    var llmostuseful: LinearLayout? = null
-    var llfitness: LinearLayout? = null
-    var llhealth: LinearLayout? = null
-    var llWorld: LinearLayout? = null
-    //    var llWorldTour: LinearLayout? = null
-    var llStockMarket: LinearLayout? = null
-
-    private var calculatorsList: ArrayList<List<String>>? = ArrayList()
-    private var cryptoList: ArrayList<List<String>>? = ArrayList()
-    private var measurementList: ArrayList<List<String>>? = ArrayList()
-    private var currencyList: ArrayList<List<String>>? = ArrayList()
-    private var financeList: ArrayList<List<String>>? = ArrayList()
-    private var stockMarketList: ArrayList<List<String>>? = ArrayList()
-
-    private var healthList: ArrayList<List<String>>? = ArrayList()
-    private var healthyfoodList: ArrayList<List<String>>? = ArrayList()
-    private var medicineList: ArrayList<List<String>>? = ArrayList()
-    private var fitnessList: ArrayList<List<String>>? = ArrayList()
-    private var foodList: ArrayList<List<String>>? = ArrayList()
-    private var shoppingList: ArrayList<List<String>>? = ArrayList()
-
-    var dialog: Dialog? = null
 
     override val bindingVariable: Int
         get() = 0
@@ -122,6 +126,7 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
         super.onViewCreated(view, savedInstanceState)
 
         initViews(view)
+
         if(firebaseRemoteConfig == null){
             firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         }
@@ -131,79 +136,119 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
         dialog!!.window!!.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT)
 
-        setRecycler()
-
         categoryViewModel = ViewModelProvider(requireActivity()).get(CategoryViewModel::class.java)
         categoryViewModel?.loadData()
-//Notes  : sportsLiveData = CalculatorsliveData
-        categoryViewModel!!.sportsLiveData.observe(viewLifecycleOwner, Observer { t ->
-            Log.d("TAG", "onViewCreated: calculatorsLiveData $t")
-            calculatorsList!!.addAll(t!!)
+
+        categoryViewModel!!.superMartLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: superMartLiveData $t")
+            superMartList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.foodData.observe(viewLifecycleOwner, Observer { t ->
-            Log.d("TAG", "onViewCreated: calculatorsLiveData $t")
-            foodList!!.addAll(t!!)
+        categoryViewModel!!.groceriesLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: groceriesLiveData $t")
+            groceriesList!!.addAll(t!!)
+        })
+        categoryViewModel!!.medicinesLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: medicinesLiveData $t")
+            medicinesList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.shoppingData.observe(viewLifecycleOwner, Observer { t ->
-            Log.d("TAG", "onViewCreated: calculatorsLiveData $t")
-            shoppingList!!.addAll(t!!)
+        categoryViewModel!!.supplementsLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: supplementsLiveData $t")
+            supplementsList!!.addAll(t!!)
+        })
+        categoryViewModel!!.electronicsLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: electronicsLiveData $t")
+            electronicsList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.healthLiveData.observe(viewLifecycleOwner, Observer { t ->
-            Log.d("TAG", "onViewCreated: cryptoLiveData $t")
-            healthList!!.addAll(t!!)
+        categoryViewModel!!.beautyLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: beautyLiveData $t")
+            beautyList!!.addAll(t!!)
         })
-        categoryViewModel!!.healthyfoodLiveData.observe(viewLifecycleOwner, Observer { t ->
-            Log.d("TAG", "onViewCreated: ntertainmentLiveData $t")
-            healthyfoodList!!.addAll(t!!)
-        })
-
-        categoryViewModel!!.medicineLiveData.observe(viewLifecycleOwner, Observer { t ->
-            Log.d("TAG", "onViewCreated: pakistanLiveData $t")
-            medicineList!!.addAll(t!!)
-        })
-        categoryViewModel!!.fitnessLiveData.observe(viewLifecycleOwner, Observer { t ->
-            Log.d("TAG", "onViewCreated: financeLiveData $t")
-            fitnessList!!.addAll(t!!)
+        categoryViewModel!!.jewelleryLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: jewelleryLiveData $t")
+            jewelleryList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.healthLiveData.observe(viewLifecycleOwner, Observer { t ->
-            Log.d("TAG", "onViewCreated: stockMarketLiveData $t")
-            stockMarketList!!.addAll(t!!)
+        categoryViewModel!!.kitchenAppliancesLiveData
+            .observe(viewLifecycleOwner, Observer { t ->
+                Log.d("TAG", "onViewCreated: kitchenAppliancesLiveData $t")
+                kitchenAppliancesList!!.addAll(t!!)
+            })
+        categoryViewModel!!.kidsLifestyleLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: kidsLifestyleLiveData $t")
+            kidsLifestyleList!!.addAll(t!!)
         })
 
-        categoryViewModel!!.mostUsefulAppsData.observe(viewLifecycleOwner, Observer { t ->
-            Log.d("CryptoFrag", "CryptoFragment Most $t")
-            mostUsefulAppsAdapter?.setItems(t)
-            mostUsefulAppsAdapter?.notifyDataSetChanged()
+        categoryViewModel!!.babyToysLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: babyToysLiveData $t")
+            babyToysList!!.addAll(t!!)
+        })
+        categoryViewModel!!.lingerieLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: lingerieLiveData $t")
+            lingerieList!!.addAll(t!!)
         })
 
-        llfitness!!.setOnClickListener {
-            onShowStores(fitnessList!!,view)
+        categoryViewModel!!.menInnerWearLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: menInnerWearLiveData $t")
+            menInnerWearList!!.addAll(t!!)
+        })
+        categoryViewModel!!.booksLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: booksLiveData $t")
+            booksList!!.addAll(t!!)
+        })
+
+        categoryViewModel!!.footwearLiveData.observe(viewLifecycleOwner, Observer { t ->
+            Log.d("TAG", "onViewCreated: footwearLiveData $t")
+            footwearList!!.addAll(t!!)
+        })
+
+
+        llSuperMarts!!.setOnClickListener {
+            onShowStores(superMartList!!,view)
         }
-        llhealth!!.setOnClickListener {
-            onShowStores(healthList!!,view)
+        llGroceries!!.setOnClickListener {
+            onShowStores(groceriesList!!,view)
         }
-        llhealthyfood!!.setOnClickListener {
-            onShowStores(healthyfoodList!!,view)
+        llMedicines!!.setOnClickListener {
+            onShowStores(medicinesList!!,view)
         }
-        llmedicine!!.setOnClickListener {
-            onShowStores(medicineList!!,view)
+        llSupplements!!.setOnClickListener {
+            onShowStores(supplementsList!!,view)
         }
-        llfood!!.setOnClickListener {
-            onShowStores(foodList!!,view)
+        llElectronics!!.setOnClickListener {
+            onShowStores(electronicsList!!,view)
         }
-        llshopping!!.setOnClickListener {
-            onShowStores(shoppingList!!,view)
+        llBeauty!!.setOnClickListener {
+            onShowStores(beautyList!!,view)
         }
-
-
-
+        llJewellery!!.setOnClickListener {
+            onShowStores(jewelleryList!!,view)
+        }
+        llKitchenAppliances!!.setOnClickListener {
+            onShowStores(kitchenAppliancesList!!,view)
+        }
+        llKidsLifestyle!!.setOnClickListener {
+            onShowStores(kidsLifestyleList!!,view)
+        }
+        llBabyToys!!.setOnClickListener {
+            onShowStores(babyToysList!!,view)
+        }
+        llLingerie!!.setOnClickListener {
+            onShowStores(lingerieList!!,view)
+        }
+        llMenInnerWear!!.setOnClickListener {
+            onShowStores(menInnerWearList!!,view)
+        }
+        llBooks!!.setOnClickListener {
+            onShowStores(booksList!!,view)
+        }
+        llFootwear!!.setOnClickListener {
+            onShowStores(footwearList!!,view)
+        }
 
     }
-
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser){
@@ -215,33 +260,33 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
                     onLoadFBNativeAd1(requireView(), requireContext())
                 }
                 if(nativeAdFB2 == null){
+                    onLoadFBNativeAd2(requireView(), requireContext())
+                }
+                if(nativeAdFB4 == null){
                     onLoadFBNativeAdCatDailog(requireContext(), dialog!!)
                 }
             }
         }
     }
 
+
     fun initViews(view: View){
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireActivity())
+        llSuperMarts = view.findViewById(R.id.llSuperMarts)
+        llGroceries = view.findViewById(R.id.llGroceries)
+        llMedicines = view.findViewById(R.id.llMedicines)
+        llSupplements = view.findViewById(R.id.llSupplements)
+        llElectronics = view.findViewById(R.id.llElectronics)
+        llBeauty = view.findViewById(R.id.llBeauty)
+        llJewellery = view.findViewById(R.id.llJewellery)
+        llKitchenAppliances = view.findViewById(R.id.llKitchenAppliances)
+        llKidsLifestyle = view.findViewById(R.id.llKidsLifestyle)
+        llBabyToys = view.findViewById(R.id.llBabyToys)
+        llLingerie = view.findViewById(R.id.llLingerie)
+        llMenInnerWear = view.findViewById(R.id.llMenInnerWear)
+        llBooks = view.findViewById(R.id.llBooks)
+        llFootwear = view.findViewById(R.id.llFootwear)
 
-
-        llmedicine = view.findViewById(R.id.llmedicine)
-        llhealthyfood = view.findViewById(R.id.llhealthyfood)
-        llfitness = view.findViewById(R.id.llfitness)
-        llhealth = view.findViewById(R.id.llhealth)
-
-//        llWorldTour = view.findViewById(R.id.llWorldTour)
-
-        rvMostUsefulApps = view.findViewById(R.id.rvMostUsefulApps)
-    }
-
-    fun setRecycler(){
-        mostUsefulAppsAdapter = MostUsefulAppsAdapter(context)
-        mostUsefulAppsAdapter!!.setListener(this)
-        rvMostUsefulApps.apply{
-            rvMostUsefulApps?.layoutManager = GridLayoutManager(activity, 3)
-            rvMostUsefulApps?.adapter = mostUsefulAppsAdapter
-        }
     }
 
     fun setRecyclerView(){
@@ -250,34 +295,6 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
         rvCategoryStores.apply {
             rvCategoryStores?.layoutManager = GridLayoutManager(activity, 3)
             rvCategoryStores?.adapter = categoryStoresAdapter
-        }
-    }
-
-    override fun CategoryStoresCardClick(item: List<String>) {
-        Log.d("TAG", "onAllBrokersCardClick: " + item.get(1))
-
-        val bundle = Bundle()
-        bundle.putString("title", item.get(1))
-        bundle.putString("url", item.get(2))
-        (activity as MainActivity?)!!.onUpdateLogEvent(bundle,"brokers_visited",true)
-        val intent: Intent? = Intent(activity, WebActivity::class.java)
-        intent?.putExtra("title", item.get(1))
-        intent?.putExtra("url", item.get(2))
-        startActivity(intent)
-    }
-
-    override fun onMostUsefulAppsCardClick(item: List<String>) {
-        Log.d("TAG", "onMostUsefulAppsCardClick: " + item.get(1))
-        try {
-            val appStoreIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+item.get(2)))
-            appStoreIntent.setPackage("com.android.vending")
-            startActivity(appStoreIntent)
-        } catch (exception: ActivityNotFoundException) {
-            startActivity(
-                Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=fund.stock.share.market.money.stakeholder.finance.economy.live")
-                )
-            )
         }
     }
 
@@ -295,9 +312,8 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
         }
 
     }
-
     fun onLoadFBNativeAd1(view: View, context: Context) {
-        nativeAdFB1 = NativeAd(context, Constants().getFbNativeTopic())
+        nativeAdFB1 = NativeAd(context, Constants().getFbNativeCat1())
         val nativeAdListener: NativeAdListener = object : NativeAdListener {
             override fun onError(p0: Ad?, p1: AdError?) {
                 Log.d("TAG", "onError: onLoadFBNativeAd1 " + p1!!.errorMessage)
@@ -312,11 +328,12 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
                 // Inflate Native Ad into Container
 
                 // Add the Ad view into the ad container.
-                nativeAdLayout = view.findViewById(R.id.native_ad_container_topic)
-                val inflater = LayoutInflater.from(context)
+                nativeAdLayout = view.findViewById(R.id.native_ad_container_cat_1)
+                val inflater = LayoutInflater.from(requireContext())
                 // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
                 adView =
-                    inflater.inflate(R.layout.native_ad_layout,
+                    inflater.inflate(
+                        R.layout.native_ad_layout,
                         nativeAdLayout,
                         false
                     ) as LinearLayout
@@ -349,17 +366,14 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
                 .build()
         );
     }
-
-    fun onLoadFBNativeAdCatDailog(context: Context, dialog: Dialog) {
-        nativeAdFB2 = NativeAd(context, Constants().getFbNativeCatDailog())
+    fun onLoadFBNativeAd2(view: View, context: Context) {
+        nativeAdFB2 = NativeAd(context, Constants().getFbNativeCat2())
         val nativeAdListener: NativeAdListener = object : NativeAdListener {
             override fun onError(p0: Ad?, p1: AdError?) {
-                Log.d("TAG", "onError: onLoadFBNativeAdCAT " + p1!!.errorMessage)
+                Log.d("TAG", "onError: onLoadFBNativeAd1 " + p1!!.errorMessage)
             }
 
             override fun onAdLoaded(ad: Ad?) {
-
-                Log.d("TAG", "onAdLoaded: onLoadFBNativeAdCAT")
 
                 // Race condition, load() called again before last ad was displayed
                 if (nativeAdFB2 == null || nativeAdFB2 !== ad) {
@@ -368,7 +382,7 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
                 // Inflate Native Ad into Container
 
                 // Add the Ad view into the ad container.
-                nativeAdLayout = dialog.findViewById(R.id.native_ad_container_dailog)
+                nativeAdLayout = view.findViewById(R.id.native_ad_container_cat_2)
                 val inflater = LayoutInflater.from(context)
                 // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
                 adView =
@@ -381,8 +395,65 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
 
                 inflateAd(nativeAdFB2!!, adView!!)
 
-                val adChoicesContainer: LinearLayout = dialog.findViewById(R.id.ad_choices_container)
+                val adChoicesContainer: LinearLayout = view.findViewById(R.id.ad_choices_container)
                 val adOptionsView = AdOptionsView(context, nativeAdFB2, nativeAdLayout)
+                adChoicesContainer.removeAllViews()
+                adChoicesContainer.addView(adOptionsView, 0)
+            }
+
+            override fun onAdClicked(p0: Ad?) {
+                Log.d("TAG", "onAdClicked: onLoadFBNativeAd1")
+            }
+
+            override fun onLoggingImpression(p0: Ad?) {
+                Log.d("TAG", "onLoggingImpression: onLoadFBNativeAd1")
+            }
+
+            override fun onMediaDownloaded(p0: Ad?) {
+                Log.d("TAG", "onMediaDownloaded: onLoadFBNativeAd1")
+            }
+        }
+
+        nativeAdFB2!!.loadAd(
+            nativeAdFB2!!.buildLoadAdConfig()
+                .withAdListener(nativeAdListener)
+                .build()
+        )
+    }
+
+    fun onLoadFBNativeAdCatDailog(context: Context, dialog: Dialog) {
+        nativeAdFB4 = NativeAd(context, Constants().getFbNativeCatDailog())
+        val nativeAdListener: NativeAdListener = object : NativeAdListener {
+            override fun onError(p0: Ad?, p1: AdError?) {
+                Log.d("TAG", "onError: onLoadFBNativeAdCAT " + p1!!.errorMessage)
+            }
+
+            override fun onAdLoaded(ad: Ad?) {
+
+                Log.d("TAG", "onAdLoaded: onLoadFBNativeAdCAT")
+
+                // Race condition, load() called again before last ad was displayed
+                if (nativeAdFB4 == null || nativeAdFB4 !== ad) {
+                    return
+                }
+                // Inflate Native Ad into Container
+
+                // Add the Ad view into the ad container.
+                nativeAdLayout = dialog.findViewById(R.id.native_ad_container_dailog)
+                val inflater = LayoutInflater.from(context)
+                // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
+                adView =
+                    inflater.inflate(
+                       R.layout.native_ad_layout,
+                        nativeAdLayout,
+                        false
+                    ) as LinearLayout
+                nativeAdLayout!!.addView(adView)
+
+                inflateAd(nativeAdFB4!!, adView!!)
+
+                val adChoicesContainer: LinearLayout = dialog.findViewById(R.id.ad_choices_container)
+                val adOptionsView = AdOptionsView(context, nativeAdFB4, nativeAdLayout)
                 adChoicesContainer.removeAllViews()
                 adChoicesContainer.addView(adOptionsView, 0)
             }
@@ -400,12 +471,13 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
             }
         }
 
-        nativeAdFB2!!.loadAd(
-            nativeAdFB2!!.buildLoadAdConfig()
+        nativeAdFB4!!.loadAd(
+            nativeAdFB4!!.buildLoadAdConfig()
                 .withAdListener(nativeAdListener)
                 .build()
         )
     }
+
 
     private fun inflateAd(nativeAd: NativeAd, adView: LinearLayout) {
         nativeAd.unregisterView()
@@ -444,13 +516,21 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
 
 
     override fun onDestroy() {
-//        nativeAdCat1?.destroy()
-//        nativeAdCat2?.destroy()
         categoryViewModel?.reset()
         super.onDestroy()
     }
 
+
     companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment CategoryFragment.
+         */
+        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: Int, param2: String) =
             CategoryFragment().apply {
@@ -459,6 +539,20 @@ class CategoryFragment : BaseFragment(), MostUsefulAppsItemClickListener<List<St
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun CategoryStoresCardClick(item: List<String>) {
+        Log.d("TAG", "onAllBrokersCardClick: " + item.get(1))
+
+        val bundle = Bundle()
+        bundle.putString("title", item.get(1))
+        bundle.putString("url", item.get(2))
+        (activity as MainActivity?)!!.onUpdateLogEvent(bundle,"brokers_visited",true)
+
+        val intent: Intent? = Intent(activity, WebActivity::class.java)
+        intent?.putExtra("title", item.get(1))
+        intent?.putExtra("url", item.get(2))
+        startActivity(intent)
     }
 }
 

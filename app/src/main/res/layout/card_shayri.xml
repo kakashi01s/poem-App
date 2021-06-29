@@ -8,32 +8,40 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_home_news"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="6dp"
         android:elevation="20dp"
         app:cardCornerRadius="20dp"
         app:cardBackgroundColor="#84CBF8"
         app:contentPadding="8dp"
         >
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <pl.droidsonroids.gif.GifImageView
-                android:id="@+id/gif_card"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/shayri_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="4"
+                    android:textSize="15dp"
+                    android:padding="8dp"/>
+
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center">
                 <ImageView
-                    android:id="@+id/share_gif"
+                    android:id="@+id/share_shayri"
                     android:src="@drawable/ic_share"
-                    android:layout_margin="10dp"
                     android:layout_width="30dp"
                     android:layout_height="30dp"/>
             </LinearLayout>

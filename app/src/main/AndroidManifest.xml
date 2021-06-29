@@ -4,13 +4,11 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>-->
-
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name="shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone"
+        android:name=".ringtone"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -18,7 +16,12 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.view.SplashActivity">
+        <activity android:name="shayri.status.gif.love.sad.wallpaper.boys.map.view.FullimageActivity"></activity>
+        <activity android:name="shayri.status.gif.love.sad.wallpaper.boys.map.view.WallPaperActivity" />
+        <activity android:name="shayri.status.gif.love.sad.wallpaper.boys.map.view.shayriactivity.AttitudeActivity" />
+        <activity android:name="shayri.status.gif.love.sad.wallpaper.boys.map.view.shayriactivity.hurtShayriActivity" />
+        <activity android:name="shayri.status.gif.love.sad.wallpaper.boys.map.view.shayriactivity.shayriShowActivity" />
+        <activity android:name=".view.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,11 +29,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.view.WebActivity"
+            android:name=".view.WebActivity"
             android:screenOrientation="portrait"
             android:usesCleartextTraffic="true"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name="shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.view.MainActivity" />
+        <activity android:name=".view.MainActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -39,15 +42,12 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-9928966600221551~4216728448" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.onesignal.NotificationOpened.DEFAULT"
             android:value="DISABLE" />
-
-
     </application>
 
 </manifest>

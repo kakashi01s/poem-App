@@ -16,13 +16,13 @@ class AppPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(f
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> {
-                FragmentHome.newInstance(position, "Home")
+                PoemmFragment.newInstance(position, "Home")
             }
             1 -> {
-                CategoryFragment.newInstance(position, "Category")
+                ShayriFragment.newInstance(position, "Category")
             }
             2 -> {
-                PoemmFragment.newInstance(position, "Poem")
+                CategoryFragment.newInstance(position, "Poem")
             }
             3 -> {
                 GifFragment.newInstance(position, "Lab Test")

@@ -98,7 +98,9 @@ class PoemmFragment : BaseFragment(), PoemClickListener<List<String>> {
         poemViewModel?.poemLiveData?.observe(viewLifecycleOwner, Observer { t ->
             poemadapter!!.setItems(t)
         })
-
+        if (firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)) {
+            onLoadFBNativeAd1(view, requireContext())
+        }
     }
 
     fun initViews(view: View) {
