@@ -6,30 +6,30 @@
         android:id="@+id/id_home"
         android:icon="@drawable/ic_baseline_home"
         app:exb_color="#FFF"
-        android:iconTint="@color/black_50"
+        android:iconTint="#FAD0C4"
         android:orderInCategory="1"
-        android:title="Home" />
+        android:title="Poems" />
     <item
         android:id="@+id/id_category"
         android:icon="@drawable/ic_category"
         android:orderInCategory="2"
-        android:iconTint="@color/black_50"
+        android:iconTint="#FAD0C4"
         app:exb_color="#FFF"
-        android:title="Tools" />
+        android:title="Shayri" />
     <item
         android:id="@+id/id_deals"
         android:icon="@drawable/ic_deal"
         android:orderInCategory="3"
-        android:iconTint="@color/black_50"
+        android:iconTint="#FAD0C4"
         app:exb_color="#FFF"
-        android:title="Pregnancy" />
+        android:title="Category" />
 
     <item
         android:id="@+id/id_bookmark"
         android:icon="@drawable/ic_baseline_bookmarks"
         android:orderInCategory="4"
-        android:iconTint="@color/black_50"
+        android:iconTint="#FAD0C4"
         app:exb_color="#FFF"
-        android:title="Lab Test"/>
+        android:title="Gif"/>
 
 </menu>

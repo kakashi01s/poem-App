@@ -6,13 +6,14 @@
     android:layout_height="match_parent"
     tools:context="shayri.status.gif.love.sad.wallpaper.boys.map.view.FullimageActivity">
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/full_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         />
     <Button
+        android:id="@+id/set_wallpaper"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"

@@ -8,7 +8,8 @@ buildscript {
         jcenter()
         mavenCentral()
         maven { url "https://maven.google.com/"}
-        maven{ url 'https://plugins.gradle.org/m2/'}
+        gradlePluginPortal()
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.1'
@@ -18,7 +19,7 @@ buildscript {
 
         // Add the Crashlytics Gradle plugin.
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.5.2'
-        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.12.10'
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.10, 0.99.99]'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

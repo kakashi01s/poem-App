@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">#A7FFEB</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">#80D8FF</item>
     </style>
 
     <style name="AppTheme.AdAttribution">
@@ -14,7 +14,7 @@
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">12sp</item>
         <item name="android:text">@string/ad</item>
-        <item name="android:background">#FFCC66</item>
+        <item name="android:background">#80D8FF</item>
         <item name="android:width">15dp</item>
         <item name="android:height">15dp</item>
     </style>

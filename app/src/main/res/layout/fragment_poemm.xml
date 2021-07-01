@@ -55,8 +55,6 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPoems"
                 android:layout_width="match_parent"
@@ -65,10 +63,9 @@
                 android:layout_marginTop="5dp"/>
 
         </LinearLayout>
-
-
-
-
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="150dp"/>
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

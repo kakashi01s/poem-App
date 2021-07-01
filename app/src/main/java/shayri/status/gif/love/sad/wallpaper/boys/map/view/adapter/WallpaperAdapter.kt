@@ -1,6 +1,7 @@
 package shayri.status.gif.love.sad.wallpaper.boys.map.view.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.R
 import shayri.status.gif.love.sad.wallpaper.boys.map.model.wallpaper.Photo
 import shayri.status.gif.love.sad.wallpaper.boys.map.model.wallpaper.WallpaperResponse
 
-class WallpaperAdapter(var context: Context, var photos: List<WallpaperResponse>) : RecyclerView.Adapter<WallpaperAdapter.WallpaperViewHolder>(){
+class WallpaperAdapter(var context: Context, var photos: List<Photo> ,var listener : WallpapercardclickLintener) : RecyclerView.Adapter<WallpaperAdapter.WallpaperViewHolder>(){
 
 
 
@@ -23,20 +24,30 @@ class WallpaperAdapter(var context: Context, var photos: List<WallpaperResponse>
 
     override fun onBindViewHolder(holder: WallpaperViewHolder, position: Int) {
         var response = photos[position]
-        var photo = response.photos[position]
 
-        holder.wallpaperid.text = photo.src.medium
+
+
+        Log.d("adapterx", response.url)
 
        Glide.with(context)
-           .load(photo.src.medium)
+           .load(response.src.original)
            .into(holder.wallpaperimgurl)
     }
 
     override fun getItemCount(): Int {
         return  photos.size
     }
-    class WallpaperViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        var wallpaperimgurl = itemView.findViewById<ImageView>(R.id.card_wallpaper)
-        var wallpaperid = itemView.findViewById<TextView>(R.id.wall_id)
+    inner class WallpaperViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+        var wallpaperimgurl = itemView.findViewById<ImageView>(R.id.wallpaper_img)
+        init {
+            itemView.setOnClickListener {
+                var url = photos[position].src.original
+                listener.OnwallpaperCardClick(url)
+            }
+        }
+
+    }
+    interface WallpapercardclickLintener{
+        fun OnwallpaperCardClick(url : String)
     }
 }

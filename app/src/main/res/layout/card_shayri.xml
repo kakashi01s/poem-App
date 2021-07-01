@@ -12,7 +12,7 @@
         android:padding="6dp"
         android:elevation="20dp"
         app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="#84CBF8"
+        app:cardBackgroundColor="#FAD0C4"
         app:contentPadding="8dp"
         >
         <LinearLayout

@@ -14,8 +14,7 @@ import kotlin.collections.ArrayList
 
 abstract class GenericRecyclerAdapter<T : Any, L : BaseRecyclerListener?, VH : BaseViewHolder<T, L>?>(
     context: Context?
-) :
-    RecyclerView.Adapter<VH>() {
+) : RecyclerView.Adapter<VH>() {
 
     private var items: MutableList<T>?
     private var listener: L? = null

@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="shayri.status.gif.love.sad.wallpaper.boys.map.view.fragment.GifFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -40,11 +41,16 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-        <androidx.appcompat.widget.SearchView
+        <EditText
             android:id="@+id/search_gif"
-            android:layout_width="match_parent"
+            android:layout_width="350dp"
             android:layout_height="50dp"
-            app:queryHint="Search for GIF"/>
+            android:hint="Search for GIF"/>
+            <ImageButton
+                android:id="@+id/search_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ic_baseline_search_24"/>
 
         </LinearLayout>
 

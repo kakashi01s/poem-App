@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +14,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.R
-import shayri.status.gif.love.sad.wallpaper.boys.map.data.giphy.Data
 import shayri.status.gif.love.sad.wallpaper.boys.map.data.giphy.GiphyData
 import shayri.status.gif.love.sad.wallpaper.boys.map.data.giphy.Images
 import shayri.status.gif.love.sad.wallpaper.boys.map.view.adapter.GifAdapter
@@ -39,8 +37,9 @@ class GifFragment : Fragment() {
 
     var gifAdapter : GifAdapter? = null
     var rv_gif: RecyclerView?= null
-    var searchgif : SearchView? = null
+    var searchgif : EditText? = null
     var searchbutton : ImageButton? = null
+    var query : String? = null
 
     private var layoutManager: RecyclerView.LayoutManager?= null
 
@@ -62,16 +61,56 @@ class GifFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initviews(view)
         rv_gif = view.findViewById(R.id.rv_gif)
-
         layoutManager = LinearLayoutManager(view.context)
         rv_gif?.layoutManager = layoutManager
+        query = searchgif!!.text.toString()
         getgif(rv_gif!!, layoutManager!!)
+        searchbutton?.setOnClickListener {
+            if (query != null) {
+                querygetgif(rv_gif!!, layoutManager!!)
+            } else {
+                getgif(rv_gif!!, layoutManager!!)
+            }
+        }
+    }
+
+    private fun querygetgif(rv: RecyclerView, manager: RecyclerView.LayoutManager) {
+        query = searchgif!!.text.toString().trim()
+        var giphy = gifService.GifInstance.getGif("$query")
+        giphy.enqueue(object : Callback<GiphyData> {
+            override fun onResponse(call: Call<GiphyData>, response: Response<GiphyData>) {
+                var items = response.body()
+                if (items != null) {
+                    var ImgObjs: MutableList<Images> = arrayListOf()
+                    var i = 0
+                    for (sample in items.data) {
+                        Log.d("SAMPLE", sample.images.original.url)
+                        //Log.d("nithik", sample.images.toString())
+                        ImgObjs.add(i,sample.images)
+                        //gifAdapter = GifAdapter(context!!, url.images.toString())
+                    }
+                    gifAdapter = GifAdapter(context!!, ImgObjs)
+                    rv.adapter = gifAdapter
+                }
+            }
+
+            override fun onFailure(call: Call<GiphyData>, t: Throwable) {
+                Log.d("nithik", t.localizedMessage)
+            }
+        })
+    }
+
+
+    private fun initviews(view : View) {
+        searchgif = view.findViewById(R.id.search_gif)
+        searchbutton = view.findViewById(R.id.search_button)
 
 
     }
-    fun getgif(rv : RecyclerView,manager: RecyclerView.LayoutManager) {
 
+    fun getgif(rv : RecyclerView,manager: RecyclerView.LayoutManager) {
         var giphy = gifService.GifInstance.getGif("hello")
         giphy.enqueue(object : Callback<GiphyData> {
             override fun onResponse(call: Call<GiphyData>, response: Response<GiphyData>) {
