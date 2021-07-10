@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
+import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -49,7 +50,20 @@ class Singleton : Application() {
         OneSignal.setAppId(ONESIGNAL_APP_ID)
         OneSignal.setNotificationOpenedHandler(AppNotificationOpenHandler(this))
 
-
+        MobileAds.initialize(
+            this
+        ) { initializationStatus ->
+            val statusMap = initializationStatus.adapterStatusMap
+            for (adapterClass in statusMap.keys) {
+                val status = statusMap[adapterClass]
+                Log.d(
+                    "MyApp", String.format(
+                        "Adapter name: %s, Description: %s, Latency: %d",
+                        adapterClass, status!!.description, status!!.latency
+                    )
+                )
+            }
+        }
         AudienceNetworkAds.initialize(this);
         if(BuildConfig.DEBUG){
             AdSettings.setIntegrationErrorMode(AdSettings.IntegrationErrorMode.INTEGRATION_ERROR_CRASH_DEBUG_MODE);
