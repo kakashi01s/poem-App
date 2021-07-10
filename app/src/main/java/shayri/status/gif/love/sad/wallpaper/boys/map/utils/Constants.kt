@@ -27,6 +27,8 @@ class Constants {
     val FB_NATIVE_HOME_1 = "722413805027589_755158915086411"
     val FB_NATIVE_HOME_2 = "722413805027589_755162745086028"
     val FB_NATIVE_CAT_1 = "722413805027589_755163058419330"
+    val FB_NATIVE_SHAYRI_1 = "722413805027589_755163058419330"
+    val FB_NATIVE_Gif_1 = "722413805027589_755163058419330"
     val FB_NATIVE_CAT_2 = "722413805027589_755163241752645"
     val FB_NATIVE_DAILOG = "722413805027589_841024753166493"
     val FB_BANNER_WEB = "722413805027589_755223338413302"
@@ -55,6 +57,13 @@ class Constants {
             FB_ADS_TEST
         else
             FB_NATIVE_CAT_1
+    }
+
+    fun getFbNativeshayri1(): String {
+        return if (BuildConfig.DEBUG)
+            FB_ADS_TEST
+        else
+            FB_NATIVE_SHAYRI_1
     }
 
     fun getFbNativeCat2(): String {

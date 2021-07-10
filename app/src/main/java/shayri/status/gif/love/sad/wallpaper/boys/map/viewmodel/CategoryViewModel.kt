@@ -9,10 +9,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
-import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataFactory
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataService
-import javax.inject.Singleton
 
 class CategoryViewModel: ViewModel() {
     var superMartLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()
@@ -53,8 +51,8 @@ class CategoryViewModel: ViewModel() {
 
     private fun fetchSuperMart(){
         Log.d("TAG", "fetchSuperMart: ")
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
 
         val disposable: Disposable?
@@ -77,8 +75,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchGroceries(){
         Log.d("TAG", "fetchSuperMart: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_GROCERIES, DataFactory().KEY)
@@ -100,8 +98,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchMedicines(){
         Log.d("TAG", "fetchMedicines: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_MEDICINES, DataFactory().KEY)
@@ -123,8 +121,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchSupplements(){
         Log.d("TAG", "fetchSupplements: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_SUPPLEMENTS, DataFactory().KEY)
@@ -146,8 +144,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchElectronics(){
         Log.d("TAG", "fetchElectronics: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_ELECTRONICS, DataFactory().KEY)
@@ -169,8 +167,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchBeauty(){
         Log.d("TAG", "fetchBeauty: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_BEAUTY, DataFactory().KEY)
@@ -192,8 +190,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchJewellery(){
         Log.d("TAG", "fetchJewellery: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_JEWELLERY, DataFactory().KEY)
@@ -215,8 +213,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchKitchenAppliances(){
         Log.d("TAG", "fetchKitchenAppliances: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(
@@ -241,8 +239,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchKidsLifestyle(){
         Log.d("TAG", "fetchKidsLifestyle: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_KIDS_LIFESTYLE, DataFactory().KEY)
@@ -264,8 +262,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchBabyToys(){
         Log.d("TAG", "fetchBabyToys: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_BABY_TOYS, DataFactory().KEY)
             ?.subscribeOn(Schedulers.io())
@@ -286,8 +284,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchLingerie(){
         Log.d("TAG", "fetchLingerie: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_LINGERIE, DataFactory().KEY)
@@ -309,8 +307,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchMenInnerWear(){
         Log.d("TAG", "fetchMenInnerWear: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_MEN_INNER_WEAR, DataFactory().KEY)
@@ -332,8 +330,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchBooks(){
         Log.d("TAG", "fetchBooks: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_BOOKS, DataFactory().KEY)
@@ -355,8 +353,8 @@ class CategoryViewModel: ViewModel() {
     private fun fetchFootwear(){
         Log.d("TAG", "fetchFootwear: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_FOOTWEAR, DataFactory().KEY)

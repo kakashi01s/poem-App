@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.view.fragment.CategoryFragment
-import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.view.fragment.FragmentHome
 import shayri.status.gif.love.sad.wallpaper.boys.map.view.fragment.*
 
 class AppPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
@@ -27,7 +26,7 @@ class AppPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(f
             3 -> {
                 GifFragment.newInstance(position, "Lab Test")
             }
-            else -> FragmentHome.newInstance(position, "Home")
+            else -> PoemmFragment.newInstance(position, "Home")
         }
     }
 

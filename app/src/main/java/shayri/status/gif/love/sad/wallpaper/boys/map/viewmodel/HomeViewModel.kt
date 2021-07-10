@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone
+import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataFactory
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -32,8 +32,8 @@ class HomeViewModel : ViewModel() {
 
     private fun fetchAllApps(){
         Log.d("TAG", "fetchAllApps: ")
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_RENT_ALL_APPS,DataFactory().KEY)

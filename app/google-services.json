@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1032294004941:android:bc0d5ef88dedc53395d184",
+        "mobilesdk_app_id": "1:1032294004941:android:ef23c124b798964195d184",
         "android_client_info": {
-          "package_name": "shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone"
+          "package_name": "shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1032294004941-0o5ueesphrdb1ubtdiklvq33nthqsgt8.apps.googleusercontent.com",
+          "client_id": "1032294004941-s9hvaa2odnof9tsi08vljo7miccu5594.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone",
+            "package_name": "shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all",
             "certificate_hash": "0e9a81e81b75b4654c7c98887fb3b5760ae00d44"
           }
         },

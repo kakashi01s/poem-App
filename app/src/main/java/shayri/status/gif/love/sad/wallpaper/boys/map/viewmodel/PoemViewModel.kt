@@ -10,9 +10,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataFactory
-import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataService
-import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.model.AllAppsModel
-import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone
 
 class PoemViewModel: ViewModel() {
     var poemLiveData: MutableLiveData<List<List<String>>?> = MutableLiveData()

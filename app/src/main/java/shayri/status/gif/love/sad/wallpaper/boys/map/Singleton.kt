@@ -18,15 +18,15 @@ import io.reactivex.schedulers.Schedulers
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.utils.AppNotificationOpenHandler
 import java.util.*
 
-class ringtone : Application() {
+class Singleton : Application() {
     private var dataService: DataService? = null
     private var scheduler: Scheduler? = null
     private val ONESIGNAL_APP_ID ="df46e0a9-5880-4d88-ade5-f973c52a8a0e"
     companion object{
 
-        var application: ringtone? = null
+        var application: Singleton? = null
 
-        fun get():ringtone? {
+        fun get():Singleton? {
             return application
         }
     }

@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.functions.Consumer
-import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone
+import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataFactory
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataService
 
@@ -55,8 +55,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchadvice(){
         Log.d("TAG", "fetchUsa: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_ADVICE, DataFactory().KEY)
@@ -78,8 +78,8 @@ class pregnancyViewModel: ViewModel() {
     private fun  fetchafter(){
         Log.d("TAG", "fetchRussia: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_AFTER, DataFactory().KEY)
@@ -101,8 +101,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchcalculator(){
         Log.d("TAG", "fetchPakistan: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_CALCULATOR, DataFactory().KEY)
@@ -124,8 +124,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchdiet(){
         Log.d("TAG", "fetchChina: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_DIET, DataFactory().KEY)
@@ -147,8 +147,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchduedate(){
         Log.d("TAG", "fetchGermany: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_DUEDATE, DataFactory().KEY)
@@ -170,8 +170,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchexercies(){
         Log.d("TAG", "fetchTurkey: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_EXERCIES, DataFactory().KEY)
@@ -193,8 +193,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchprecaution(){
         Log.d("TAG", "fetchUae: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(
@@ -219,8 +219,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchmiscarriage(){
         Log.d("TAG", "fetchItaly: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_MISCARRIAGE, DataFactory().KEY)
@@ -242,8 +242,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchsymptoms(){
         Log.d("TAG", "fetchSwitzerland: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_SYMPTOMS, DataFactory().KEY)
@@ -265,8 +265,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchpregnancycalender(){
         Log.d("TAG", "fetchCanada: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_PREGNANCY_CALENDER, DataFactory().KEY)
@@ -288,8 +288,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchweight(){
         Log.d("TAG", "fetchSingapore: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_WEIGHT, DataFactory().KEY)
@@ -311,8 +311,8 @@ class pregnancyViewModel: ViewModel() {
     private fun fetchtest(){
         Log.d("TAG", "fetchFrance: ")
 
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
         val disposable: Disposable?
         disposable = dataService?.fetchAllApps(DataFactory().URL_TEST, DataFactory().KEY)

@@ -1,29 +1,33 @@
 package shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.view
 
+import android.os.Bundle
+import android.webkit.WebView
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.*
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.facebook.ads.*
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import kotlinx.android.synthetic.main.activity_web.*
-import kotlinx.android.synthetic.main.custom_toast.*
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.R
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.utils.Constants
 
 
-class WebActivity : AppCompatActivity() {
+class WebActivity  : AppCompatActivity() {
 
     var webView: WebView? = null
     var appTitle: String? = null
@@ -33,12 +37,13 @@ class WebActivity : AppCompatActivity() {
     var rlWebSplash: RelativeLayout? = null
     var ivAppIcon: ImageView? = null
 
+    var adView: AdView? = null
+    private var mInterstitialAd: InterstitialAd? = null
+
     private val TAG: String = WebActivity::class.java.simpleName
     private val TIME_DELAY = 2000
     private var back_pressed: Long = 0
 
-    private var interstitialFbAd: com.facebook.ads.InterstitialAd? = null
-    private var adView: AdView? = null
     lateinit var fullscreenView: View
 
     var firebaseRemoteConfig: FirebaseRemoteConfig? = null
@@ -58,10 +63,10 @@ class WebActivity : AppCompatActivity() {
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
         if(firebaseRemoteConfig!!.getBoolean(Constants().SHOW_ADS)){
-
-            onFbBannerAds()
-            onLoadFbInterstitial()
+            onBannerAds()
+            onLoadInterstitial()
         }
+
         loadWebSplash()
 
         ActivityCompat.requestPermissions(
@@ -221,81 +226,87 @@ class WebActivity : AppCompatActivity() {
             .into(ivAppIcon!!)
     }
 
-    fun onLoadFbInterstitial() {
-        interstitialFbAd = InterstitialAd(this, Constants().getFbInterstitialWebExit())
+    fun onLoadInterstitial() {
+        val adRequest = AdRequest.Builder().build()
 
-        val interstitialAdListener: InterstitialAdListener = object : InterstitialAdListener {
-            override fun onInterstitialDisplayed(ad: Ad) {
-                // Interstitial ad displayed callback
-                Log.e(TAG, "Interstitial ad displayed.")
+        InterstitialAd.load(this,Constants().getFbInterstitialWebExit(), adRequest, object : InterstitialAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.d(TAG, adError.message)
+                mInterstitialAd = null
             }
 
-            override fun onInterstitialDismissed(ad: Ad) {
-                // Interstitial dismissed callback
-                Log.e(TAG, "Interstitial ad dismissed.")
-                finish()
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                Log.d(TAG, "Ad was loaded.")
+                mInterstitialAd = interstitialAd
             }
-
-            override fun onError(ad: Ad?, adError: AdError) {
-                // Ad error callback
-                Log.e(TAG, "Interstitial ad failed to load: " + adError.getErrorMessage())
-            }
-
-            override fun onAdLoaded(ad: Ad) {
-                // Interstitial ad is loaded and ready to be displayed
-                Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!")
-                // Show the ad
-//                interstitialFbAd.show()
-            }
-
-            override fun onAdClicked(ad: Ad) {
-                // Ad clicked callback
-                Log.d(TAG, "Interstitial ad clicked!")
-            }
-
-            override fun onLoggingImpression(ad: Ad) {
-                // Ad impression logged callback
-                Log.d(TAG, "Interstitial ad impression logged!")
-            }
-        }
-
-        interstitialFbAd!!.loadAd(
-            interstitialFbAd!!.buildLoadAdConfig()
-                .withAdListener(interstitialAdListener)
-                .build()
-        );
+        })
 
     }
 
-    fun onFbBannerAds() {
-        adView = AdView(this, Constants().getFbBannerWeb(), AdSize.BANNER_HEIGHT_50)
-
-        // Find the Ad Container
-        val adContainer = findViewById<View>(R.id.banner_container) as LinearLayout
-
-        // Add the ad view to your activity layout
-        adContainer.addView(adView)
-
-        val adListenerBanner: com.facebook.ads.AdListener = object : com.facebook.ads.AdListener {
-            override fun onError(ad: Ad?, adError: AdError) {
-                // Ad error callback
+    // Show the ad if it's ready. Otherwise toast and restart the game.
+    private fun showInterstitial() {
+        mInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+                Log.d(TAG, "Ad was dismissed.")
+                // Don't forget to set the ad reference to null so you
+                // don't show the ad a second time.
+                mInterstitialAd = null
+                finish()
             }
 
-            override fun onAdLoaded(ad: Ad?) {
-                Log.d(TAG, "onAdLoaded: Banner")
+            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                Log.d(TAG, "Ad failed to show.")
+                // Don't forget to set the ad reference to null so you
+                // don't show the ad a second time.
+                mInterstitialAd = null
+                finish()
             }
 
-            override fun onAdClicked(ad: Ad?) {
-                // Ad clicked callback
+            override fun onAdShowedFullScreenContent() {
+                Log.d(TAG, "Ad showed fullscreen content.")
+                // Called when ad is dismissed.
+            }
+        }
+        mInterstitialAd!!.show(this)
+    }
+
+
+    fun onBannerAds() {
+        adView = AdView(this@WebActivity)
+        adView!!.adSize = AdSize.BANNER
+        adView!!.adUnitId = Constants().getFbBannerWeb()
+        adView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        adView!!.loadAd(adRequest)
+
+        adView!!.adListener = object: AdListener() {
+            override fun onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                if(adView!!.visibility == View.GONE)
+                    adView!!.visibility = View.VISIBLE
             }
 
-            override fun onLoggingImpression(ad: Ad?) {
-                // Ad impression logged callback
+            override fun onAdFailedToLoad(adError : LoadAdError) {
+                // Code to be executed when an ad request fails.
+                if(adView!!.visibility == View.VISIBLE)
+                    adView!!.visibility = View.GONE
+            }
+
+            override fun onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
             }
         }
 
-        // Request an ad
-        adView!!.loadAd(adView!!.buildLoadAdConfig().withAdListener(adListenerBanner).build())
     }
 
     public override fun onPause() {
@@ -320,24 +331,26 @@ class WebActivity : AppCompatActivity() {
     override fun onBackPressed() {
 
         if (back_pressed + TIME_DELAY > System.currentTimeMillis()) {
-            super.onBackPressed()
+            if(mInterstitialAd!=null){
+                showInterstitial()
+            }
+            else{
+                super.onBackPressed()
+            }
         } else {
-            Toast.makeText(getBaseContext(), "Double click to exit!",
-                Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                baseContext, "Double click to exit!",
+                Toast.LENGTH_SHORT).show()
             if (webView!!.canGoBack()) {
                 webView!!.goBack()
             }
             else{
-                if (interstitialFbAd!=null && interstitialFbAd!!.isAdLoaded) {
-                    if (interstitialFbAd!!.isAdInvalidated) {
-                    } else {
-                        interstitialFbAd!!.show()
-                    }
+                if(mInterstitialAd!=null){
+                    showInterstitial()
                 }
                 else{
                     super.onBackPressed()
                 }
-
             }
         }
         back_pressed = System.currentTimeMillis();

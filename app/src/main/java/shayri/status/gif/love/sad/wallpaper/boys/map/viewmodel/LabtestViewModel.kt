@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
-import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone
+import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataFactory
 
 class LabtestViewModel : ViewModel() {
@@ -30,7 +30,7 @@ class LabtestViewModel : ViewModel() {
 
     private fun fetchBookLab(){
         Log.d("TAG", "fetchAllApps: ")
-        val ringtone: ringtone? = ringtone.get()
+        val Singleton: Singleton? = Singleton.get()
 
         val dataService by lazy {
             DataFactory.create()
@@ -55,7 +55,7 @@ class LabtestViewModel : ViewModel() {
 
     private fun fetchTestResult(){
         Log.d("TAG", "fetchMostUsefullApps: ")
-        val ringtone: ringtone? = ringtone.get()
+        val Singleton: Singleton? = Singleton.get()
         val dataService by lazy {
             DataFactory.create()
         }

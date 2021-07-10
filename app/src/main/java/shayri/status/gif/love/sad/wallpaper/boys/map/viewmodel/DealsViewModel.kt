@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.ringtone
+import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.Singleton
 import shayri.status.gif.love.sad.wallpaper.boys.girls.attitude.all.data.DataFactory
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -26,8 +26,8 @@ class DealsViewModel : ViewModel() {
 
     private fun fetchDealsData(){
         Log.d("TAG", "fetchDealsData: ")
-        val ringtone: ringtone? = ringtone.get()
-        val dataService: DataService? = ringtone!!.getDataService()
+        val Singleton: Singleton? = Singleton.get()
+        val dataService: DataService? = Singleton!!.getDataService()
 
 
         val disposable: Disposable?
